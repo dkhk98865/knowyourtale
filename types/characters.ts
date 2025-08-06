@@ -15,17 +15,17 @@ export const characters = [
     story: `After losing her parents, a kind young woman is forced into servitude by her cruel stepfamily. Despite her hardships, she remains gentle and hopeful. With the help of magical aid, she attends a royal ball in disguise, capturing the prince’s heart. When the magic fades, her true identity is revealed, and she rises from obscurity to become queen.`
   },
   {
-    id: "royal",
-    name: "The Lost Royal",
-    description: "Destined for greatness but haunted by forgotten lineage and deep quests.",
-    image: "/images/royal.jpg",
-    story: `In a kingdom shrouded in mist and mystery, the Lost Royal wandered, unaware of their noble blood. Guided by dreams and visions, they embarked on a quest to reclaim their heritage. Along the way, they discovered allies in unexpected places and learned that true royalty lies not in birthright, but in courage and compassion.`
+    id: "sleepingbeauty",
+    name: "Sleeping Beauty",
+    description: "A cursed slumber, awakened by destiny",
+    image: "/images/sleepingbeauty.png",
+    story: `A princess is cursed at birth to fall into a deep sleep on her sixteenth birthday. Hidden away for protection, the curse is fulfilled despite all efforts. After years in enchanted slumber, she is awakened by true love’s kiss, breaking the spell and restoring peace to the kingdom.`
   },
   {
-    id: "witch",
-    name: "The Witch-in-Training",
-    description: "Wise beyond their years, always learning and searching for hidden power.",
-    image: "/images/witch.jpg",
-    story: `In a secluded glen, where the veil between worlds was thin, the Witch-in-Training practiced their craft. With each spell cast and potion brewed, they grew in wisdom and strength. Their journey was one of discovery, learning that true magic comes from within and that every challenge is an opportunity for growth.`
+    id: "littlemermaid",
+    name: "Little Mermaid",
+    description: "Love at the cost of self.",
+    image: "/images/littlemermaid.png",
+    story: `A young mermaid longs to live in the human world and falls in love with a mortal prince. She sacrifices her voice for a chance to walk on land, but the price of her wish is steep. When the prince falls for another, she faces a choice between saving herself or staying true to her love—ultimately choosing selflessness over revenge.`
   },
 ];
