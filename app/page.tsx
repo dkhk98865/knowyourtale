@@ -30,6 +30,23 @@ export default function HomePage() {
           </Link>
         ))}
       </section>
+      <section className="bg-gray-100 py-12 mt-20">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Unlock All Characters and Stories
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Subscribe now to explore the full cast of fairy tale protagonists and their stories.
+          </p>
+          <a
+            href="/subscription"
+            className="inline-block bg-black text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-800 transition"
+          >
+            View Subscription Plans
+          </a>
+        </div>
+      </section>
+
     </main>
   );
 }
