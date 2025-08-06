@@ -3,6 +3,7 @@
 import { characters } from '@/types/characters';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import Chat from '@/components/chat';
 
 type Props = {
   params: { id: string };
@@ -40,7 +41,8 @@ export default function StoryPage({ params }: Props) {
         <h2 className="text-2xl font-semibold mb-4">Chat with the Tale</h2>
         {/* Placeholder — this is where we’ll mount the AI chat */}
         <div className="bg-gray-100 rounded-lg p-4 text-gray-600 italic">
-          Coming soon: Ask the tale questions about your path, struggle, or dreams...
+          Ask the tale questions about your path, struggle, or dreams...
+        <Chat />
         </div>
       </div>
     </div>
