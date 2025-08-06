@@ -3,30 +3,39 @@
 import { useState, useEffect, useRef } from 'react';
 
 type Message = {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
   content: string;
 };
 
-export default function Chat() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+type ChatProps = {
+    characterName: string;
+    characterDescription: string;
+};
+
+export default function Chat( { characterName, characterDescription }: ChatProps) {
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [input, setInput] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom on new message
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
+    const systemPrompt = {
+        role: 'system' as const,
+        content: `You are ${characterName}, a character from a fairy tale. Speak and respond like ${characterName} would, based on the story and description: ${characterDescription}. Your role is to engage in conversation with users, answering their questions and providing insights based on your story and experiences. You are kind, wise, and always ready to share the magic of your tale.`
+    }
+
+    const sendMessage = async () => {
+        if (!input.trim()) return;
 
     const userMessage = { role: 'user', content: input.trim() };
     setMessages((prev) => [
         ...prev,
         { role: 'user' as const, content: input.trim() }
     ]);
-
     setInput('');
     setIsLoading(true);
 
@@ -34,7 +43,7 @@ export default function Chat() {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [...messages, userMessage] }),
+        body: JSON.stringify({ messages: [systemPrompt, ...messages, userMessage] }),
       });
       const data = await response.json();
 
@@ -46,15 +55,15 @@ export default function Chat() {
           { role: 'assistant', content: 'Sorry, something went wrong.' },
         ]);
       }
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        { role: 'assistant', content: 'Network error, please try again.' },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      } catch {
+        setMessages((prev) => [
+          ...prev,
+          { role: 'assistant', content: 'Network error, please try again.' },
+        ]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
   const onEnterPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {

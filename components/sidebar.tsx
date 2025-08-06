@@ -8,7 +8,7 @@ export default function Sidebar() {
 
   const pages = [
     { name: 'Home', href: '/' },
-    { name: 'Select Character', href: '/select' },
+    { name: 'Characters', href: '/select' },
     // add other pages as needed
   ];
 

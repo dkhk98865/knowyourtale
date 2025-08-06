@@ -23,7 +23,7 @@ export default function StoryPage({ params }: Props) {
         <p className="text-gray-600">{character.description}</p>
       </div>
 
-      <div className="relative w-full h-64 mb-8 rounded-lg overflow-hidden">
+      <div className="relative w-full h-190 mb-8 rounded-lg overflow-hidden">
         <Image
           src={character.image}
           alt={character.name}
@@ -42,7 +42,9 @@ export default function StoryPage({ params }: Props) {
         {/* Placeholder — this is where we’ll mount the AI chat */}
         <div className="bg-gray-100 rounded-lg p-4 text-gray-600 italic">
           Ask the tale questions about your path, struggle, or dreams...
-        <Chat />
+        <Chat 
+          characterName={character.name}
+          characterDescription={character.description}/>
         </div>
       </div>
     </div>

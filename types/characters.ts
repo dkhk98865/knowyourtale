@@ -1,18 +1,18 @@
-// types/archetypes.ts
+// types/characters.ts
 export const characters = [
   {
-    id: "dreamer",
-    name: "The Dreamer",
-    description: "A gentle soul with eyes toward the stars and a heart full of wonder.",
-    image: "/images/dreamer.jpg",
-    story: `Once upon a time, in a land where dreams were woven into the fabric of reality, there lived a Dreamer. This Dreamer had a heart that beat in rhythm with the stars, always seeking the magic hidden in the mundane. They wandered through enchanted forests and across shimmering lakes, collecting stories and whispers of ancient wisdom.`
+    id: "snowwhite",
+    name: "Snow White",
+    description: "Innocence that outlived envy.",
+    image: "/images/snowwhite.png",
+    story: `Once upon a time, in a kingdom veiled in mirrors and whispers, lived a Maiden of radiant grace. Her beauty stirred envy, and envy summoned danger. Banished by betrayal, she wandered into the wild, where kindness took the shape of dwarfs and refuge grew beneath the trees. Though death kissed her lips, it could not claim her spirit — for light, once dimmed, will rise again.`
   },
   {
-    id: "trickster",
-    name: "The Trickster",
-    description: "Clever, curious, and always dancing on the edge of chaos and fun.",
-    image: "/images/trickster.jpg",
-    story: `In a world where laughter was the language of the gods, the Trickster thrived. With a mischievous grin and a twinkle in their eye, they turned the ordinary into the extraordinary. Their pranks were legendary, but beneath the laughter lay a wisdom that could unravel the deepest mysteries of life.`
+    id: "cinderella",
+    name: "Cinderella",
+    description: "From ashes to royalty.",
+    image: "/images/cinderella.png",
+    story: `After losing her parents, a kind young woman is forced into servitude by her cruel stepfamily. Despite her hardships, she remains gentle and hopeful. With the help of magical aid, she attends a royal ball in disguise, capturing the prince’s heart. When the magic fades, her true identity is revealed, and she rises from obscurity to become queen.`
   },
   {
     id: "royal",
