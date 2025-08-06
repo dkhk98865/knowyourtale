@@ -16,16 +16,51 @@ export const characters = [
   },
   {
     id: "sleepingbeauty",
-    name: "Sleeping Beauty",
+    name: "Aurora",
     description: "A cursed slumber, awakened by destiny",
     image: "/images/sleepingbeauty.png",
     story: `A princess is cursed at birth to fall into a deep sleep on her sixteenth birthday. Hidden away for protection, the curse is fulfilled despite all efforts. After years in enchanted slumber, she is awakened by true love’s kiss, breaking the spell and restoring peace to the kingdom.`
   },
   {
     id: "littlemermaid",
-    name: "Little Mermaid",
+    name: "Ariel",
     description: "Love at the cost of self.",
     image: "/images/littlemermaid.png",
     story: `A young mermaid longs to live in the human world and falls in love with a mortal prince. She sacrifices her voice for a chance to walk on land, but the price of her wish is steep. When the prince falls for another, she faces a choice between saving herself or staying true to her love—ultimately choosing selflessness over revenge.`
+  },
+  {
+    id: "beautyandthebeast",
+    name: "Belle",
+    description: "Love that sees beyond appeearances.",
+    image: "/images/beautyandthebeast.png",
+    story: `A bright and independent young woman trades her freedom to save her father, becoming a prisoner in a mysterious castle. There, she discovers that the Beast, once a prince, is under a powerful curse. Through patience, compassion, and courage, Belle sees beyond his monstrous form—and her love ultimately breaks the spell.`
+  },
+  {
+    id: "rapunzel",
+    name: "Rapunzel",
+    description: "Freedon found in a towered prison.",
+    image: "/images/rapunzel.png",
+    story: `Taken from her parents as a baby, a girl with magical hair is locked away in a tower by a sorceress. Isolated from the world, she grows curious and brave. When a stranger stumbles upon her hidden prison, Rapunzel dares to dream of freedom—and through love, loss, and discovery, she escapes the tower to reclaim her life.`
+  },
+  {
+    id: "snowqueen",
+    name: "Gerda",
+    description: "Love that defies the coldest magic.",
+    image: "/images/gerda.png",
+    story: `When a boy falls under the spell of the Snow Queen and is taken to her frozen palace, his closest friend, a brave and loving girl, sets out on a long and perilous journey to rescue him. Guided by her unwavering heart, she overcomes magical trials, melts the ice in his soul, and breaks the Snow Queen’s hold through the power of love and loyalty.`
+  },
+  {
+    id: "mulan",
+    name: "Mulan",
+    description: "Honor forced in borrowed armor.",
+    image: "/images/mulan.png",
+    story: `To spare her elderly father from conscription, Mulan disguises herself as a man and joins the army in his place. For over a decade, she serves with distinction, earning the respect of her comrades without revealing her identity. When the war ends, she declines official honors and returns home. Only then do her fellow soldiers learn that the brave warrior they fought beside was a woman.`
+  },
+  {
+    id: "aliceinwonderland",
+    name: "Alice",
+    description: "A girl who questioned the world--and made her own.",
+    image: "/images/aliceinwonderland.png",
+    story: `After following a talking White Rabbit, a curious girl named Alice falls down a rabbit hole into a fantastical world. There, she encounters bizarre creatures, shifting logic, and strange rules that challenge her sense of reality. Through wit and courage, she navigates chaos and contradiction, ultimately finding her way back home—with her imagination forever changed.`
   },
 ];
