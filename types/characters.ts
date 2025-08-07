@@ -63,4 +63,25 @@ export const characters = [
     image: "/images/aliceinwonderland.png",
     story: `After following a talking White Rabbit, a curious girl named Alice falls down a rabbit hole into a fantastical world. There, she encounters bizarre creatures, shifting logic, and strange rules that challenge her sense of reality. Through wit and courage, she navigates chaos and contradiction, ultimately finding her way back home—with her imagination forever changed.`
   },
+  {
+    id: "wizardofoz",
+    name: "Dorothy",
+    description: "A storm swept her away, but she found her way home with courage.",
+    image: "/images/dorothygale.png",
+    story: `After a cyclone carries her from Kansas to the magical Land of Oz, Dorothy Gale sets out on a journey to find her way back home. Along the yellow brick road, she befriends a scarecrow, a tin man, and a cowardly lion—all seeking something within themselves. Facing witches, illusions, and unexpected truths, Dorothy learns that the power to return was within her all along.`
+  },
+  {
+    id: "wendydarling",
+    name: "Wendy",
+    description: "A storyteller who mothered the lost and remembered the way home.",
+    image: "/images/wendydarling.png",
+    story: `Wendy Darling, a curious and nurturing girl, is swept away to Neverland by Peter Pan, a boy who refuses to grow up. There, she becomes a mother figure to the Lost Boys, faces pirates and fairies, and explores the wonders and dangers of eternal childhood. In time, she chooses to return home—carrying with her the magic of imagination and the quiet courage to grow up.`
+  },
+  {
+    id: "littleredridinghood",
+    name: "Little Red Riding Hood",
+    description: "Curiousity led her into darkness--and back out wiser.",
+    image: "/images/littleredridinghood.png",
+    story: `Wendy Darling, a curious and nurturing girl, is swept away to Neverland by Peter Pan, a boy who refuses to grow up. There, she becomes a mother figure to the Lost Boys, faces pirates and fairies, and explores the wonders and dangers of eternal childhood. In time, she chooses to return home—carrying with her the magic of imagination and the quiet courage to grow up.`
+  },
 ];
