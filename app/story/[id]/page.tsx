@@ -4,17 +4,41 @@ import { characters } from '@/types/characters';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Chat from '@/components/chat';
+import { auth } from '@clerk/nextjs/server';
+import { supabase } from '@/lib/supabaseclient';
+import { Message } from '@/types/messages';
 
 type Props = {
   params: { id: string };
 };
 
-export default function StoryPage({ params }: Props) {
-  const character = characters.find((a) => a.id === params.id);
+export default async function StoryPage({ 
+    params,
+    searchParams, 
+  }: {
+    params: { id: string };
+    searchParams: { fromHistory?: string };
+  }) {
+    const character = characters.find((a) => a.id === params.id);
 
-  if (!character) {
-    return notFound();
-  }
+    if (!character) {
+      return notFound();
+    }
+
+    let pastMessages: Message[] = [];
+    if (searchParams.fromHistory) {
+      const { userId } = await auth();
+      if (userId) {
+        const { data } = await supabase
+          .from("messages")
+          .select("role, content")
+          .eq("user_id", userId)
+          .eq("character_id", params.id)
+          .order("created_at", { ascending: true });
+
+        pastMessages = data || [];
+      }
+    }
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
@@ -44,7 +68,9 @@ export default function StoryPage({ params }: Props) {
           Ask the tale questions about your path, struggle, or dreams...
         <Chat 
           characterName={character.name}
-          characterDescription={character.description}/>
+          characterDescription={character.description}
+          characterId={character.id} 
+          initialMessages={pastMessages} />
         </div>
       </div>
     </div>

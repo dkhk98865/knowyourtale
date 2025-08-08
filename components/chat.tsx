@@ -1,19 +1,17 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-
-type Message = {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-};
+import { Message } from '@/types/messages';
 
 type ChatProps = {
     characterName: string;
     characterDescription: string;
+    characterId: string;
+    initialMessages?: Message[];
 };
 
-export default function Chat( { characterName, characterDescription }: ChatProps) {
-    const [messages, setMessages] = useState<Message[]>([]);
+export default function Chat( { characterName, characterDescription, characterId, initialMessages = [] }: ChatProps) {
+    const [messages, setMessages] = useState<Message[]>(initialMessages);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -43,7 +41,9 @@ export default function Chat( { characterName, characterDescription }: ChatProps
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [systemPrompt, ...messages, userMessage] }),
+        body: JSON.stringify({ messages: [systemPrompt, ...messages, userMessage],
+        characterId,
+         }),
       });
       const data = await response.json();
 
