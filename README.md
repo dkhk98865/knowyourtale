@@ -20,6 +20,34 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Authentication Setup
+
+This project includes Supabase authentication with email/password and Google OAuth. To enable authentication features:
+
+1. Create a Supabase project at [https://supabase.com](https://supabase.com)
+2. Get your project URL and anon key from the project settings
+3. Create a `.env.local` file in the root directory with:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url_here
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+```
+
+4. Enable Email authentication in your Supabase project dashboard
+5. Configure your email templates if desired
+6. For Google OAuth:
+   - Enable Google provider in Authentication > Providers
+   - Add your Google OAuth credentials
+   - Set redirect URL to: `https://your-domain.com/auth/callback`
+
+## Features
+
+- **Character Selection**: Choose from various fairy tale characters
+- **Interactive Chat**: Chat with AI-powered fairy tale characters
+- **Chat History**: Save and review your conversations
+- **User Authentication**: Sign up, sign in, and manage your account
+- **Responsive Design**: Works on desktop and mobile devices
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

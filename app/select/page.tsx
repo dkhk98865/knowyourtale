@@ -42,7 +42,7 @@ export default function SelectCharacterPage() {
             </div>
             <div className="p-6">
               <h3 className="text-xl font-semibold mb-3 text-center font-['Playfair_Display']">{character.name}</h3>
-              <p className="text-sm text-gray-700 text-center leading-relaxed">{character.description}</p>
+              <p className="text-lg text-gray-700 text-center leading-relaxed">{character.description}</p>
             </div>
           </Link>
         ))}

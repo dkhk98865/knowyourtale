@@ -247,7 +247,7 @@ export default function HistoryPage() {
                     
                     {/* Action Buttons */}
                     <div className="flex gap-2">
-                      <Link href={`/story/${session.character_id}`}>
+                      <Link href={`/story/${session.character_id}?session=${session.session_id}`}>
                         <button className="magical-button magical-glow text-sm px-4 py-2">
                           💬 Continue Chat
                         </button>

@@ -10,13 +10,15 @@ type ChatProps = {
     characterDescription: string;
     characterId: string;
     initialMessages?: Message[];
+    sessionId?: string; // Add optional sessionId prop
 };
 
-export default function Chat( { characterName, characterDescription, characterId, initialMessages = [] }: ChatProps) {
+export default function Chat( { characterName, characterDescription, characterId, initialMessages = [], sessionId: propSessionId }: ChatProps) {
     const [messages, setMessages] = useState<Message[]>(initialMessages);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [sessionId, setSessionId] = useState<string>('');
+    const [isContinuingConversation, setIsContinuingConversation] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     // Generate or get session ID for this chat
@@ -32,9 +34,15 @@ export default function Chat( { characterName, characterDescription, characterId
             }
         };
         
-        const currentSessionId = getOrCreateSessionId();
+        const currentSessionId = propSessionId || getOrCreateSessionId();
+        
+        // If we have a prop session ID, store it in localStorage for this character
+        if (propSessionId) {
+            localStorage.setItem(`session_${characterId}`, propSessionId);
+        }
+        
         setSessionId(currentSessionId);
-    }, [characterId]);
+    }, [characterId, propSessionId]);
 
     // Load chat history from Supabase
     useEffect(() => {
@@ -59,15 +67,36 @@ export default function Chat( { characterName, characterDescription, characterId
                         role: msg.role as 'user' | 'assistant',
                         content: msg.content
                     }));
-                    setMessages(messagesFromDB);
+                    // Merge initial messages with loaded history, avoiding duplicates
+                    const allMessages = [...initialMessages];
+                    messagesFromDB.forEach(dbMsg => {
+                        // Only add if not already present in initial messages
+                        const exists = allMessages.some(initMsg => 
+                            initMsg.role === dbMsg.role && initMsg.content === dbMsg.content
+                        );
+                        if (!exists) {
+                            allMessages.push(dbMsg);
+                        }
+                    });
+                    setMessages(allMessages);
+                    setIsContinuingConversation(true);
+                } else if (initialMessages.length > 0) {
+                    // If no DB history but we have initial messages, use those
+                    setMessages(initialMessages);
+                    setIsContinuingConversation(false);
                 }
             } catch (error) {
                 console.error('Error loading chat history:', error);
+                // Fallback to initial messages if loading fails
+                if (initialMessages.length > 0) {
+                    setMessages(initialMessages);
+                    setIsContinuingConversation(false);
+                }
             }
         };
 
         loadChatHistory();
-    }, [sessionId, characterId]);
+    }, [sessionId, characterId, initialMessages]);
 
   // Scroll to bottom on new message
     useEffect(() => {
@@ -210,6 +239,13 @@ export default function Chat( { characterName, characterDescription, characterId
       </div>
       
       <div className="space-y-4 mb-4 max-h-96 overflow-y-auto custom-scrollbar">
+        {isContinuingConversation && (
+          <div className="text-center mb-4">
+            <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded-lg text-sm">
+              ✨ Continuing your previous conversation with {characterName} ✨
+            </div>
+          </div>
+        )}
         {messages.map((message, index) => (
           <div
             key={index}
@@ -218,7 +254,7 @@ export default function Chat( { characterName, characterDescription, characterId
             <div
               className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                 message.role === 'user'
-                  ? 'bg-accent-gold text-white'
+                  ? 'bg-accent-gold text-black'
                   : 'bg-white border border-accent-brown text-gray-800'
               }`}
             >

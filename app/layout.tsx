@@ -1,20 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { Crimson_Text, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/sidebar";
 import Footer from "@/components/footer";
-
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import Header from "@/components/header";
 
 const crimsonText = Crimson_Text({
   variable: "--font-crimson-text",
@@ -42,8 +31,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${crimsonText.variable} ${playfairDisplay.variable} antialiased`}
+        className={`${crimsonText.variable} ${playfairDisplay.variable} antialiased`}
       >
+          <Header />
           <Sidebar />
           <div className="pt-16">
             {children}

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { characters } from '@/types/characters';
 import Image from 'next/image';
 
+
 export default function HomePage() {
   const topFour = characters.slice(0, 4);
 
