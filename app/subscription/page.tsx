@@ -34,14 +34,40 @@ export default function SubscriptionPage() {
     return () => subscription.unsubscribe();
   }, [supabase]);
 
-  const handleSubscribe = (plan: string) => {
+  const handleSubscribe = async (plan: string) => {
     if (!user) {
       alert('Please sign in to subscribe to a plan');
       return;
     }
-    
-    // For now, just show an alert. In production, you'd integrate with Stripe/payment processor
-    alert(`Subscribing to ${plan} plan - Payment integration coming soon!`);
+
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          plan: plan.toLowerCase(),
+          successUrl: `${window.location.origin}/subscription/success`,
+          cancelUrl: `${window.location.origin}/subscription`,
+        }),
+      });
+
+      const { url, error } = await response.json();
+
+      if (error) {
+        alert(`Error: ${error}`);
+        return;
+      }
+
+      if (url) {
+        // Redirect to Stripe Checkout
+        window.location.href = url;
+      }
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      alert('Failed to create checkout session. Please try again.');
+    }
   };
 
   return (
