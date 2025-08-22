@@ -1,14 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-export default function SubscriptionSuccessPage() {
+function SubscriptionSuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     if (sessionId) {
@@ -109,5 +108,19 @@ export default function SubscriptionSuccessPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function SubscriptionSuccessPage() {
+  return (
+    <Suspense fallback={
+      <main className="max-w-4xl mx-auto px-4 py-12 text-center">
+        <div className="magical-sparkle">⏳</div>
+        <h1 className="storybook-title text-4xl mb-4">Loading...</h1>
+        <p className="text-gray-600">Please wait while we prepare your success page!</p>
+      </main>
+    }>
+      <SubscriptionSuccessContent />
+    </Suspense>
   );
 }
