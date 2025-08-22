@@ -10,6 +10,7 @@ export default function Sidebar() {
     { name: '🏠 Home', href: '/', icon: '🏠' },
     { name: '🎭 Characters', href: '/select', icon: '🎭' },
     { name: '📚 History', href: '/history', icon: '📚' },
+    { name: '🗝️ Upgrade', href: '/subscription', icon: '🗝️' },
     { name: '⚙️ Settings', href: '/settings', icon: '⚙️' },
     { name: '💌 Contact', href: '/contact', icon: '💌' },
   ];
