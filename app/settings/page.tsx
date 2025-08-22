@@ -189,18 +189,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Debug Information */}
-      <div className="mt-8 storybook-card page-turn p-6">
-        <div className="text-center mb-4">
-          <h3 className="storybook-subtitle text-lg">Debug Information</h3>
-        </div>
-        <div className="bg-gray-50 p-4 rounded-lg text-sm">
-          <p><strong>User Object:</strong></p>
-          <pre className="mt-2 text-xs overflow-x-auto">
-            {JSON.stringify(user, null, 2)}
-          </pre>
-        </div>
-      </div>
+
     </main>
   );
 }
