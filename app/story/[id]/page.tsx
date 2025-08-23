@@ -34,6 +34,26 @@ export default function StoryPage({
       router.push('/subscription');
     };
 
+    // Social sharing functions
+    const shareOnFacebook = (characterName: string, description: string) => {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(`I just discovered my fairy tale personality type is ${characterName}! ${description} Take the quiz at Know Your Tale!`);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank');
+    };
+
+    const shareOnTwitter = (characterName: string, description: string) => {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(`I just discovered my fairy tale personality type is ${characterName}! ${description} Take the quiz at Know Your Tale!`);
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    };
+
+    const shareOnLinkedIn = (characterName: string, description: string) => {
+      const url = encodeURIComponent(window.location.href);
+      const title = encodeURIComponent(`My Fairy Tale Personality: ${characterName}`);
+      const summary = encodeURIComponent(`I just discovered my fairy tale personality type is ${characterName}! ${description}`);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${title}&summary=${summary}`, '_blank');
+    };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="parchment-content">
@@ -58,9 +78,32 @@ export default function StoryPage({
               <p className="text-gray-800 text-xl font-semibold mb-4 bg-white/80 px-4 py-2 rounded-lg border border-accent-gold">
                 {character.description}
               </p>
-              <p className="text-gray-700">
-                Start a conversation below to connect with your fairy tale spirit and discover what wisdom {character.name} has to share with you!
+              <p className="text-gray-700 mb-4">
+                Share your fairy tale personality type with friends and family!
               </p>
+              <div className="flex justify-center space-x-4 mb-4">
+                <button 
+                  onClick={() => shareOnFacebook(character.name, character.description)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2"
+                >
+                  <span>📘</span>
+                  <span>Facebook</span>
+                </button>
+                <button 
+                  onClick={() => shareOnTwitter(character.name, character.description)}
+                  className="bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2"
+                >
+                  <span>🐦</span>
+                  <span>Twitter</span>
+                </button>
+                <button 
+                  onClick={() => shareOnLinkedIn(character.name, character.description)}
+                  className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2"
+                >
+                  <span>💼</span>
+                  <span>LinkedIn</span>
+                </button>
+              </div>
               <div className="magical-sparkle text-2xl mt-4">✨</div>
             </div>
           </div>

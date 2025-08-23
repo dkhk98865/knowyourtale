@@ -40,24 +40,21 @@ export default function HomePage() {
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {characters.map((character) => (
-            <div key={character.id} className="storybook-card page-turn p-4 text-center">
-              <div className="relative w-full h-40 rounded-lg overflow-hidden mb-3">
-                <Image
-                  src={character.image}
-                  alt={character.name}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+            <Link key={character.id} href={`/story/${character.id}`} className="block">
+              <div className="storybook-card page-turn p-4 text-center hover:scale-105 transition-transform duration-200 cursor-pointer">
+                <div className="relative w-full h-40 rounded-lg overflow-hidden mb-3">
+                  <Image
+                    src={character.image}
+                    alt={character.name}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                </div>
+                <h3 className="storybook-subtitle text-lg mb-2">{character.name}</h3>
+                <p className="text-gray-600 text-sm">{character.description}</p>
               </div>
-              <h3 className="storybook-subtitle text-lg mb-2">{character.name}</h3>
-              <p className="text-gray-600 text-sm mb-3">{character.description}</p>
-              <Link href={`/story/${character.id}`}>
-                <button className="magical-button magical-glow text-sm px-4 py-2">
-                  📖 Learn More
-                </button>
-              </Link>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -77,9 +74,9 @@ export default function HomePage() {
               🧙‍♀️ Take the Quiz 🧙‍♀️
             </button>
           </Link>
-          <Link href="/select">
+          <Link href="/reports">
             <button className="magical-button magical-glow">
-              🎭 Browse All Characters 🎭
+              📊 View All Reports 📊
             </button>
           </Link>
         </div>

@@ -75,19 +75,19 @@ function SubscriptionSuccessContent() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6 mb-8">
-        <Link href="/select">
+        <Link href="/reports">
           <div className="storybook-card page-turn p-6 hover:shadow-lg transition-shadow cursor-pointer">
-            <div className="magical-sparkle text-4xl mb-4">🎭</div>
-            <h3 className="storybook-subtitle text-xl mb-3">Meet All Characters</h3>
-            <p className="text-gray-600">Start conversations with all available fairy tale characters</p>
+            <div className="magical-sparkle text-4xl mb-4">📊</div>
+            <h3 className="storybook-subtitle text-xl mb-3">View All Reports</h3>
+            <p className="text-gray-600">Access detailed reports for all fairy tale personality types</p>
           </div>
         </Link>
 
-        <Link href="/select">
+        <Link href="/reports">
           <div className="storybook-card page-turn p-6 hover:shadow-lg transition-shadow cursor-pointer">
-            <div className="magical-sparkle text-4xl mb-4">🎭</div>
-            <h3 className="storybook-subtitle text-xl mb-3">Explore All Characters</h3>
-            <p className="text-gray-600">Discover all twelve fairy tale personalities and their stories</p>
+            <div className="magical-sparkle text-4xl mb-4">📊</div>
+            <h3 className="storybook-subtitle text-xl mb-3">Explore All Reports</h3>
+            <p className="text-gray-600">Discover all twelve fairy tale personalities and their detailed insights</p>
           </div>
         </Link>
       </div>

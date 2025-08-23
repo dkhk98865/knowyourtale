@@ -28,8 +28,8 @@ export default function Footer() {
               <Link href="/" className="block text-gray-600 hover:text-accent-brown transition-colors duration-200 text-sm">
                 🏠 Home
               </Link>
-              <Link href="/select" className="block text-gray-600 hover:text-accent-brown transition-colors duration-200 text-sm">
-                🎭 Characters
+              <Link href="/reports" className="block text-gray-600 hover:text-accent-brown transition-colors duration-200 text-sm">
+                📊 Reports
               </Link>
 
               <Link href="/subscription" className="block text-gray-600 hover:text-accent-brown transition-colors duration-200 text-sm">

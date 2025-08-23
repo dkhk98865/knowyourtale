@@ -9,7 +9,7 @@ export default function Sidebar() {
   const pages = [
     { name: '🏠 Home', href: '/', icon: '🏠' },
     { name: '🧙‍♀️ Quiz', href: '/quiz', icon: '🧙‍♀️' },
-    { name: '🎭 Characters', href: '/select', icon: '🎭' },
+    { name: '📊 Reports', href: '/reports', icon: '📊' },
     { name: '🗝️ Upgrade', href: '/subscription', icon: '🗝️' },
     { name: '⚙️ Settings', href: '/settings', icon: '⚙️' },
     { name: '💌 Contact', href: '/contact', icon: '💌' },
