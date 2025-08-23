@@ -6,9 +6,10 @@ import { createClient } from '@/lib/supabase-client';
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onAuthSuccess?: () => void;
 }
 
-export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
+export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
@@ -46,7 +47,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         });
         if (error) throw error;
         setMessage('Successfully signed in!');
-        setTimeout(() => onClose(), 1500);
+        setTimeout(() => {
+          onClose();
+          if (onAuthSuccess) {
+            onAuthSuccess();
+          }
+        }, 1500);
       }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
@@ -64,10 +70,12 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`
+          redirectTo: `${window.location.origin}/auth/callback?redirectTo=/subscription`
         }
       });
       if (error) throw error;
+      // Close modal since user will be redirected
+      onClose();
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Google sign-in failed';
       setMessage(errorMessage);

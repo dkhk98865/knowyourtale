@@ -1,36 +1,50 @@
 // app/story/[id]/page.tsx
 
+'use client';
+
 import { characters } from '@/types/characters';
 import { notFound } from 'next/navigation';
-
 import Image from 'next/image';
+import AuthModal from '@/components/auth-modal';
+import { useState, use } from 'react';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ quiz?: string }>;
 };
 
-export default async function StoryPage({ 
+export default function StoryPage({ 
     params,
     searchParams,
   }: Props) {
-    const { id } = await params;
-    const { quiz } = await searchParams;
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const router = useRouter();
+    
+    const { id } = use(params);
+    const { quiz } = use(searchParams);
     const character = characters.find((a) => a.id === id);
 
     if (!character) {
       return notFound();
     }
 
-    // Chat functionality is maintained (only auth was removed)
+    const handleAuthSuccess = () => {
+      setIsAuthModalOpen(false);
+      router.push('/subscription');
+    };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="parchment-content">
-        <div className="magical-sparkle">📖</div>
-        <h1 className="storybook-title text-5xl text-center mb-8">{character.name}</h1>
-        <div className="storybook-divider mb-8"></div>
-        <div className="magical-sparkle">✨</div>
+        {/* Personality Type Header */}
+        <div className="text-center mb-8">
+          <div className="magical-sparkle text-3xl mb-4">🌟</div>
+          <h2 className="storybook-subtitle text-2xl mb-3 text-accent-brown">Your Fairy Tale Personality Type Is...</h2>
+          <h1 className="storybook-title text-6xl mb-4 text-accent-gold">{character.name}</h1>
+          <div className="storybook-divider mb-4"></div>
+          <div className="magical-sparkle text-2xl">✨</div>
+        </div>
         
         {/* Quiz Completion Banner */}
         {quiz === 'true' && (
@@ -60,15 +74,17 @@ export default async function StoryPage({
               <h2 className="storybook-subtitle text-xl mb-3">Character Portrait</h2>
               <div className="magical-sparkle">✨</div>
             </div>
-            <div className="relative w-full max-w-md mx-auto h-96 rounded-lg overflow-hidden mb-6">
-              <Image
-                src={character.image}
-                alt={character.name}
-                fill
-                className="object-cover"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+            <div className="flex justify-center mb-6">
+              <div className="relative w-full max-w-lg rounded-lg overflow-hidden">
+                <Image
+                  src={character.image}
+                  alt={character.name}
+                  width={600}
+                  height={800}
+                  className="w-full h-auto"
+                  priority
+                />
+              </div>
             </div>
           </div>
           
@@ -94,8 +110,54 @@ export default async function StoryPage({
             <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto">{character.story}</p>
           </div>
           
+          {/* Full Report CTA */}
+          <div className="storybook-card page-turn p-8 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-accent-gold">
+            <div className="text-center">
+              <div className="magical-sparkle text-5xl mb-6">📊</div>
+              <h2 className="storybook-subtitle text-4xl mb-6 text-accent-gold font-bold">Would you like a full report of the fairy tale personality analysis?</h2>
+              
+              <div className="grid md:grid-cols-3 gap-8 mb-8 text-left">
+                <div className="text-center">
+                  <div className="magical-sparkle text-3xl mb-3">🎭</div>
+                  <h3 className="font-bold text-xl mb-3 text-accent-brown">Get Access To All Twelve Character Reports</h3>
+                  <p className="text-gray-700 text-base font-medium">Discover your connection to every fairy tale personality type</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="magical-sparkle text-3xl mb-3">📧</div>
+                  <h3 className="font-bold text-xl mb-3 text-accent-brown">Get Weekly Emails with Prompts</h3>
+                  <p className="text-gray-700 text-base font-medium">Reflect on your personality and life with guided prompts</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="magical-sparkle text-3xl mb-3">📖</div>
+                  <h3 className="font-bold text-xl mb-3 text-accent-brown">Start a Journal On The Reports</h3>
+                  <p className="text-gray-700 text-base font-medium">Track your growth with weekly email prompts & insights</p>
+                </div>
+              </div>
+              
+              <div className="magical-sparkle text-3xl mb-6">✨</div>
+              
+              <button 
+                onClick={() => setIsAuthModalOpen(true)}
+                className="magical-button magical-glow text-xl px-10 py-5 inline-block font-bold"
+              >
+                🗝️ Unlock Full Personality Analysis 🗝️
+              </button>
+              
+              <div className="magical-sparkle text-2xl mt-6">🌟</div>
+            </div>
+          </div>
+          
         </div>
       </div>
+      
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)}
+        onAuthSuccess={handleAuthSuccess}
+      />
     </div>
   );
 }
