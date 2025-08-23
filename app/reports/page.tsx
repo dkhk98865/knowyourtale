@@ -1,26 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { characters } from '@/types/characters';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase-client';
 import AuthModal from '@/components/auth-modal';
-import { useRouter } from 'next/navigation';
+import { User } from '@supabase/supabase-js';
 
 export default function ReportsPage() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [subscription, setSubscription] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [subscription, setSubscription] = useState<{ status: string; user_email: string } | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
   const supabase = createClient();
 
-  useEffect(() => {
-    checkUserAndSubscription();
-  }, []);
-
-  const checkUserAndSubscription = async () => {
+  const checkUserAndSubscription = useCallback(async () => {
     try {
       // Check if user is signed in
       const { data: { user } } = await supabase.auth.getUser();
@@ -50,7 +45,11 @@ export default function ReportsPage() {
       console.error('Error checking user and subscription:', error);
       setLoading(false);
     }
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    checkUserAndSubscription();
+  }, [checkUserAndSubscription]);
 
   const handleAuthSuccess = () => {
     setIsAuthModalOpen(false);
