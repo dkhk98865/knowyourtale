@@ -31,9 +31,7 @@ export default function Footer() {
               <Link href="/select" className="block text-gray-600 hover:text-accent-brown transition-colors duration-200 text-sm">
                 🎭 Characters
               </Link>
-              <Link href="/history" className="block text-gray-600 hover:text-accent-brown transition-colors duration-200 text-sm">
-                📚 History
-              </Link>
+
               <Link href="/subscription" className="block text-gray-600 hover:text-accent-brown transition-colors duration-200 text-sm">
                 🗝️ Upgrade
               </Link>

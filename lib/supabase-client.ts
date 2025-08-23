@@ -1,7 +1,9 @@
 import { createBrowserClient } from '@supabase/ssr'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
 // Mock Supabase client for testing when environment variables are not available
-const createMockClient = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createMockClient = (): any => {
   return {
     from: () => ({
       select: () => ({
@@ -26,10 +28,11 @@ const createMockClient = () => {
       signInWithOAuth: () => Promise.resolve({ data: { provider: 'google', url: null }, error: null }),
       signOut: () => Promise.resolve({ error: null })
     }
-  };
+  } as unknown as SupabaseClient;
 };
 
-export function createClient() {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function createClient(): any {
   // Check if environment variables are available
   if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return createBrowserClient(
@@ -39,7 +42,7 @@ export function createClient() {
   } else {
     // Return mock client for testing
     console.warn('Supabase environment variables not found, using mock client');
-    return createMockClient() as ReturnType<typeof createBrowserClient>;
+    return createMockClient();
   }
 }
 

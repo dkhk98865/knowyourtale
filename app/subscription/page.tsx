@@ -86,7 +86,7 @@ export default function SubscriptionPage() {
         <h1 className="storybook-title text-5xl mb-6">Choose Your Adventure</h1>
         <div className="storybook-divider"></div>
         <p className="storybook-subtitle text-xl mb-8">
-          Unlock the full magical experience with unlimited conversations and exclusive features
+          Unlock the full magical experience with unlimited character access and exclusive features
         </p>
         <div className="magical-sparkle">✨</div>
       </section>
@@ -114,11 +114,11 @@ export default function SubscriptionPage() {
               </div>
               <div className="flex items-center space-x-3">
                 <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Unlimited conversations</span>
+                <span className="text-gray-700">Unlimited character insights</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="text-gray-400 text-xl">✗</div>
-                <span className="text-gray-400">Chat history access</span>
+                <span className="text-gray-400">Advanced personality features</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="text-gray-400 text-xl">✗</div>
@@ -162,11 +162,11 @@ export default function SubscriptionPage() {
               </div>
               <div className="flex items-center space-x-3">
                 <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Unlimited conversations</span>
+                <span className="text-gray-700">Unlimited character insights</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Chat history access</span>
+                <span className="text-gray-700">Advanced personality features</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="text-green-500 text-xl">✓</div>
@@ -194,12 +194,12 @@ export default function SubscriptionPage() {
             <div className="magical-sparkle">✨</div>
           </div>
           <p className="text-gray-600 mb-4">
-            Enjoy limited conversations with 3 characters. Perfect for getting started on your magical journey!
+            Enjoy limited access to 3 characters. Perfect for getting started on your magical journey!
           </p>
           <div className="text-sm text-gray-500">
-            • 5 conversations per day<br/>
             • Access to 3 featured characters<br/>
-            • Basic chat functionality
+            • Basic personality insights<br/>
+            • Character stories and descriptions
           </div>
         </div>
       </div>
@@ -236,7 +236,7 @@ export default function SubscriptionPage() {
           <div className="storybook-card page-turn p-6">
             <h3 className="font-semibold mb-3">Is my data secure?</h3>
             <p className="text-gray-600 text-sm">
-              Your privacy and security are our top priorities. All conversations and personal data are encrypted and securely stored.
+              Your privacy and security are our top priorities. All personal data and character information are encrypted and securely stored.
             </p>
           </div>
         </div>

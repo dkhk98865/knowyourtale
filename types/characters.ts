@@ -82,7 +82,7 @@ export const characters = [
       name: "Little Red Riding Hood",
       description: "Curiousity led her into darkness--and back out wiser.",
       image: "/images/littleredridinghood.png",
-      story: `Wendy Darling, a curious and nurturing girl, is swept away to Neverland by Peter Pan, a boy who refuses to grow up. There, she becomes a mother figure to the Lost Boys, faces pirates and fairies, and explores the wonders and dangers of eternal childhood. In time, she chooses to return home—carrying with her the magic of imagination and the quiet courage to grow up.`
+      story: `Little Red Riding Hood goes to visit her sick grandmother but is tricked by a wolf along the way. The wolf gets to Grandma’s house first, disguises himself, and tries to eat her. In the end, Red and her grandmother are saved, teaching a lesson about caution and not trusting strangers.`
     },
   ];
   

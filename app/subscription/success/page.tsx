@@ -55,11 +55,11 @@ function SubscriptionSuccessContent() {
         <div className="space-y-4 mb-8">
           <div className="flex items-center justify-center space-x-3">
             <div className="text-green-500 text-xl">✓</div>
-            <span className="text-gray-700">Unlimited conversations with all characters</span>
+            <span className="text-gray-700">Access to all fairy tale characters</span>
           </div>
           <div className="flex items-center justify-center space-x-3">
             <div className="text-green-500 text-xl">✓</div>
-            <span className="text-gray-700">Priority chat response</span>
+            <span className="text-gray-700">Unlimited personality insights</span>
           </div>
           <div className="flex items-center justify-center space-x-3">
             <div className="text-green-500 text-xl">✓</div>
@@ -83,11 +83,11 @@ function SubscriptionSuccessContent() {
           </div>
         </Link>
 
-        <Link href="/history">
+        <Link href="/select">
           <div className="storybook-card page-turn p-6 hover:shadow-lg transition-shadow cursor-pointer">
-            <div className="magical-sparkle text-4xl mb-4">📚</div>
-            <h3 className="storybook-subtitle text-xl mb-3">View Chat History</h3>
-            <p className="text-gray-600">Access your conversation history and continue previous chats</p>
+            <div className="magical-sparkle text-4xl mb-4">🎭</div>
+            <h3 className="storybook-subtitle text-xl mb-3">Explore All Characters</h3>
+            <p className="text-gray-600">Discover all twelve fairy tale personalities and their stories</p>
           </div>
         </Link>
       </div>
