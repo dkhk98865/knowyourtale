@@ -1,13 +1,14 @@
 'use client';
 
+import { Suspense } from 'react';
 import Link from 'next/link';
 import { characters } from '@/types/characters';
 import Image from 'next/image';
 
-
-export default function HomePage() {
+function HomePageContent() {
   return (
-    <main className="max-w-6xl mx-auto px-4 py-12">
+    <>
+      <main className="max-w-6xl mx-auto px-4 py-12">
       <div className="parchment-content text-center mb-16">
         <div className="magical-sparkle">🔮</div>
         <h1 className="storybook-title text-6xl mb-6">What Fairy Tale Personality Type Are You?</h1>
@@ -83,5 +84,22 @@ export default function HomePage() {
         <div className="magical-sparkle">🌟</div>
       </div>
     </main>
+
+    </>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={
+      <main className="max-w-6xl mx-auto px-4 py-12">
+        <div className="text-center">
+          <div className="magical-sparkle text-4xl mb-6">✨</div>
+          <h1 className="storybook-title text-4xl mb-6">Loading...</h1>
+        </div>
+      </main>
+    }>
+      <HomePageContent />
+    </Suspense>
   );
 }

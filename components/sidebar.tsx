@@ -1,19 +1,46 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase-client';
+import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [supabase] = useState(() => createClient());
 
-  const pages = [
+  useEffect(() => {
+    // Get initial session
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+    };
+
+    getSession();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event: string, session: { user: User | null } | null) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, [supabase]);
+
+  const allPages = [
     { name: '🏠 Home', href: '/', icon: '🏠' },
     { name: '🧙‍♀️ Quiz', href: '/quiz', icon: '🧙‍♀️' },
     { name: '📊 Reports', href: '/reports', icon: '📊' },
+    { name: '📖 Journal', href: '/journal', icon: '📖', requiresAuth: true },
     { name: '🗝️ Upgrade', href: '/subscription', icon: '🗝️' },
-    { name: '⚙️ Settings', href: '/settings', icon: '⚙️' },
+    { name: '⚙️ Settings', href: '/settings', icon: '⚙️', requiresAuth: true },
     { name: '💌 Contact', href: '/contact', icon: '💌' },
   ];
+
+  // Filter pages based on authentication status
+  const pages = allPages.filter(page => !page.requiresAuth || user);
 
   return (
     <>

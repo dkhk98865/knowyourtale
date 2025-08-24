@@ -51,6 +51,13 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
           onClose();
           if (onAuthSuccess) {
             onAuthSuccess();
+          } else {
+            // If no onAuthSuccess callback, redirect to the intended page
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectTo = urlParams.get('redirectTo');
+            if (redirectTo) {
+              window.location.href = redirectTo;
+            }
           }
         }, 1500);
       }
@@ -67,10 +74,14 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
     setMessage('');
 
     try {
+      // Get the current URL to check for redirectTo parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectTo = urlParams.get('redirectTo') || '/subscription';
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?redirectTo=/subscription`
+          redirectTo: `${window.location.origin}/auth/callback?redirectTo=${encodeURIComponent(redirectTo)}`
         }
       });
       if (error) throw error;

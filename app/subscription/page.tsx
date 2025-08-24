@@ -86,7 +86,7 @@ export default function SubscriptionPage() {
         <h1 className="storybook-title text-5xl mb-6">Choose Your Adventure</h1>
         <div className="storybook-divider"></div>
         <p className="storybook-subtitle text-xl mb-8">
-          Unlock detailed personality analysis reports, weekly journaling prompts, and exclusive journaling features
+          Unlock detailed personality analysis reports, weekly journaling prompts, and exclusive journaling features including your personal fairy tale journal
         </p>
         <div className="magical-sparkle">✨</div>
       </section>

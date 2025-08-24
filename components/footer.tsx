@@ -31,7 +31,9 @@ export default function Footer() {
               <Link href="/reports" className="block text-gray-600 hover:text-accent-brown transition-colors duration-200 text-sm">
                 📊 Reports
               </Link>
-
+              <Link href="/journal" className="block text-gray-600 hover:text-accent-brown transition-colors duration-200 text-sm">
+                📖 Journal
+              </Link>
               <Link href="/subscription" className="block text-gray-600 hover:text-accent-brown transition-colors duration-200 text-sm">
                 🗝️ Upgrade
               </Link>
