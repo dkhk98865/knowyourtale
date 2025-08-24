@@ -86,7 +86,7 @@ export default function SubscriptionPage() {
         <h1 className="storybook-title text-5xl mb-6">Choose Your Adventure</h1>
         <div className="storybook-divider"></div>
         <p className="storybook-subtitle text-xl mb-8">
-          Unlock the full magical experience with unlimited character access and exclusive features
+          Unlock detailed personality analysis reports, weekly journaling prompts, and exclusive journaling features
         </p>
         <div className="magical-sparkle">✨</div>
       </section>
@@ -110,19 +110,15 @@ export default function SubscriptionPage() {
             <div className="space-y-4 mb-8">
               <div className="flex items-center space-x-3">
                 <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Access to all fairy tale characters</span>
+                <span className="text-gray-700">Single personality analysis report</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Unlimited character insights</span>
+                <span className="text-gray-700">Weekly email with prompts for journaling</span>
               </div>
               <div className="flex items-center space-x-3">
-                <div className="text-gray-400 text-xl">✗</div>
-                <span className="text-gray-400">Advanced personality features</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="text-gray-400 text-xl">✗</div>
-                <span className="text-gray-400">Priority Support</span>
+                <div className="text-green-500 text-xl">✓</div>
+                <span className="text-gray-700">Access to Know Your Tale journaling</span>
               </div>
             </div>
 
@@ -158,19 +154,15 @@ export default function SubscriptionPage() {
             <div className="space-y-4 mb-8">
               <div className="flex items-center space-x-3">
                 <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Access to all fairy tale characters</span>
+                <span className="text-gray-700">All 12 personality analysis reports</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Unlimited character insights</span>
+                <span className="text-gray-700">Weekly email with prompts for journaling</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Advanced personality features</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Priority support</span>
+                <span className="text-gray-700">Access to Know Your Tale journaling</span>
               </div>
             </div>
 
@@ -194,12 +186,12 @@ export default function SubscriptionPage() {
             <div className="magical-sparkle">✨</div>
           </div>
           <p className="text-gray-600 mb-4">
-            Enjoy limited access to 3 characters. Perfect for getting started on your magical journey!
+            Start your journey with basic access. Perfect for exploring your fairy tale personality!
           </p>
           <div className="text-sm text-gray-500">
-            • Access to 3 featured characters<br/>
+            • Access to character stories and descriptions<br/>
             • Basic personality insights<br/>
-            • Character stories and descriptions
+            • Quiz to discover your personality type
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@ import Image from 'next/image';
 import AuthModal from '@/components/auth-modal';
 import { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -181,12 +182,11 @@ export default function StoryPage({
               
               <div className="magical-sparkle text-3xl mb-6">✨</div>
               
-              <button 
-                onClick={() => setIsAuthModalOpen(true)}
-                className="magical-button magical-glow text-xl px-10 py-5 inline-block font-bold"
-              >
-                🗝️ Unlock Full Personality Analysis 🗝️
-              </button>
+              <Link href="/reports">
+                <button className="magical-button magical-glow text-xl px-10 py-5 inline-block font-bold">
+                  🗝️ Unlock Full Personality Analysis 🗝️
+                </button>
+              </Link>
               
               <div className="magical-sparkle text-2xl mt-6">🌟</div>
             </div>

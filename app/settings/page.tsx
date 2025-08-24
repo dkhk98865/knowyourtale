@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
+import SubscriptionManager from '@/components/subscription-manager';
 
 export default function SettingsPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -174,11 +175,7 @@ export default function SettingsPage() {
               )}
             </button>
             
-            <Link href="/history">
-              <button className="w-full magical-button magical-glow">
-                📚 View Chat History
-              </button>
-            </Link>
+
             
             <Link href="/">
               <button className="w-full magical-button magical-glow">
@@ -189,6 +186,10 @@ export default function SettingsPage() {
         </div>
       </div>
 
+      {/* Subscription Management */}
+      <div className="max-w-2xl mx-auto">
+        <SubscriptionManager user={user} />
+      </div>
 
     </main>
   );

@@ -16,6 +16,28 @@ const createMockStripe = () => {
     },
     customers: {
       retrieve: async () => ({ email: 'mock@example.com' })
+    },
+    billingPortal: {
+      sessions: {
+        create: async () => ({
+          id: 'mock_portal_session_id',
+          url: 'https://example.com/mock-portal'
+        })
+      }
+    },
+    subscriptions: {
+      update: async () => ({
+        id: 'mock_subscription_id',
+        status: 'active',
+        current_period_end: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60), // 30 days from now
+        cancel_at_period_end: false
+      }),
+      retrieve: async () => ({
+        id: 'mock_subscription_id',
+        items: {
+          data: [{ id: 'mock_item_id' }]
+        }
+      })
     }
   } as unknown as Stripe;
 };
@@ -34,10 +56,9 @@ export const SUBSCRIPTION_PLANS = {
     price: 499, // $4.99 in cents
     priceId: process.env.STRIPE_ESSENTIAL_PRICE_ID,
     features: [
-      'Access to all fairy tale characters',
-      'Unlimited conversations',
-      'Priority chat response',
-      'Mobile app access'
+      'Single personality analysis report',
+      'Weekly email with prompts for journaling',
+      'Access to Know Your Tale journaling'
     ]
   },
   premium: {
@@ -45,13 +66,9 @@ export const SUBSCRIPTION_PLANS = {
     price: 999, // $9.99 in cents
     priceId: process.env.STRIPE_PREMIUM_PRICE_ID,
     features: [
-      'Access to all fairy tale characters',
-      'Unlimited conversations',
-      'Complete chat history access',
-      'Advanced conversation features',
-      'Priority support',
-      'Export conversations',
-      'Early access to new characters'
+      'All 12 personality analysis reports',
+      'Weekly email with prompts for journaling',
+      'Access to Know Your Tale journaling'
     ]
   }
 };
