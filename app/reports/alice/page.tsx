@@ -28,7 +28,7 @@ export default function AliceReportPage() {
         <div className="storybook-card page-turn p-6 text-center">
           <div className="relative w-full h-80 rounded-lg overflow-hidden mb-6">
             <Image 
-              src="/images/wendydarling.png" 
+              src="/images/aliceinwonderland.png" 
               alt="Alice (Alice in Wonderland)" 
               fill 
               className="object-cover"

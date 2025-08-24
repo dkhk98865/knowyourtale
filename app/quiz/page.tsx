@@ -12,15 +12,15 @@ type Choice = "A" | "B" | "C" | "D";
 const CHARACTER_MAP: Record<string, string> = {
   "Snow White": "snowwhite",
   "Cinderella": "cinderella", 
-  "Aurora": "sleepingbeauty",
-  "Ariel": "littlemermaid",
-  "Belle": "beautyandthebeast",
+  "Aurora": "aurora",
+  "Ariel": "ariel",
+  "Belle": "belle",
   "Rapunzel": "rapunzel",
-  "Gerda": "snowqueen",
+  "Gerda": "gerda",
   "Mulan": "mulan",
-  "Alice": "aliceinwonderland",
-  "Dorothy": "wizardofoz",
-  "Wendy": "wendydarling",
+  "Alice": "alice",
+  "Dorothy": "dorothy",
+  "Wendy": "wendy",
   "Little Red Riding Hood": "littleredridinghood"
 };
 

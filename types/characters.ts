@@ -15,21 +15,21 @@ export const characters = [
       story: `After losing her parents, a kind young woman is forced into servitude by her cruel stepfamily. Despite her hardships, she remains gentle and hopeful. With the help of magical aid, she attends a royal ball in disguise, capturing the prince’s heart. When the magic fades, her true identity is revealed, and she rises from obscurity to become queen.`
     },
     {
-      id: "sleepingbeauty",
+      id: "aurora",
       name: "Aurora",
       description: "A cursed slumber, awakened by destiny",
       image: "/images/sleepingbeauty.png",
       story: `A princess is cursed at birth to fall into a deep sleep on her sixteenth birthday. Hidden away for protection, the curse is fulfilled despite all efforts. After years in enchanted slumber, she is awakened by true love’s kiss, breaking the spell and restoring peace to the kingdom.`
     },
     {
-      id: "littlemermaid",
+      id: "ariel",
       name: "Ariel",
       description: "Love at the cost of self.",
       image: "/images/littlemermaid.png",
       story: `A young mermaid longs to live in the human world and falls in love with a mortal prince. She sacrifices her voice for a chance to walk on land, but the price of her wish is steep. When the prince falls for another, she faces a choice between saving herself or staying true to her love—ultimately choosing selflessness over revenge.`
     },
     {
-      id: "beautyandthebeast",
+      id: "belle",
       name: "Belle",
       description: "Love that sees beyond appeearances.",
       image: "/images/beautyandthebeast.png",
@@ -43,7 +43,7 @@ export const characters = [
       story: `Taken from her parents as a baby, a girl with magical hair is locked away in a tower by a sorceress. Isolated from the world, she grows curious and brave. When a stranger stumbles upon her hidden prison, Rapunzel dares to dream of freedom—and through love, loss, and discovery, she escapes the tower to reclaim her life.`
     },
     {
-      id: "snowqueen",
+      id: "gerda",
       name: "Gerda",
       description: "Love that defies the coldest magic.",
       image: "/images/gerda.png",
@@ -57,21 +57,21 @@ export const characters = [
       story: `To spare her elderly father from conscription, Mulan disguises herself as a man and joins the army in his place. For over a decade, she serves with distinction, earning the respect of her comrades without revealing her identity. When the war ends, she declines official honors and returns home. Only then do her fellow soldiers learn that the brave warrior they fought beside was a woman.`
     },
     {
-      id: "aliceinwonderland",
+      id: "alice",
       name: "Alice",
       description: "A girl who questioned the world--and made her own.",
       image: "/images/aliceinwonderland.png",
       story: `After following a talking White Rabbit, a curious girl named Alice falls down a rabbit hole into a fantastical world. There, she encounters bizarre creatures, shifting logic, and strange rules that challenge her sense of reality. Through wit and courage, she navigates chaos and contradiction, ultimately finding her way back home—with her imagination forever changed.`
     },
     {
-      id: "wizardofoz",
+      id: "dorothy",
       name: "Dorothy",
       description: "A storm swept her away, but she found her way home with courage.",
       image: "/images/dorothygale.png",
       story: `After a cyclone carries her from Kansas to the magical Land of Oz, Dorothy Gale sets out on a journey to find her way back home. Along the yellow brick road, she befriends a scarecrow, a tin man, and a cowardly lion—all seeking something within themselves. Facing witches, illusions, and unexpected truths, Dorothy learns that the power to return was within her all along.`
     },
     {
-      id: "wendydarling",
+      id: "wendy",
       name: "Wendy",
       description: "A storyteller who mothered the lost and remembered the way home.",
       image: "/images/wendydarling.png",
