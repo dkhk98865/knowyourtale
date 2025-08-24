@@ -20,14 +20,12 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-
+    
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: [
         'card',           // Credit/debit cards
         'us_bank_account', // ACH Direct Debit (US)
-        'klarna',         // Buy now, pay later
-        'afterpay_clearpay', // Buy now, pay later
       ],
       // Explicitly exclude PayPal - it's not included in payment_method_types
       line_items: [
@@ -37,8 +35,8 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: 'subscription',
-      success_url: successUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/subscription`,
+      success_url: successUrl || `http://localhost:3000/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: cancelUrl || `http://localhost:3000/subscription`,
       metadata: {
         plan: plan,
         planName: selectedPlan.name,
