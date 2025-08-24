@@ -213,9 +213,17 @@ export default function SubscriptionPage() {
 
           <div className="storybook-card page-turn p-6">
             <h3 className="font-semibold mb-3">What payment methods do you accept?</h3>
-            <p className="text-gray-600 text-sm">
-              We accept all major credit cards, PayPal, and other secure payment methods through our payment processor.
+            <p className="text-gray-600 text-sm mb-3">
+              We accept secure payments through Stripe, including:
             </p>
+            <div className="text-gray-600 text-xs space-y-1">
+              • Credit Cards: Visa, Mastercard, American Express, Discover<br/>
+              • Debit Cards: All major debit cards<br/>
+              • Digital Wallets: Apple Pay, Google Pay<br/>
+              • Bank Transfers: ACH Direct Debit (US), SEPA (Europe)<br/>
+              • Buy Now, Pay Later: Klarna, Afterpay/Clearpay<br/>
+              • Local Methods: Bancontact, iDEAL, Sofort, and more
+            </div>
           </div>
 
           <div className="storybook-card page-turn p-6">
@@ -228,7 +236,7 @@ export default function SubscriptionPage() {
           <div className="storybook-card page-turn p-6">
             <h3 className="font-semibold mb-3">Is my data secure?</h3>
             <p className="text-gray-600 text-sm">
-              Your privacy and security are our top priorities. All personal data and character information are encrypted and securely stored.
+              Your privacy and security are our top priorities. All personal data and character information are encrypted and securely stored. Payments are processed securely through Stripe, which is PCI DSS Level 1 certified - the highest level of payment security.
             </p>
           </div>
         </div>

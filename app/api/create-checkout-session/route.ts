@@ -23,7 +23,13 @@ export async function POST(request: NextRequest) {
 
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: [
+        'card',           // Credit/debit cards
+        'us_bank_account', // ACH Direct Debit (US)
+        'klarna',         // Buy now, pay later
+        'afterpay_clearpay', // Buy now, pay later
+      ],
+      // Explicitly exclude PayPal - it's not included in payment_method_types
       line_items: [
         {
           price: selectedPlan.priceId,
