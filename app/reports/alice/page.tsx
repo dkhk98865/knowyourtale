@@ -247,7 +247,7 @@ export default function AliceReportPage() {
         <div className="storybook-card page-turn p-8 bg-gradient-to-r from-yellow-50 to-amber-50 border-2 border-accent-gold">
           <div className="text-center mb-6">
             <div className="magical-sparkle text-3xl mb-3">🔮</div>
-            <h3 className="storybook-subtitle text-2xl mb-4 text-accent-gold">Bonus Insights (Premium Only)</h3>
+            <h3 className="storybook-subtitle text-2xl mb-4 text-accent-gold">Bonus Insights (Paid Plans)</h3>
             <div className="magical-sparkle text-xl">✨</div>
           </div>
           <div className="max-w-4xl mx-auto space-y-4">

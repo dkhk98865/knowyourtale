@@ -29,15 +29,27 @@ This guide will walk you through setting up Stripe for your subscription plans.
    - Go to [stripe.com](https://stripe.com) and sign up
    - Complete account verification
 
-2. **Create Products**
-   - Go to Products → Add Product
-   - Create "Essential Adventure" product
-   - Create "Premium Adventure" product
+## 3. Create Products and Prices
 
-3. **Create Recurring Prices**
-   - For Essential Adventure: $4.99/month recurring
-   - For Premium Adventure: $9.99/month recurring
-   - **Important**: Copy the Price IDs (start with `price_`)
+### **Products to Create:**
+- Create "Single Report" product
+- Create "Monthly Plan" product  
+- Create "All Reports" product
+
+### **Price Configuration:**
+- For Single Report: $4.99 one-time payment
+- For Monthly Plan: $7.99/month recurring
+- For All Reports: $9.99 one-time payment
+
+### **Product Setup Steps:**
+1. Go to Products in your Stripe Dashboard
+2. Click "Add Product"
+3. Set product name (e.g., "Single Report")
+4. Set price to $4.99
+5. Choose "One time" for Single Report and All Reports, "Recurring" for Monthly Adventure
+6. For Monthly Adventure, set billing interval to "Monthly"
+7. Save the product
+8. Repeat for all three products
 
 ### 2. Environment Variables
 
@@ -48,8 +60,9 @@ Add these to your `.env.local` file:
 STRIPE_SECRET_KEY=sk_test_... # Your Stripe secret key
 STRIPE_PUBLISHABLE_KEY=pk_test_... # Your Stripe publishable key
 STRIPE_WEBHOOK_SECRET=whsec_... # Webhook secret (we'll get this later)
-STRIPE_ESSENTIAL_PRICE_ID=price_... # Essential plan price ID
-STRIPE_PREMIUM_PRICE_ID=price_... # Premium plan price ID
+STRIPE_SINGLE_PRICE_ID=price_1S0WRdDvKY96pR0jHZkUEZ4M # Single Report price ID
+STRIPE_MONTHLY_PRICE_ID=price_1S0WSbDvKY96pR0jMSIGmjE5 # Monthly Plan price ID
+STRIPE_ALL_REPORTS_PRICE_ID=price_1S0WS2DvKY96pR0jiqSx56lv # All Reports price ID
 
 # App Configuration
 NEXT_PUBLIC_BASE_URL=http://localhost:3000 # Your app URL
@@ -93,7 +106,7 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_... # Same as above
 2. **Test Subscription Flow**
    - Go to `/subscription`
    - Sign in with a test account
-   - Click "Start Essential Adventure" or "Start Premium Adventure"
+   - Click "Get Single Report", "Start Monthly Adventure", or "Get All Reports"
    - Should redirect to Stripe Checkout
 
 3. **Use Test Cards**
@@ -111,7 +124,7 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_... # Same as above
    - Restart development server
 
 2. **"Price ID not configured"**
-   - Verify `STRIPE_ESSENTIAL_PRICE_ID` and `STRIPE_PREMIUM_PRICE_ID` are set
+   - Verify `STRIPE_SINGLE_PRICE_ID`, `STRIPE_MONTHLY_PRICE_ID`, and `STRIPE_ALL_REPORTS_PRICE_ID` are set
    - Check that Price IDs start with `price_`
 
 3. **Webhook errors**

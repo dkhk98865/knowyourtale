@@ -154,11 +154,12 @@ The Journal System is a comprehensive feature that allows users to create, edit,
 
 ### **Feature Access:**
 - **Free Users**: Basic journaling (limited entries)
-- **Essential Plan**: Full journaling + weekly prompts
-- **Premium Plan**: Everything + advanced features
+- **Single Report**: One-time purchase for single personality report
+- **Monthly Plan**: Weekly prompts + journaling access + community board
+- **All Reports**: One-time purchase for all personality reports
 
-### **Premium Features:**
-- **Unlimited entries** for premium subscribers
+### **Paid Plan Features:**
+- **Unlimited entries** for Monthly Adventure subscribers and All Reports purchasers
 - **Advanced filtering** and search capabilities
 - **Export functionality** (future enhancement)
 

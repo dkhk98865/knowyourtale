@@ -21,6 +21,9 @@ export async function POST(request: NextRequest) {
       );
     }
     
+    // Determine if this is a subscription or one-time purchase
+    const isSubscription = plan === 'monthly';
+    
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: [
@@ -34,19 +37,21 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
-      mode: 'subscription',
+      mode: isSubscription ? 'subscription' : 'payment',
       success_url: successUrl || `http://localhost:3000/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: cancelUrl || `http://localhost:3000/subscription`,
       metadata: {
         plan: plan,
         planName: selectedPlan.name,
       },
-      subscription_data: {
-        metadata: {
-          plan: plan,
-          planName: selectedPlan.name,
+      ...(isSubscription && {
+        subscription_data: {
+          metadata: {
+            plan: plan,
+            planName: selectedPlan.name,
+          },
         },
-      },
+      }),
     });
 
     return NextResponse.json({ sessionId: session.id, url: session.url });

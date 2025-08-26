@@ -51,24 +51,30 @@ export const stripe = process.env.STRIPE_SECRET_KEY
 
 // Define your subscription plans
 export const SUBSCRIPTION_PLANS = {
-  essential: {
-    name: 'Essential Adventure',
+  single: {
+    name: 'Single Report',
     price: 499, // $4.99 in cents
-    priceId: process.env.STRIPE_ESSENTIAL_PRICE_ID,
+    priceId: process.env.STRIPE_SINGLE_PRICE_ID,
     features: [
-      'Single personality analysis report',
-      'Weekly email with prompts for journaling',
-      'Access to Know Your Tale journaling'
+      'Single personality analysis report'
     ]
   },
-  premium: {
-    name: 'Premium Adventure',
-    price: 999, // $9.99 in cents
-    priceId: process.env.STRIPE_PREMIUM_PRICE_ID,
+  monthly: {
+    name: 'Monthly Plan',
+    price: 799, // $7.99 in cents
+    priceId: process.env.STRIPE_MONTHLY_PRICE_ID,
     features: [
-      'All 12 personality analysis reports',
-      'Weekly email with prompts for journaling',
-      'Access to Know Your Tale journaling'
+      'Weekly emails with prompts',
+      'Access to Know Your Tale journaling',
+      'Community board access'
+    ]
+  },
+  allReports: {
+    name: 'All Reports',
+    price: 999, // $9.99 in cents
+    priceId: process.env.STRIPE_ALL_REPORTS_PRICE_ID,
+    features: [
+      'All 12 personality analysis reports'
     ]
   }
 };

@@ -27,17 +27,23 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
 
   // Plan details
   const plans = {
-    essential: {
-      name: 'Essential Adventure',
-      price: '$4.99/month',
-      priceId: process.env.NEXT_PUBLIC_STRIPE_ESSENTIAL_PRICE_ID,
-      features: ['Single personality analysis report', 'Weekly email with prompts for journaling', 'Access to Know Your Tale journaling']
+    single: {
+      name: 'Single Report',
+      price: '$4.99',
+      priceId: process.env.NEXT_PUBLIC_STRIPE_SINGLE_PRICE_ID,
+      features: ['Single personality analysis report']
     },
-    premium: {
-      name: 'Premium Adventure',
-      price: '$9.99/month',
-      priceId: process.env.NEXT_PUBLIC_STRIPE_PREMIUM_PRICE_ID,
-      features: ['All 12 personality analysis reports', 'Weekly email with prompts for journaling', 'Access to Know Your Tale journaling']
+    monthly: {
+      name: 'Monthly Plan',
+      price: '$7.99/month',
+      priceId: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID,
+      features: ['Weekly emails with prompts', 'Access to Know Your Tale journaling', 'Community board access']
+    },
+    allReports: {
+      name: 'All Reports',
+      price: '$9.99',
+      priceId: process.env.NEXT_PUBLIC_STRIPE_ALL_REPORTS_PRICE_ID,
+      features: ['All 12 personality analysis reports']
     }
   };
 
@@ -69,18 +75,21 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
   const getCurrentPlan = () => {
     if (!subscription) return null;
     
-    if (subscription.stripe_price_id === plans.essential.priceId) {
-      return 'essential';
-    } else if (subscription.stripe_price_id === plans.premium.priceId) {
-      return 'premium';
+    if (subscription.stripe_price_id === plans.single.priceId) {
+      return 'single';
+    } else if (subscription.stripe_price_id === plans.monthly.priceId) {
+      return 'monthly';
+    } else if (subscription.stripe_price_id === plans.allReports.priceId) {
+      return 'allReports';
     }
     return null;
   };
 
   const getUpgradePlan = () => {
     const current = getCurrentPlan();
-    if (current === 'essential') return 'premium';
-    if (current === 'premium') return 'essential';
+    if (current === 'single') return 'monthly';
+    if (current === 'monthly') return 'allReports';
+    if (current === 'allReports') return 'single';
     return null;
   };
 

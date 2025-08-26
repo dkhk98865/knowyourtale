@@ -86,25 +86,25 @@ export default function SubscriptionPage() {
         <h1 className="storybook-title text-5xl mb-6">Choose Your Adventure</h1>
         <div className="storybook-divider"></div>
         <p className="storybook-subtitle text-xl mb-8">
-          Unlock detailed personality analysis reports, weekly journaling prompts, and exclusive journaling features including your personal fairy tale journal
+          Choose from one-time personality reports or monthly access to journaling features, weekly prompts, and community engagement
         </p>
         <div className="magical-sparkle">✨</div>
       </section>
 
       {/* Pricing Cards */}
-      <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
-        {/* Essential Plan */}
+      <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
+        {/* Single Report Plan */}
         <div className="storybook-card page-turn relative overflow-hidden">
           <div className="p-8">
             <div className="text-center mb-6">
               <div className="magical-sparkle">🌟</div>
-              <h2 className="storybook-subtitle text-2xl mb-3">Essential Adventure</h2>
+              <h2 className="storybook-subtitle text-2xl mb-3">Single Report</h2>
               <div className="magical-sparkle">✨</div>
             </div>
             
             <div className="text-center mb-6">
               <div className="text-4xl font-bold text-accent-gold mb-2">$4.99</div>
-              <div className="text-gray-600">per month</div>
+              <div className="text-gray-600">one-time purchase</div>
             </div>
 
             <div className="space-y-4 mb-8">
@@ -112,27 +112,19 @@ export default function SubscriptionPage() {
                 <div className="text-green-500 text-xl">✓</div>
                 <span className="text-gray-700">Single personality analysis report</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Weekly email with prompts for journaling</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Access to Know Your Tale journaling</span>
-              </div>
             </div>
 
             <button
-              onClick={() => handleSubscribe('Essential')}
+              onClick={() => handleSubscribe('Single')}
               className="w-full magical-button magical-glow"
               disabled={loading}
             >
-              {loading ? 'Loading...' : 'Start Essential Adventure'}
+              {loading ? 'Loading...' : 'Get Single Report'}
             </button>
           </div>
         </div>
 
-        {/* Premium Plan */}
+        {/* Monthly Plan */}
         <div className="storybook-card page-turn relative overflow-hidden border-2 border-accent-gold">
           {/* Popular badge */}
           <div className="absolute top-4 right-4 bg-accent-gold text-white px-3 py-1 rounded-full text-sm font-semibold">
@@ -141,14 +133,53 @@ export default function SubscriptionPage() {
           
           <div className="p-8">
             <div className="text-center mb-6">
-              <div className="magical-sparkle">👑</div>
-              <h2 className="storybook-subtitle text-2xl mb-3">Premium Adventure</h2>
+              <div className="magical-sparkle">📅</div>
+              <h2 className="storybook-subtitle text-2xl mb-3">Monthly Plan</h2>
               <div className="magical-sparkle">💎</div>
             </div>
             
             <div className="text-center mb-6">
-              <div className="text-4xl font-bold text-accent-gold mb-2">$9.99</div>
+              <div className="text-4xl font-bold text-accent-gold mb-2">$7.99</div>
               <div className="text-gray-600">per month</div>
+            </div>
+
+            <div className="space-y-4 mb-8">
+              <div className="flex items-center space-x-3">
+                <div className="text-green-500 text-xl">✓</div>
+                <span className="text-gray-700">Weekly emails with prompts</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="text-green-500 text-xl">✓</div>
+                <span className="text-gray-700">Access to Know Your Tale journaling</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="text-green-500 text-xl">✓</div>
+                <span className="text-gray-700">Community board access</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => handleSubscribe('Monthly')}
+              className="w-full magical-button magical-glow bg-accent-gold hover:bg-yellow-600"
+              disabled={loading}
+            >
+              {loading ? 'Loading...' : 'Start Monthly Plan'}
+            </button>
+          </div>
+        </div>
+
+        {/* All Reports Plan */}
+        <div className="storybook-card page-turn relative overflow-hidden">
+          <div className="p-8">
+            <div className="text-center mb-6">
+              <div className="magical-sparkle">👑</div>
+              <h2 className="storybook-subtitle text-2xl mb-3">All Reports</h2>
+              <div className="magical-sparkle">✨</div>
+            </div>
+            
+            <div className="text-center mb-6">
+              <div className="text-4xl font-bold text-accent-gold mb-2">$9.99</div>
+              <div className="text-gray-600">one-time purchase</div>
             </div>
 
             <div className="space-y-4 mb-8">
@@ -156,22 +187,14 @@ export default function SubscriptionPage() {
                 <div className="text-green-500 text-xl">✓</div>
                 <span className="text-gray-700">All 12 personality analysis reports</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Weekly email with prompts for journaling</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Access to Know Your Tale journaling</span>
-              </div>
             </div>
 
             <button
-              onClick={() => handleSubscribe('Premium')}
-              className="w-full magical-button magical-glow bg-accent-gold hover:bg-yellow-600"
+              onClick={() => handleSubscribe('AllReports')}
+              className="w-full magical-button magical-glow"
               disabled={loading}
             >
-              {loading ? 'Loading...' : 'Start Premium Adventure'}
+              {loading ? 'Loading...' : 'Get All Reports'}
             </button>
           </div>
         </div>
@@ -191,7 +214,8 @@ export default function SubscriptionPage() {
           <div className="text-sm text-gray-500">
             • Access to character stories and descriptions<br/>
             • Basic personality insights<br/>
-            • Quiz to discover your personality type
+            • Quiz to discover your personality type<br/>
+            • Limited journaling access
           </div>
         </div>
       </div>
