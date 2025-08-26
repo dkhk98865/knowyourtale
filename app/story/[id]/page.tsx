@@ -154,42 +154,92 @@ export default function StoryPage({
             <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto">{character.story}</p>
           </div>
           
-          {/* Full Report CTA */}
+          {/* Pricing CTAs */}
           <div className="storybook-card page-turn p-8 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-accent-gold">
-            <div className="text-center">
+            <div className="text-center mb-8">
               <div className="magical-sparkle text-5xl mb-6">📊</div>
-              <h2 className="storybook-subtitle text-4xl mb-6 text-accent-gold font-bold">Would you like a full report of the fairy tale personality analysis?</h2>
-              
-              <div className="grid md:grid-cols-3 gap-8 mb-8 text-left">
+              <h2 className="storybook-subtitle text-4xl mb-6 text-accent-gold font-bold">Unlock More Fairy Tale Insights</h2>
+              <p className="text-gray-700 text-lg mb-8">Choose how you want to explore your fairy tale personality further</p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+              {/* Single Report CTA */}
+              <div className="storybook-card page-turn p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200">
                 <div className="text-center">
-                  <div className="magical-sparkle text-3xl mb-3">🎭</div>
-                  <h3 className="font-bold text-xl mb-3 text-accent-brown">Get Access To All Twelve Character Reports</h3>
-                  <p className="text-gray-700 text-base font-medium">Discover your connection to every fairy tale personality type</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="magical-sparkle text-3xl mb-3">📧</div>
-                  <h3 className="font-bold text-xl mb-3 text-accent-brown">Get Weekly Emails with Prompts</h3>
-                  <p className="text-gray-700 text-base font-medium">Reflect on your personality and life with guided prompts</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="magical-sparkle text-3xl mb-3">📖</div>
-                  <h3 className="font-bold text-xl mb-3 text-accent-brown">Start a Journal On The Reports</h3>
-                  <p className="text-gray-700 text-base font-medium">Track your growth with weekly email prompts & insights</p>
+                  <div className="magical-sparkle text-4xl mb-4">🌟</div>
+                  <h3 className="storybook-subtitle text-2xl mb-4 text-blue-800">Single Report</h3>
+                  <div className="text-3xl font-bold text-blue-600 mb-4">$4.99</div>
+                  <p className="text-gray-700 mb-4">Get your detailed personality analysis report for {character.name}</p>
+                  
+                  <div className="space-y-2 mb-6 text-left">
+                    <div className="flex items-center space-x-2">
+                      <div className="text-green-500">✓</div>
+                      <span className="text-gray-700">Detailed personality insights</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="text-green-500">✓</div>
+                      <span className="text-gray-700">Character strengths & challenges</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="text-green-500">✓</div>
+                      <span className="text-gray-700">Personal growth recommendations</span>
+                    </div>
+                  </div>
+                  
+                  <Link href="/subscription">
+                    <button className="magical-button magical-glow bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 font-semibold">
+                      Get {character.name} Report
+                    </button>
+                  </Link>
                 </div>
               </div>
               
-              <div className="magical-sparkle text-3xl mb-6">✨</div>
-              
-              <Link href="/reports">
-                <button className="magical-button magical-glow text-xl px-10 py-5 inline-block font-bold">
-                  🗝️ Unlock Full Personality Analysis 🗝️
+              {/* All Reports CTA */}
+              <div className="storybook-card page-turn p-6 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200">
+                <div className="text-center">
+                  <div className="magical-sparkle text-4xl mb-4">👑</div>
+                  <h3 className="storybook-subtitle text-2xl mb-4 text-purple-800">All Reports</h3>
+                  <div className="text-3xl font-bold text-purple-600 mb-4">$9.99</div>
+                  <p className="text-gray-700 mb-4">Discover all twelve fairy tale personality types</p>
+                  
+                  <div className="space-y-2 mb-6 text-left">
+                    <div className="flex items-center space-x-2">
+                      <div className="text-green-500">✓</div>
+                      <span className="text-gray-700">All 12 personality reports</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="text-green-500">✓</div>
+                      <span className="text-gray-700">Compare different types</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="text-green-500">✓</div>
+                      <span className="text-gray-700">Complete fairy tale journey</span>
+                    </div>
+                  </div>
+                  
+                  <Link href="/subscription">
+                    <button className="magical-button magical-glow bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 font-semibold">
+                      Get All Reports
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+            
+            {/* Monthly Plan Option */}
+            <div className="text-center">
+              <div className="magical-sparkle text-2xl mb-4">💎</div>
+              <p className="text-gray-700 mb-4">
+                <strong>Want weekly journaling prompts and community access?</strong>
+              </p>
+              <Link href="/subscription">
+                <button className="magical-button text-lg px-6 py-3">
+                  View Monthly Plan Options
                 </button>
               </Link>
-              
-              <div className="magical-sparkle text-2xl mt-6">🌟</div>
             </div>
+            
+            <div className="magical-sparkle text-2xl mt-6">🌟</div>
           </div>
           
         </div>
