@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase-server';
 import { headers } from 'next/headers';
 import { Stripe } from 'stripe';
 
+// This route handles both /api/webhooks/stripe and /api/webhooks/stripe/
+// The 308 redirect suggests Next.js is adding trailing slashes automatically
 export async function POST(request: NextRequest) {
   try {
     console.log('🔔 Webhook received - starting processing...');

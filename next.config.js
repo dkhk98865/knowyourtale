@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  trailingSlash: false,
+  async redirects() {
+    return [];
+  }
 };
 
 module.exports = nextConfig;
