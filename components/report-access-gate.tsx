@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
@@ -17,7 +17,7 @@ export default function ReportAccessGate({ characterId, children }: ReportAccess
   const [loading, setLoading] = useState(true);
   const [supabase] = useState(() => createClient());
 
-  const checkAccess = async (email: string) => {
+  const checkAccess = useCallback(async (email: string) => {
     try {
       const response = await fetch('/api/check-report-access', {
         method: 'POST',
@@ -38,7 +38,7 @@ export default function ReportAccessGate({ characterId, children }: ReportAccess
       console.error('Error checking user access:', error);
       setUserAccess({ hasAccess: false, accessType: null });
     }
-  };
+  }, [characterId]);
 
   useEffect(() => {
     const getSession = async () => {
@@ -64,7 +64,7 @@ export default function ReportAccessGate({ characterId, children }: ReportAccess
     );
 
     return () => subscription.unsubscribe();
-  }, [supabase, characterId]);
+  }, [supabase, characterId, checkAccess]);
 
   if (loading) {
     return (

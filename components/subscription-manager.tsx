@@ -122,7 +122,7 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
       } else {
         setMessage(`Error: ${result.error}`);
       }
-    } catch (_error) {
+    } catch {
       setMessage('Failed to upgrade subscription. Please try again.');
     } finally {
       setUpdating(false);
@@ -158,7 +158,7 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
       } else {
         setMessage(`Error: ${result.error}`);
       }
-    } catch (_error) {
+    } catch {
       setMessage('Failed to cancel subscription. Please try again.');
     } finally {
       setUpdating(false);
@@ -186,7 +186,7 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
       } else {
         setMessage('Failed to open customer portal. Please try again.');
       }
-    } catch (_error) {
+    } catch {
       setMessage('Failed to open customer portal. Please try again.');
     }
   };

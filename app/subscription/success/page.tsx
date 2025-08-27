@@ -16,14 +16,14 @@ function SubscriptionSuccessContent() {
   useEffect(() => {
     // If we have a session ID, verify the purchase
     if (sessionId) {
-      verifyPurchase(sessionId);
+      verifyPurchase();
     } else {
       // If no session ID, try to verify by checking recent purchases
       checkRecentPurchases();
     }
   }, [sessionId, plan, characterId]);
 
-  const verifyPurchase = async (_sessionId: string) => {
+  const verifyPurchase = async () => {
     try {
       // You could add an API endpoint to verify the session
       // For now, we'll assume it's valid if we have a session ID
@@ -139,12 +139,12 @@ function SubscriptionSuccessContent() {
           <h1 className="storybook-title text-4xl mb-4">Purchase Verification</h1>
           <div className="storybook-divider mb-6"></div>
           <p className="storybook-subtitle text-xl mb-6">
-            We're having trouble verifying your purchase. This can happen with Apple Pay or other mobile payment methods.
+            We&apos;re having trouble verifying your purchase. This can happen with Apple Pay or other mobile payment methods.
           </p>
           
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
             <p className="text-yellow-800">
-              <strong>Don't worry!</strong> If you received a payment confirmation, your purchase was successful. 
+              <strong>Don&apos;t worry!</strong> If you received a payment confirmation, your purchase was successful. 
               You can access your content from the reports page.
             </p>
           </div>

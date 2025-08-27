@@ -26,11 +26,6 @@ export async function POST(request: NextRequest) {
     
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: [
-        'card',           // Credit/debit cards
-        'us_bank_account', // ACH Direct Debit (US)
-        'apple_pay',      // Apple Pay support
-      ],
       line_items: [
         {
           price: selectedPlan.priceId,
@@ -44,12 +39,6 @@ export async function POST(request: NextRequest) {
         plan: plan,
         planName: selectedPlan.name,
         characterId: characterId || '', // Add character ID for single reports
-      },
-      // Add Apple Pay specific configuration
-      payment_method_options: {
-        apple_pay: {
-          setup_future_usage: 'off_session',
-        },
       },
       ...(isSubscription && {
         subscription_data: {
