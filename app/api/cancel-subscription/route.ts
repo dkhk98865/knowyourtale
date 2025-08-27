@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { createClient } from '@/lib/supabase-client';
+import { createClient } from '@/lib/supabase-server';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 
 export async function POST(request: NextRequest) {
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest) {
     }) as Stripe.Subscription;
 
     // Update the database
-    const supabase = await createClient();
+    const supabase: SupabaseClient = await createClient();
     const { error } = await supabase
       .from('user_subscriptions')
       .update({

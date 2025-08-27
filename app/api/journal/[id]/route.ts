@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase-server';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { UpdateJournalEntry } from '@/types/journal';
 
 export async function GET(
@@ -8,7 +9,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const supabase = await createClient();
+    const supabase: SupabaseClient = await createClient();
     
     // Check authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -45,7 +46,7 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const supabase = await createClient();
+    const supabase: SupabaseClient = await createClient();
     
     // Check authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -85,7 +86,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const supabase = await createClient();
+    const supabase: SupabaseClient = await createClient();
     
     // Check authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();

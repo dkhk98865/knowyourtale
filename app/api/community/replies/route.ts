@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase-server';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
+    const supabase: SupabaseClient = await createClient();
     
     const { data: replies, error } = await supabase
       .from('community_replies')
@@ -35,7 +36,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase: SupabaseClient = await createClient();
     
     // Get user session
     const { data: { user }, error: authError } = await supabase.auth.getUser();
