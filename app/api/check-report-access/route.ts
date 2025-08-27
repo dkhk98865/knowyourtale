@@ -29,19 +29,8 @@ export async function POST(request: NextRequest) {
     
     console.log('🔍 DEBUG: All user records found:', { data: allUserRecords, error: allUserError });
     
-    // Debug: Check table structure
-    console.log('🔍 DEBUG: Checking table structure...');
-    const { data: tableInfo, error: tableError } = await supabase
-      .from('user_report_access')
-      .select('*')
-      .limit(1);
-    
-    console.log('🔍 DEBUG: Table structure check:', { data: tableInfo, error: tableError });
-
     // Check for all reports access first
     console.log('🔍 Checking for all reports access...');
-    console.log('🔍 SQL Query: SELECT * FROM user_report_access WHERE user_email = ? AND access_type = ? AND status = ?');
-    console.log('🔍 Query params:', { userEmail, accessType: 'allReports', status: 'active' });
     
     const { data: allReportsAccess, error: allReportsError } = await supabase
       .from('user_report_access')
@@ -92,8 +81,6 @@ export async function POST(request: NextRequest) {
     } else {
       // If no characterId provided, check for ANY single report access
       console.log('🔍 Checking for any single report access...');
-      console.log('🔍 SQL Query: SELECT * FROM user_report_access WHERE user_email = ? AND access_type = ? AND status = ?');
-      console.log('🔍 Query params:', { userEmail, accessType: 'single', status: 'active' });
       
       const { data: anySingleReportAccess, error: anySingleError } = await supabase
         .from('user_report_access')

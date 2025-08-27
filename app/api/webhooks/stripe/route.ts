@@ -50,8 +50,21 @@ export async function POST(request: NextRequest) {
     if (testError) {
       console.error('❌ Database connection test failed:', testError);
       console.error('❌ This suggests the table might not exist or there are permission issues');
+      
+      // Log the error to webhook_logs table
+      await supabase.from('webhook_logs').insert({
+        event_type: 'database_connection_test',
+        status: 'failed',
+        error_message: JSON.stringify(testError)
+      });
     } else {
       console.log('✅ Database connection test successful');
+      
+      // Log successful connection test
+      await supabase.from('webhook_logs').insert({
+        event_type: 'database_connection_test',
+        status: 'success'
+      });
     }
 
     try {
@@ -63,6 +76,16 @@ export async function POST(request: NextRequest) {
           
           console.log('📋 Session metadata:', metadata);
           console.log('📧 Customer email:', session.customer_details?.email);
+          
+          // Log the webhook event
+          await supabase.from('webhook_logs').insert({
+            event_type: 'checkout.session.completed',
+            stripe_event_id: event.id,
+            user_email: session.customer_details?.email,
+            plan: metadata?.plan,
+            character_id: metadata?.characterId,
+            status: 'processing'
+          });
           
           if (metadata && (metadata.plan === 'single' || metadata.plan === 'allReports')) {
             console.log('📊 Processing report purchase:', metadata.plan);
@@ -103,9 +126,30 @@ export async function POST(request: NextRequest) {
                   details: insertError.details,
                   hint: insertError.hint
                 });
+                
+                // Log the error to webhook_logs table
+                await supabase.from('webhook_logs').insert({
+                  event_type: 'user_access_record_creation',
+                  stripe_event_id: event.id,
+                  user_email: customerEmail,
+                  plan: plan,
+                  character_id: characterId || null,
+                  status: 'failed',
+                  error_message: JSON.stringify(insertError)
+                });
               } else {
                 console.log('✅ User access record created successfully!');
                 console.log('✅ Inserted data:', insertData);
+                
+                // Log the success to webhook_logs table
+                await supabase.from('webhook_logs').insert({
+                  event_type: 'user_access_record_creation',
+                  stripe_event_id: event.id,
+                  user_email: customerEmail,
+                  plan: plan,
+                  character_id: characterId || null,
+                  status: 'success'
+                });
               }
             } else {
               console.log('⚠️ No customer email found in session');
