@@ -9,7 +9,12 @@ import { User } from '@supabase/supabase-js';
 
 export default function ReportsPage() {
   const [user, setUser] = useState<User | null>(null);
-  const [userAccess, setUserAccess] = useState<{ hasAccess: boolean; accessType: string | null; characterId?: string } | null>(null);
+  const [userAccess, setUserAccess] = useState<{ 
+    hasAccess: boolean; 
+    accessType: string | null; 
+    characterId?: string;
+    characterIds?: string[];
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [supabase] = useState(() => createClient());
 
@@ -128,6 +133,8 @@ export default function ReportsPage() {
             <p className="storybook-subtitle text-lg mb-8">
               {userAccess.accessType === 'allReports' 
                 ? 'You have access to all personality reports! Explore the full collection below.'
+                : userAccess.accessType === 'multiple_single'
+                ? `You have access to ${userAccess.characterIds?.length || 0} personality reports! Click on any accessible character below.`
                 : `You have access to the ${characters.find(c => c.id === userAccess.characterId)?.name} report. Click on it to view your full personality analysis!`
               }
             </p>
@@ -153,7 +160,8 @@ export default function ReportsPage() {
           // Determine if user has access to this specific character
           const hasAccessToCharacter = userAccess?.hasAccess && (
             userAccess.accessType === 'allReports' || 
-            (userAccess.accessType === 'single' && userAccess.characterId === character.id)
+            (userAccess.accessType === 'single' && userAccess.characterId === character.id) ||
+            (userAccess.accessType === 'multiple_single' && userAccess.characterIds?.includes(character.id))
           );
 
           return (

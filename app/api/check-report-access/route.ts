@@ -88,8 +88,7 @@ export async function POST(request: NextRequest) {
         .select('*')
         .eq('user_email', userEmail)
         .eq('access_type', 'single')
-        .eq('status', 'active')
-        .limit(1); // Changed from .single() to .limit(1)
+        .eq('status', 'active');
 
       console.log('🔍 Any single report query result:', { data: anySingleReportAccess, error: anySingleError });
 
@@ -98,11 +97,15 @@ export async function POST(request: NextRequest) {
       }
 
       if (anySingleReportAccess && anySingleReportAccess.length > 0) {
-        console.log('✅ User has single report access for character:', anySingleReportAccess[0].character_id);
+        console.log('✅ User has single report access for multiple characters:', anySingleReportAccess.length, 'characters');
+        // Return all accessible character IDs
+        const characterIds = anySingleReportAccess.map(record => record.character_id);
+        console.log('✅ Accessible character IDs:', characterIds);
         return NextResponse.json({ 
           hasAccess: true, 
-          accessType: 'single', 
-          characterId: anySingleReportAccess[0].character_id 
+          accessType: 'multiple_single', 
+          characterIds: characterIds,
+          characterId: characterIds[0] // Keep backward compatibility
         });
       }
     }
