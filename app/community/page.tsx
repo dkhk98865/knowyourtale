@@ -150,6 +150,78 @@ export default function CommunityPage() {
     }
   };
 
+  const deletePost = async (postId: string) => {
+    if (!user) return;
+    
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+    
+    const confirmed = confirm(
+      `Are you sure you want to delete "${post.title}"?\n\nThis will also delete all replies to this post. This action cannot be undone.`
+    );
+    
+    if (!confirmed) return;
+
+    try {
+      const { error } = await supabase
+        .from('community_posts')
+        .delete()
+        .eq('id', postId)
+        .eq('user_email', user.email); // Ensure user can only delete their own posts
+
+      if (error) throw error;
+
+      // Close the post modal if it was open
+      if (selectedPost?.id === postId) {
+        closePost();
+      }
+      
+      // Show success message
+      alert('Post deleted successfully!');
+      
+      // Refresh posts
+      fetchPosts();
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      alert('Failed to delete post. Please try again.');
+    }
+  };
+
+  const deleteReply = async (replyId: string, replyUserEmail: string) => {
+    if (!user || user.email !== replyUserEmail) return;
+    
+    const reply = replies.find(r => r.id === replyId);
+    if (!reply) return;
+    
+    const confirmed = confirm(
+      `Are you sure you want to delete this reply?\n\n"${reply.content.substring(0, 50)}${reply.content.length > 50 ? '...' : ''}"\n\nThis action cannot be undone.`
+    );
+    
+    if (!confirmed) return;
+
+    try {
+      const { error } = await supabase
+        .from('community_replies')
+        .delete()
+        .eq('id', replyId)
+        .eq('user_email', user.email); // Ensure user can only delete their own replies
+
+      if (error) throw error;
+
+      // Show success message
+      alert('Reply deleted successfully!');
+      
+      // Refresh replies for the current post
+      if (selectedPost) {
+        fetchReplies(selectedPost.id);
+        fetchPosts(); // Refresh post counts
+      }
+    } catch (error) {
+      console.error('Error deleting reply:', error);
+      alert('Failed to delete reply. Please try again.');
+    }
+  };
+
   const openPost = (post: CommunityPost) => {
     setSelectedPost(post);
     fetchReplies(post.id);
@@ -310,6 +382,19 @@ export default function CommunityPage() {
                     </div>
                   </div>
                 </div>
+                {/* Delete button for post owner */}
+                {user && user.email === post.user_email && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deletePost(post.id);
+                    }}
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-all duration-200 hover:scale-110 hover:shadow-md"
+                    title="Delete post"
+                  >
+                    🗑️
+                  </button>
+                )}
               </div>
               
               <p className="text-gray-700 mb-4 line-clamp-3">{post.content}</p>
@@ -349,12 +434,25 @@ export default function CommunityPage() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-2xl font-bold text-gray-800">{selectedPost.title}</h2>
-                  <button
-                    onClick={closePost}
-                    className="text-gray-500 hover:text-gray-700 text-2xl"
-                  >
-                    ✕
-                  </button>
+                  <div className="flex items-center space-x-2">
+                    {/* Delete button for post owner */}
+                    {user && user.email === selectedPost.user_email && (
+                      <button
+                        onClick={() => deletePost(selectedPost.id)}
+                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-md flex items-center space-x-2"
+                        title="Delete post"
+                      >
+                        <span>🗑️</span>
+                        <span>Delete Post</span>
+                      </button>
+                    )}
+                    <button
+                      onClick={closePost}
+                      className="text-gray-500 hover:text-gray-700 text-2xl"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 </div>
                 
                 <div className="mb-6 p-4 bg-amber-50 rounded-lg">
@@ -374,8 +472,20 @@ export default function CommunityPage() {
                     {replies.map((reply) => (
                       <div key={reply.id} className="p-4 bg-gray-50 rounded-lg">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium text-gray-800">{reply.user_name || reply.user_email}</span>
-                          <span className="text-sm text-gray-500">{new Date(reply.created_at).toLocaleDateString()}</span>
+                          <div className="flex items-center space-x-2">
+                            <span className="font-medium text-gray-800">{reply.user_name || reply.user_email}</span>
+                            <span className="text-sm text-gray-500">{new Date(reply.created_at).toLocaleDateString()}</span>
+                          </div>
+                          {/* Delete button for reply owner */}
+                          {user && user.email === reply.user_email && (
+                            <button
+                              onClick={() => deleteReply(reply.id, reply.user_email)}
+                              className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-all duration-200 hover:scale-110 hover:shadow-md"
+                              title="Delete reply"
+                            >
+                              🗑️
+                            </button>
+                          )}
                         </div>
                         <p className="text-gray-700">{reply.content}</p>
                       </div>
