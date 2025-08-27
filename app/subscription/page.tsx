@@ -48,7 +48,7 @@ export default function SubscriptionPage() {
         },
         body: JSON.stringify({
           plan: plan.toLowerCase(),
-          successUrl: `${window.location.origin}/subscription/success`,
+          successUrl: `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=monthly`,
           cancelUrl: `${window.location.origin}/subscription`,
         }),
       });

@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: isSubscription ? 'subscription' : 'payment',
-      success_url: successUrl || `http://localhost:3000/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: successUrl || `http://localhost:3000/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=${plan}`,
       cancel_url: cancelUrl || `http://localhost:3000/subscription`,
       metadata: {
         plan: plan,

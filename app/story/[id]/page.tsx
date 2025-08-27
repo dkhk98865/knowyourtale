@@ -76,7 +76,7 @@ export default function StoryPage({
           body: JSON.stringify({
             plan: 'single',
             characterId: id,
-            successUrl: `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+            successUrl: `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=single`,
             cancelUrl: `${window.location.origin}/story/${id}`,
           }),
         });
@@ -111,7 +111,7 @@ export default function StoryPage({
           },
           body: JSON.stringify({
             plan: 'allReports',
-            successUrl: `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+            successUrl: `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=allReports`,
             cancelUrl: `${window.location.origin}/story/${id}`,
           }),
         });
