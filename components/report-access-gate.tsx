@@ -64,7 +64,7 @@ export default function ReportAccessGate({ characterId, children }: ReportAccess
     );
 
     return () => subscription.unsubscribe();
-  }, [supabase, characterId]);
+  }, [supabase, characterId, checkAccess]);
 
   if (loading) {
     return (

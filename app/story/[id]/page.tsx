@@ -1,18 +1,14 @@
-// app/story/[id]/page.tsx
-
 'use client';
 
 import { characters } from '@/types/characters';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import AuthModal from '@/components/auth-modal';
-import { useState, use } from 'react';
+import { useState, use, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { SUBSCRIPTION_PLANS } from '@/lib/stripe';
 import { createClient } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js';
-import { useEffect } from 'react';
 
 type Props = {
   params: Promise<{ id: string }>;

@@ -79,19 +79,7 @@ export default function ReportsPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 py-12 px-4 sm:px-6 lg:px-8">
-      {/* Debug Banner - Added back for troubleshooting */}
-      {user && (
-        <div className="max-w-7xl mx-auto mb-6 p-4 bg-red-100 border border-red-300 rounded-lg">
-          <h3 className="text-lg font-bold text-red-800 mb-2">🔍 DEBUG BANNER - Troubleshooting Second Purchase</h3>
-          <div className="text-sm text-red-700 space-y-1">
-            <p><strong>User Email:</strong> {user.email}</p>
-            <p><strong>User Access:</strong> {JSON.stringify(userAccess)}</p>
-            <p><strong>Has Access:</strong> {userAccess?.hasAccess ? 'Yes' : 'No'}</p>
-            <p><strong>Access Type:</strong> {userAccess?.accessType || 'None'}</p>
-            <p><strong>Character ID:</strong> {userAccess?.characterId || 'None'}</p>
-          </div>
-        </div>
-      )}
+
 
       <section className="text-center mb-16 parchment-content">
         <h1 className="storybook-title text-4xl mb-6">Your Reports</h1>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { use } from 'react';
 import { createClient } from '@/lib/supabase-client';
 import { JournalEntry, UpdateJournalEntry } from '@/types/journal';
 import { characters } from '@/types/characters';
@@ -26,7 +27,7 @@ export default function JournalEntryPage({ params }: { params: Promise<{ id: str
       await fetchJournal(id);
     };
     loadData();
-  }, [params]);
+  }, [params, checkUser, fetchJournal]);
 
   const checkUser = async () => {
     const { data: { user } } = await supabase.auth.getUser();

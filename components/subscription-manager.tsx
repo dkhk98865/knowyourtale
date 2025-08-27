@@ -122,7 +122,7 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
       } else {
         setMessage(`Error: ${result.error}`);
       }
-    } catch (error) {
+    } catch (_error) {
       setMessage('Failed to upgrade subscription. Please try again.');
     } finally {
       setUpdating(false);

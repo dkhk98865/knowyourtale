@@ -26,7 +26,7 @@ export default function JournalPage() {
     checkUser();
     fetchJournals();
     fetchPrompts();
-  }, []);
+  }, [checkUser, fetchJournals, fetchPrompts]);
 
   const checkUser = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -315,10 +315,9 @@ export default function JournalPage() {
 }
 
 // Create Journal Modal Component
-function CreateJournalModal({ onClose, onSuccess, prompts }: { 
+function CreateJournalModal({ onClose, onSuccess }: { 
   onClose: () => void; 
   onSuccess: () => void; 
-  prompts: WeeklyPrompt[];
 }) {
   const [formData, setFormData] = useState({
     title: '',
