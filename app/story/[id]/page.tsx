@@ -9,6 +9,7 @@ import AuthModal from '@/components/auth-modal';
 import { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { SUBSCRIPTION_PLANS } from '@/lib/stripe';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -33,6 +34,67 @@ export default function StoryPage({
     const handleAuthSuccess = () => {
       setIsAuthModalOpen(false);
       router.push('/subscription');
+    };
+
+    // Stripe checkout functions
+    const handleSingleReportCheckout = async () => {
+      try {
+        const response = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            plan: 'single',
+            successUrl: `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancelUrl: `${window.location.origin}/story/${id}`,
+          }),
+        });
+
+        const { url, error } = await response.json();
+
+        if (error) {
+          alert(`Error: ${error}`);
+          return;
+        }
+
+        if (url) {
+          window.location.href = url;
+        }
+      } catch (error) {
+        console.error('Error creating checkout session:', error);
+        alert('Failed to create checkout session. Please try again.');
+      }
+    };
+
+    const handleAllReportsCheckout = async () => {
+      try {
+        const response = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            plan: 'allReports',
+            successUrl: `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancelUrl: `${window.location.origin}/story/${id}`,
+          }),
+        });
+
+        const { url, error } = await response.json();
+
+        if (error) {
+          alert(`Error: ${error}`);
+          return;
+        }
+
+        if (url) {
+          window.location.href = url;
+        }
+      } catch (error) {
+        console.error('Error creating checkout session:', error);
+        alert('Failed to create checkout session. Please try again.');
+      }
     };
 
     // Social sharing functions
@@ -186,11 +248,12 @@ export default function StoryPage({
                     </div>
                   </div>
                   
-                  <Link href="/subscription">
-                    <button className="magical-button magical-glow bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 font-semibold">
-                      Get {character.name} Report
-                    </button>
-                  </Link>
+                  <button 
+                    onClick={handleSingleReportCheckout}
+                    className="magical-button magical-glow bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 font-semibold"
+                  >
+                    Get {character.name} Report
+                  </button>
                 </div>
               </div>
               
@@ -217,11 +280,12 @@ export default function StoryPage({
                     </div>
                   </div>
                   
-                  <Link href="/subscription">
-                    <button className="magical-button magical-glow bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 font-semibold">
-                      Get All Reports
-                    </button>
-                  </Link>
+                  <button 
+                    onClick={handleAllReportsCheckout}
+                    className="magical-button magical-glow bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 font-semibold"
+                  >
+                    Get All Reports
+                  </button>
                 </div>
               </div>
             </div>

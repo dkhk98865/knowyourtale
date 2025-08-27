@@ -283,6 +283,54 @@ export default function AliceReportPage() {
         </div>
       </section>
 
+      {/* Monthly Plan CTA Section */}
+      <section className="mb-12">
+        <div className="storybook-card page-turn p-8 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200">
+          <div className="text-center mb-6">
+            <div className="magical-sparkle text-4xl mb-4">📅</div>
+            <h3 className="storybook-subtitle text-3xl mb-4 text-green-800">Continue Your Journey with Monthly Plan</h3>
+            <div className="magical-sparkle text-xl">💎</div>
+          </div>
+          
+          <div className="max-w-4xl mx-auto mb-6">
+            <p className="text-gray-700 text-lg mb-6">
+              Ready to dive deeper into your fairy tale journey? Subscribe to our Monthly Plan and unlock weekly journaling prompts, exclusive journaling features, and access to our community board.
+            </p>
+            
+            <div className="grid md:grid-cols-3 gap-6 mb-6">
+              <div className="text-center">
+                <div className="text-green-600 text-2xl mb-2">📧</div>
+                <h4 className="font-semibold text-green-800 mb-2">Weekly Emails</h4>
+                <p className="text-gray-600 text-sm">Personalized prompts for reflection and growth</p>
+              </div>
+              <div className="text-center">
+                <div className="text-green-600 text-2xl mb-2">📖</div>
+                <h4 className="font-semibold text-green-800 mb-2">Journaling Access</h4>
+                <p className="text-gray-600 text-sm">Track your journey with our exclusive journaling tools</p>
+              </div>
+              <div className="text-center">
+                <div className="text-green-600 text-2xl mb-2">👥</div>
+                <h4 className="font-semibold text-green-800 mb-2">Community Board</h4>
+                <p className="text-gray-600 text-sm">Connect with fellow fairy tale enthusiasts</p>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <div className="text-3xl font-bold text-green-600 mb-2">$7.99/month</div>
+              <p className="text-gray-600 mb-4">Cancel anytime • No commitment required</p>
+            </div>
+          </div>
+          
+          <div className="text-center">
+            <Link href="/subscription">
+              <button className="magical-button magical-glow bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg font-semibold">
+                Start Monthly Plan
+              </button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Navigation */}
       <section className="text-center">
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">

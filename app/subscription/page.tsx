@@ -86,41 +86,26 @@ export default function SubscriptionPage() {
         <h1 className="storybook-title text-5xl mb-6">Choose Your Adventure</h1>
         <div className="storybook-divider"></div>
         <p className="storybook-subtitle text-xl mb-8">
-          Choose from one-time personality reports or monthly access to journaling features, weekly prompts, and community engagement
+          Unlock weekly journaling prompts, exclusive journaling features, and community engagement
         </p>
         <div className="magical-sparkle">✨</div>
       </section>
 
       {/* Pricing Cards */}
-      <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
-        {/* Single Report Plan */}
-        <div className="storybook-card page-turn relative overflow-hidden">
-          <div className="p-8">
-            <div className="text-center mb-6">
-              <div className="magical-sparkle">🌟</div>
-              <h2 className="storybook-subtitle text-2xl mb-3">Single Report</h2>
-              <div className="magical-sparkle">✨</div>
-            </div>
-            
-            <div className="text-center mb-6">
-              <div className="text-4xl font-bold text-accent-gold mb-2">$4.99</div>
-              <div className="text-gray-600">one-time purchase</div>
-            </div>
-
-            <div className="space-y-4 mb-8">
-              <div className="flex items-center space-x-3">
-                <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Single personality analysis report</span>
-              </div>
-            </div>
-
-            <button
-              onClick={() => handleSubscribe('Single')}
-              className="w-full magical-button magical-glow"
-              disabled={loading}
-            >
-              {loading ? 'Loading...' : 'Get Single Report'}
-            </button>
+      <div className="grid md:grid-cols-1 gap-8 max-w-2xl mx-auto mb-16">
+        {/* Info about personality reports */}
+        <div className="storybook-card page-turn p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200">
+          <div className="text-center">
+            <div className="magical-sparkle text-3xl mb-3">📊</div>
+            <h3 className="storybook-subtitle text-xl mb-3 text-blue-800">Personality Reports</h3>
+            <p className="text-gray-700 mb-4">
+              Looking for detailed personality analysis reports? Visit any character story page after taking the quiz to purchase individual reports or get all reports at once.
+            </p>
+            <Link href="/quiz">
+              <button className="magical-button bg-blue-600 hover:bg-blue-700 text-white px-6 py-2">
+                Take the Quiz
+              </button>
+            </Link>
           </div>
         </div>
 
@@ -167,37 +152,6 @@ export default function SubscriptionPage() {
             </button>
           </div>
         </div>
-
-        {/* All Reports Plan */}
-        <div className="storybook-card page-turn relative overflow-hidden">
-          <div className="p-8">
-            <div className="text-center mb-6">
-              <div className="magical-sparkle">👑</div>
-              <h2 className="storybook-subtitle text-2xl mb-3">All Reports</h2>
-              <div className="magical-sparkle">✨</div>
-            </div>
-            
-            <div className="text-center mb-6">
-              <div className="text-4xl font-bold text-accent-gold mb-2">$9.99</div>
-              <div className="text-gray-600">one-time purchase</div>
-            </div>
-
-            <div className="space-y-4 mb-8">
-              <div className="flex items-center space-x-3">
-                <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">All 12 personality analysis reports</span>
-              </div>
-            </div>
-
-            <button
-              onClick={() => handleSubscribe('AllReports')}
-              className="w-full magical-button magical-glow"
-              disabled={loading}
-            >
-              {loading ? 'Loading...' : 'Get All Reports'}
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* Free Plan Info */}
@@ -215,7 +169,8 @@ export default function SubscriptionPage() {
             • Access to character stories and descriptions<br/>
             • Basic personality insights<br/>
             • Quiz to discover your personality type<br/>
-            • Limited journaling access
+            • Limited journaling access<br/>
+            • <strong>Personality reports available on character story pages</strong>
           </div>
         </div>
       </div>
