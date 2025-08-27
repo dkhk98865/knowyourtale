@@ -73,16 +73,20 @@ export default function ReportsPage() {
   }
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-12 relative">
-      {/* Magical floating sparkles */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="magical-sparkle"></div>
-        <div className="magical-sparkle"></div>
-        <div className="magical-sparkle"></div>
-        <div className="magical-sparkle"></div>
-        <div className="magical-sparkle"></div>
-        <div className="magical-sparkle"></div>
-      </div>
+    <main className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 py-12 px-4 sm:px-6 lg:px-8">
+      {/* Debug Banner - Remove after fixing */}
+      {user && (
+        <div className="max-w-7xl mx-auto mb-6 p-4 bg-red-100 border border-red-300 rounded-lg">
+          <h3 className="text-lg font-bold text-red-800 mb-2">🔍 DEBUG BANNER - Remove After Fixing</h3>
+          <div className="text-sm text-red-700 space-y-1">
+            <p><strong>User Email:</strong> {user.email}</p>
+            <p><strong>User Access:</strong> {JSON.stringify(userAccess)}</p>
+            <p><strong>Has Access:</strong> {userAccess?.hasAccess ? 'Yes' : 'No'}</p>
+            <p><strong>Access Type:</strong> {userAccess?.accessType || 'None'}</p>
+            <p><strong>Character ID:</strong> {userAccess?.characterId || 'None'}</p>
+          </div>
+        </div>
+      )}
 
       <section className="text-center mb-16 parchment-content">
         <h1 className="storybook-title text-4xl mb-6">Your Reports</h1>
@@ -142,20 +146,6 @@ export default function ReportsPage() {
           </>
         )}
       </section>
-
-      {/* Temporary Debug Section - Remove after fixing webhook */}
-      {user && (
-        <section className="mb-8 p-4 bg-gray-100 rounded-lg">
-          <h3 className="text-lg font-semibold mb-2">🔍 Debug Info (Remove after fixing)</h3>
-          <div className="text-sm space-y-1">
-            <p><strong>User Email:</strong> {user.email}</p>
-            <p><strong>User Access:</strong> {JSON.stringify(userAccess)}</p>
-            <p><strong>Has Access:</strong> {userAccess?.hasAccess ? 'Yes' : 'No'}</p>
-            <p><strong>Access Type:</strong> {userAccess?.accessType || 'None'}</p>
-            <p><strong>Character ID:</strong> {userAccess?.characterId || 'None'}</p>
-          </div>
-        </section>
-      )}
 
       {/* Show all character cards with different access states */}
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
