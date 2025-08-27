@@ -6,11 +6,17 @@ import { Stripe } from 'stripe';
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('🔔 Webhook received - starting processing...');
+    
     const body = await request.text();
     const headersList = await headers();
     const signature = headersList.get('stripe-signature');
 
+    console.log('📝 Webhook signature:', signature ? 'Present' : 'Missing');
+    console.log('📊 Webhook body length:', body.length);
+
     if (!signature) {
+      console.error('❌ No signature found in webhook');
       return NextResponse.json({ error: 'No signature' }, { status: 400 });
     }
 
@@ -18,21 +24,41 @@ export async function POST(request: NextRequest) {
       apiVersion: '2025-07-30.basil',
     });
 
-    const event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
+      console.log('✅ Webhook signature verified successfully');
+      console.log('🎯 Event type:', event.type);
+      console.log('🆔 Event ID:', event.id);
+    } catch (err) {
+      console.error('❌ Webhook signature verification failed:', err);
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+    }
+
     const supabase = await createClient();
+    console.log('🔗 Supabase client created successfully');
 
     try {
       switch (event.type) {
         case 'checkout.session.completed':
+          console.log('💰 Processing checkout.session.completed event...');
           const session = event.data.object;
           const metadata = session.metadata;
           
+          console.log('📋 Session metadata:', metadata);
+          console.log('📧 Customer email:', session.customer_details?.email);
+          
           if (metadata && (metadata.plan === 'single' || metadata.plan === 'allReports')) {
+            console.log('📊 Processing report purchase:', metadata.plan);
             // Handle one-time report purchases
             const { plan, characterId } = metadata;
             const customerEmail = session.customer_details?.email;
             
+            console.log('🎭 Character ID:', characterId);
+            console.log('📧 Customer email:', customerEmail);
+            
             if (customerEmail) {
+              console.log('💾 Attempting to create user access record...');
               // Create user access record
               const { error: insertError } = await supabase
                 .from('user_report_access')
@@ -45,14 +71,20 @@ export async function POST(request: NextRequest) {
                 });
 
               if (insertError) {
-                console.error('Error creating user access record:', insertError);
+                console.error('❌ Error creating user access record:', insertError);
+              } else {
+                console.log('✅ User access record created successfully!');
               }
+            } else {
+              console.log('⚠️ No customer email found in session');
             }
           } else if (metadata?.plan === 'monthly') {
+            console.log('📅 Processing monthly subscription...');
             // Handle monthly subscription (existing logic)
             const customerEmail = session.customer_details?.email;
             
             if (customerEmail) {
+              console.log('💾 Attempting to create subscription record...');
               const { error: insertError } = await supabase
                 .from('user_subscriptions')
                 .insert({
@@ -64,18 +96,27 @@ export async function POST(request: NextRequest) {
                 });
 
               if (insertError) {
-                console.error('Error creating subscription record:', insertError);
+                console.error('❌ Error creating subscription record:', insertError);
+              } else {
+                console.log('✅ Subscription record created successfully!');
               }
             }
+          } else {
+            console.log('⚠️ No valid plan found in metadata:', metadata);
           }
           break;
 
         case 'customer.subscription.created':
         case 'customer.subscription.updated':
+          console.log('📅 Processing subscription event:', event.type);
           const subscription = event.data.object;
           const subscriptionEmail = subscription.metadata?.email;
           
+          console.log('📧 Subscription email:', subscriptionEmail);
+          console.log('🆔 Subscription ID:', subscription.id);
+          
           if (subscriptionEmail) {
+            console.log('💾 Attempting to upsert subscription record...');
             const { error: upsertError } = await supabase
               .from('user_subscriptions')
               .upsert({
@@ -89,16 +130,25 @@ export async function POST(request: NextRequest) {
               });
 
             if (upsertError) {
-              console.error('Error upserting subscription:', upsertError);
+              console.error('❌ Error upserting subscription:', upsertError);
+            } else {
+              console.log('✅ Subscription record upserted successfully!');
             }
+          } else {
+            console.log('⚠️ No subscription email found in metadata');
           }
           break;
 
         case 'customer.subscription.deleted':
+          console.log('🗑️ Processing subscription deletion...');
           const deletedSubscription = event.data.object;
           const deletedEmail = deletedSubscription.metadata?.email;
           
+          console.log('📧 Deleted subscription email:', deletedEmail);
+          console.log('🆔 Deleted subscription ID:', deletedSubscription.id);
+          
           if (deletedEmail) {
+            console.log('💾 Attempting to update deleted subscription status...');
             const { error: updateError } = await supabase
               .from('user_subscriptions')
               .update({
@@ -108,15 +158,20 @@ export async function POST(request: NextRequest) {
               .eq('stripe_subscription_id', deletedSubscription.id);
 
             if (updateError) {
-              console.error('Error updating deleted subscription:', updateError);
+              console.error('❌ Error updating deleted subscription:', updateError);
+            } else {
+              console.log('✅ Deleted subscription status updated successfully!');
             }
+          } else {
+            console.log('⚠️ No deleted subscription email found in metadata');
           }
           break;
 
         default:
-          console.log(`Unhandled event type: ${event.type}`);
+          console.log(`ℹ️ Unhandled event type: ${event.type}`);
       }
 
+      console.log('✅ Webhook processing completed successfully');
       return NextResponse.json({ received: true });
     } catch (error) {
       console.error('Error processing webhook:', error);

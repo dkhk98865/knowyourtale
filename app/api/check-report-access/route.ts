@@ -3,9 +3,14 @@ import { createClient } from '@/lib/supabase-server';
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('🔍 Access check request received...');
     const { userEmail, characterId } = await request.json();
     
+    console.log('📧 User email:', userEmail);
+    console.log('🎭 Character ID:', characterId);
+    
     if (!userEmail) {
+      console.log('❌ No user email provided');
       return NextResponse.json(
         { error: 'User email is required' },
         { status: 400 }
@@ -13,9 +18,11 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = await createClient();
+    console.log('🔗 Supabase client created for access check');
     
     // Check for all reports access first
-    const { data: allReportsAccess } = await supabase
+    console.log('🔍 Checking for all reports access...');
+    const { data: allReportsAccess, error: allReportsError } = await supabase
       .from('user_report_access')
       .select('*')
       .eq('user_email', userEmail)
@@ -23,7 +30,12 @@ export async function POST(request: NextRequest) {
       .eq('status', 'active')
       .single();
 
+    if (allReportsError) {
+      console.log('⚠️ Error checking all reports access:', allReportsError);
+    }
+
     if (allReportsAccess) {
+      console.log('✅ User has all reports access');
       return NextResponse.json({ 
         hasAccess: true, 
         accessType: 'allReports' 
@@ -32,7 +44,8 @@ export async function POST(request: NextRequest) {
 
     // If no all reports access, check for specific character access
     if (characterId) {
-      const { data: singleReportAccess } = await supabase
+      console.log('🔍 Checking for single report access for character:', characterId);
+      const { data: singleReportAccess, error: singleReportError } = await supabase
         .from('user_report_access')
         .select('*')
         .eq('user_email', userEmail)
@@ -41,7 +54,12 @@ export async function POST(request: NextRequest) {
         .eq('status', 'active')
         .single();
 
+      if (singleReportError) {
+        console.log('⚠️ Error checking single report access:', singleReportError);
+      }
+
       if (singleReportAccess) {
+        console.log('✅ User has single report access for character:', characterId);
         return NextResponse.json({ 
           hasAccess: true, 
           accessType: 'single', 
@@ -50,13 +68,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    console.log('❌ User has no access to reports');
     return NextResponse.json({ 
       hasAccess: false, 
       accessType: null 
     });
 
   } catch (error) {
-    console.error('Error checking report access:', error);
+    console.error('💥 Error in access check API:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

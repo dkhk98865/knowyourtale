@@ -4,7 +4,6 @@ import { characters } from '@/types/characters';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import ReportAccessGate from '@/components/report-access-gate';
 
 export default function ArielReportPage() {
   const character = characters.find((a) => a.id === 'ariel');
@@ -14,8 +13,7 @@ export default function ArielReportPage() {
   }
 
   return (
-    <ReportAccessGate characterId="ariel">
-      <main className="max-w-6xl mx-auto px-4 py-12 relative">
+    <main className="max-w-6xl mx-auto px-4 py-12 relative">
         {/* Magical floating sparkles */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="magical-sparkle"></div>
@@ -364,6 +362,5 @@ export default function ArielReportPage() {
           </Link>
         </section>
       </main>
-    </ReportAccessGate>
   );
 }
