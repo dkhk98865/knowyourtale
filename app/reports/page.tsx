@@ -93,12 +93,7 @@ export default function ReportsPage() {
             <p className="storybook-subtitle text-lg mb-8">
               Sign in to access your purchased personality reports and unlock detailed insights.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth">
-                <button className="magical-button magical-glow">
-                  🔐 Sign In
-                </button>
-              </Link>
+            <div className="flex justify-center">
               <Link href="/quiz">
                 <button className="magical-button magical-glow">
                   🧙‍♀️ Take the Quiz
