@@ -23,31 +23,31 @@ export default function CommunityPage() {
   const [replyContent, setReplyContent] = useState('');
 
   useEffect(() => {
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+    };
+
+    const fetchPosts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('community_posts_view')
+          .select('*')
+          .order('is_pinned', { ascending: false })
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        setPosts(data || []);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     getSession();
     fetchPosts();
-  }, []);
-
-  const getSession = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    setUser(session?.user ?? null);
-  };
-
-  const fetchPosts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('community_posts_view')
-        .select('*')
-        .order('is_pinned', { ascending: false })
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setPosts(data || []);
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [supabase]);
 
   const fetchReplies = async (postId: string) => {
     try {
@@ -219,7 +219,7 @@ export default function CommunityPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Post Type</label>
                   <select
                     value={postType}
-                    onChange={(e) => setPostType(e.target.value as any)}
+                    onChange={(e) => setPostType(e.target.value as 'discussion' | 'question' | 'story' | 'announcement')}
                     className="w-full p-3 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                   >
                     <option value="discussion">💬 Discussion</option>

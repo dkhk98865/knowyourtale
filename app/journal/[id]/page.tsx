@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { use } from 'react';
+
 import { createClient } from '@/lib/supabase-client';
 import { JournalEntry, UpdateJournalEntry } from '@/types/journal';
 import { characters } from '@/types/characters';
@@ -23,41 +23,42 @@ export default function JournalEntryPage({ params }: { params: Promise<{ id: str
   useEffect(() => {
     const loadData = async () => {
       const { id } = await params;
+      
+      const checkUser = async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+      };
+
+      const fetchJournal = async (id: string) => {
+        try {
+          const { data, error } = await supabase
+            .from('user_journals')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+          if (error) throw error;
+          setJournal(data);
+          setFormData({
+            title: data.title,
+            content: data.content,
+            character_tags: data.character_tags,
+            entry_type: data.entry_type,
+            mood_rating: data.mood_rating
+          });
+        } catch (error) {
+          console.error('Error fetching journal:', error);
+          router.push('/journal');
+        } finally {
+          setLoading(false);
+        }
+      };
+
       await checkUser();
       await fetchJournal(id);
     };
     loadData();
-  }, [params, checkUser, fetchJournal]);
-
-  const checkUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setUser(user);
-  };
-
-  const fetchJournal = async (id: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('user_journals')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error) throw error;
-      setJournal(data);
-      setFormData({
-        title: data.title,
-        content: data.content,
-        character_tags: data.character_tags,
-        entry_type: data.entry_type,
-        mood_rating: data.mood_rating
-      });
-    } catch (error) {
-      console.error('Error fetching journal:', error);
-      router.push('/journal');
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [params, supabase, router]);
 
   const handleSave = async () => {
     if (!journal) return;

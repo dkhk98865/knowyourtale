@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
+
 import { createClient } from '@/lib/supabase-server';
 import { headers } from 'next/headers';
 import { Stripe } from 'stripe';
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     // Test database connection and table access
     console.log('🔍 Testing database connection...');
-    const { data: testData, error: testError } = await supabase
+    const { error: testError } = await supabase
       .from('user_report_access')
       .select('count')
       .limit(1);

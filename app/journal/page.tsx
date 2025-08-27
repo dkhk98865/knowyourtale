@@ -23,46 +23,46 @@ export default function JournalPage() {
   const supabase = createClient();
 
   useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+
+    const fetchJournals = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('user_journals')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        setJournals(data || []);
+      } catch (error) {
+        console.error('Error fetching journals:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchPrompts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('weekly_prompts')
+          .select('*')
+          .eq('is_active', true)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        setPrompts(data || []);
+      } catch (error) {
+        console.error('Error fetching prompts:', error);
+      }
+    };
+
     checkUser();
     fetchJournals();
     fetchPrompts();
-  }, [checkUser, fetchJournals, fetchPrompts]);
-
-  const checkUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setUser(user);
-  };
-
-  const fetchJournals = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('user_journals')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setJournals(data || []);
-    } catch (error) {
-      console.error('Error fetching journals:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchPrompts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('weekly_prompts')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setPrompts(data || []);
-    } catch (error) {
-      console.error('Error fetching prompts:', error);
-    }
-  };
+  }, [supabase]);
 
   const filteredJournals = journals.filter(journal => {
     if (filters.character_tags && journal.character_tags.includes(filters.character_tags)) return true;
