@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js';
-import { checkUserReportAccess } from '@/lib/supabase-server';
 
 export default function ReportsPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -14,18 +13,36 @@ export default function ReportsPage() {
   const [loading, setLoading] = useState(true);
   const [supabase] = useState(() => createClient());
 
+  const checkAccess = async (email: string) => {
+    try {
+      const response = await fetch('/api/check-report-access', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userEmail: email }),
+      });
+      
+      if (response.ok) {
+        const access = await response.json();
+        setUserAccess(access);
+      } else {
+        console.error('Error checking access:', response.statusText);
+        setUserAccess({ hasAccess: false, accessType: null });
+      }
+    } catch (error) {
+      console.error('Error checking user access:', error);
+      setUserAccess({ hasAccess: false, accessType: null });
+    }
+  };
+
   useEffect(() => {
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
       
       if (session?.user?.email) {
-        try {
-          const access = await checkUserReportAccess(session.user.email);
-          setUserAccess(access);
-        } catch (error) {
-          console.error('Error checking user access:', error);
-        }
+        await checkAccess(session.user.email);
       }
       
       setLoading(false);
@@ -37,12 +54,7 @@ export default function ReportsPage() {
       async (event: string, session: { user: User | null } | null) => {
         setUser(session?.user ?? null);
         if (session?.user?.email) {
-          try {
-            const access = await checkUserReportAccess(session.user.email);
-            setUserAccess(access);
-          } catch (error) {
-            console.error('Error checking user access:', error);
-          }
+          await checkAccess(session.user.email);
         }
       }
     );
@@ -97,7 +109,7 @@ export default function ReportsPage() {
         ) : !userAccess?.hasAccess ? (
           <>
             <p className="storybook-subtitle text-lg mb-8">
-              You haven't purchased any reports yet. Take the quiz to discover your personality type and purchase reports!
+              You haven&apos;t purchased any reports yet. Take the quiz to discover your personality type and purchase reports!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/quiz">

@@ -2,133 +2,129 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { createClient } from '@/lib/supabase-server';
 import { headers } from 'next/headers';
+import { Stripe } from 'stripe';
 
 export async function POST(request: NextRequest) {
-  const body = await request.text();
-  const signature = headers().get('stripe-signature');
-
-  if (!signature) {
-    return NextResponse.json({ error: 'No signature' }, { status: 400 });
-  }
-
-  let event;
-
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
-  } catch (err) {
-    console.error('Webhook signature verification failed:', err);
-    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
-  }
+    const body = await request.text();
+    const headersList = await headers();
+    const signature = headersList.get('stripe-signature');
 
-  const supabase = createClient();
+    if (!signature) {
+      return NextResponse.json({ error: 'No signature' }, { status: 400 });
+    }
 
-  try {
-    switch (event.type) {
-      case 'checkout.session.completed':
-        const session = event.data.object;
-        const { plan, characterId } = session.metadata;
-        
-        if (plan === 'single' || plan === 'allReports') {
-          // Handle one-time report purchases
-          const customerEmail = session.customer_details?.email;
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2025-07-30.basil',
+    });
+
+    const event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
+    const supabase = await createClient();
+
+    try {
+      switch (event.type) {
+        case 'checkout.session.completed':
+          const session = event.data.object;
+          const metadata = session.metadata;
           
-          if (customerEmail) {
-            // Get user ID from email
-            const { data: userData } = await supabase.auth.admin.getUserByEmail(customerEmail);
+          if (metadata && (metadata.plan === 'single' || metadata.plan === 'allReports')) {
+            // Handle one-time report purchases
+            const { plan, characterId } = metadata;
+            const customerEmail = session.customer_details?.email;
             
-            if (userData?.user) {
+            if (customerEmail) {
               // Create user access record
               const { error: insertError } = await supabase
                 .from('user_report_access')
                 .insert({
-                  user_id: userData.user.id,
                   user_email: customerEmail,
                   access_type: plan,
                   character_id: characterId || null,
                   stripe_payment_intent_id: session.payment_intent,
-                  status: 'active',
-                  expires_at: plan === 'single' ? null : null, // Single reports don't expire, all reports are permanent
+                  status: 'active'
                 });
 
               if (insertError) {
                 console.error('Error creating user access record:', insertError);
               }
             }
-          }
-        } else if (plan === 'monthly') {
-          // Handle monthly subscription (existing logic)
-          const customerEmail = session.customer_details?.email;
-          
-          if (customerEmail) {
-            const { error: insertError } = await supabase
-              .from('user_subscriptions')
-              .insert({
-                user_email: customerEmail,
-                stripe_subscription_id: session.subscription,
-                plan: 'monthly',
-                status: 'active',
-                current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-              });
+          } else if (metadata?.plan === 'monthly') {
+            // Handle monthly subscription (existing logic)
+            const customerEmail = session.customer_details?.email;
+            
+            if (customerEmail) {
+              const { error: insertError } = await supabase
+                .from('user_subscriptions')
+                .insert({
+                  user_email: customerEmail,
+                  stripe_subscription_id: session.subscription,
+                  plan: 'monthly',
+                  status: 'active',
+                  current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+                });
 
-            if (insertError) {
-              console.error('Error creating subscription record:', insertError);
+              if (insertError) {
+                console.error('Error creating subscription record:', insertError);
+              }
             }
           }
-        }
-        break;
+          break;
 
-      case 'customer.subscription.created':
-      case 'customer.subscription.updated':
-        const subscription = event.data.object;
-        const subscriptionEmail = subscription.metadata?.email;
-        
-        if (subscriptionEmail) {
-          const { error: upsertError } = await supabase
-            .from('user_subscriptions')
-            .upsert({
-              user_email: subscriptionEmail,
-              stripe_subscription_id: subscription.id,
-              plan: subscription.metadata?.plan || 'monthly',
-              status: subscription.status,
-              current_period_end: new Date(subscription.current_period_end * 1000),
-            }, {
-              onConflict: 'stripe_subscription_id'
-            });
+        case 'customer.subscription.created':
+        case 'customer.subscription.updated':
+          const subscription = event.data.object;
+          const subscriptionEmail = subscription.metadata?.email;
+          
+          if (subscriptionEmail) {
+            const { error: upsertError } = await supabase
+              .from('user_subscriptions')
+              .upsert({
+                user_email: subscriptionEmail,
+                stripe_subscription_id: subscription.id,
+                plan: subscription.metadata?.plan || 'monthly',
+                status: subscription.status,
+                current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default to 30 days from now
+              }, {
+                onConflict: 'stripe_subscription_id'
+              });
 
-          if (upsertError) {
-            console.error('Error upserting subscription:', upsertError);
+            if (upsertError) {
+              console.error('Error upserting subscription:', upsertError);
+            }
           }
-        }
-        break;
+          break;
 
-      case 'customer.subscription.deleted':
-        const deletedSubscription = event.data.object;
-        const deletedEmail = deletedSubscription.metadata?.email;
-        
-        if (deletedEmail) {
-          const { error: updateError } = await supabase
-            .from('user_subscriptions')
-            .update({
-              status: 'canceled',
-              updated_at: new Date().toISOString(),
-            })
-            .eq('stripe_subscription_id', deletedSubscription.id);
+        case 'customer.subscription.deleted':
+          const deletedSubscription = event.data.object;
+          const deletedEmail = deletedSubscription.metadata?.email;
+          
+          if (deletedEmail) {
+            const { error: updateError } = await supabase
+              .from('user_subscriptions')
+              .update({
+                status: 'canceled',
+                updated_at: new Date().toISOString(),
+              })
+              .eq('stripe_subscription_id', deletedSubscription.id);
 
-          if (updateError) {
-            console.error('Error updating deleted subscription:', updateError);
+            if (updateError) {
+              console.error('Error updating deleted subscription:', updateError);
+            }
           }
-        }
-        break;
+          break;
 
-      default:
-        console.log(`Unhandled event type: ${event.type}`);
+        default:
+          console.log(`Unhandled event type: ${event.type}`);
+      }
+
+      return NextResponse.json({ received: true });
+    } catch (error) {
+      console.error('Error processing webhook:', error);
+      return NextResponse.json(
+        { error: 'Webhook processing failed' },
+        { status: 500 }
+      );
     }
-
-    return NextResponse.json({ received: true });
   } catch (error) {
     console.error('Error processing webhook:', error);
     return NextResponse.json(

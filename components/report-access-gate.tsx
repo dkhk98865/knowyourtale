@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js';
-import { checkUserReportAccess } from '@/lib/supabase-server';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 
@@ -18,18 +17,36 @@ export default function ReportAccessGate({ characterId, children }: ReportAccess
   const [loading, setLoading] = useState(true);
   const [supabase] = useState(() => createClient());
 
+  const checkAccess = async (email: string) => {
+    try {
+      const response = await fetch('/api/check-report-access', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userEmail: email, characterId }),
+      });
+      
+      if (response.ok) {
+        const access = await response.json();
+        setUserAccess(access);
+      } else {
+        console.error('Error checking access:', response.statusText);
+        setUserAccess({ hasAccess: false, accessType: null });
+      }
+    } catch (error) {
+      console.error('Error checking user access:', error);
+      setUserAccess({ hasAccess: false, accessType: null });
+    }
+  };
+
   useEffect(() => {
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
       
       if (session?.user?.email) {
-        try {
-          const access = await checkUserReportAccess(session.user.email, characterId);
-          setUserAccess(access);
-        } catch (error) {
-          console.error('Error checking user access:', error);
-        }
+        await checkAccess(session.user.email);
       }
       
       setLoading(false);
@@ -41,12 +58,7 @@ export default function ReportAccessGate({ characterId, children }: ReportAccess
       async (event: string, session: { user: User | null } | null) => {
         setUser(session?.user ?? null);
         if (session?.user?.email) {
-          try {
-            const access = await checkUserReportAccess(session.user.email, characterId);
-            setUserAccess(access);
-          } catch (error) {
-            console.error('Error checking user access:', error);
-          }
+          await checkAccess(session.user.email);
         }
       }
     );
