@@ -157,26 +157,58 @@ export async function POST(request: NextRequest) {
             }
           } else if (metadata?.plan === 'monthly') {
             console.log('📅 Processing monthly subscription...');
-            // Handle monthly subscription (existing logic)
+            // Handle monthly subscription
             const customerEmail = session.customer_details?.email;
+            const subscriptionId = session.subscription;
             
-            if (customerEmail) {
+            console.log('📧 Customer email:', customerEmail);
+            console.log('🆔 Subscription ID:', subscriptionId);
+            
+            if (customerEmail && subscriptionId) {
               console.log('💾 Attempting to create subscription record...');
+              
+              // Calculate current period end (30 days from now)
+              const currentPeriodEnd = new Date();
+              currentPeriodEnd.setDate(currentPeriodEnd.getDate() + 30);
+              
               const { error: insertError } = await supabase
                 .from('user_subscriptions')
                 .insert({
                   user_email: customerEmail,
-                  stripe_subscription_id: session.subscription,
+                  stripe_subscription_id: subscriptionId,
                   plan: 'monthly',
                   status: 'active',
-                  current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+                  current_period_end: currentPeriodEnd.toISOString(),
                 });
 
               if (insertError) {
                 console.error('❌ Error creating subscription record:', insertError);
+                
+                // Log the error to webhook_logs table
+                await supabase.from('webhook_logs').insert({
+                  event_type: 'monthly_subscription_creation',
+                  stripe_event_id: event.id,
+                  user_email: customerEmail,
+                  plan: 'monthly',
+                  status: 'failed',
+                  error_message: JSON.stringify(insertError)
+                });
               } else {
                 console.log('✅ Subscription record created successfully!');
+                
+                // Log the success to webhook_logs table
+                await supabase.from('webhook_logs').insert({
+                  event_type: 'monthly_subscription_creation',
+                  stripe_event_id: event.id,
+                  user_email: customerEmail,
+                  plan: 'monthly',
+                  status: 'success'
+                });
               }
+            } else {
+              console.log('⚠️ Missing customer email or subscription ID');
+              console.log('📧 Customer email:', customerEmail);
+              console.log('🆔 Subscription ID:', subscriptionId);
             }
           } else {
             console.log('⚠️ No valid plan found in metadata:', metadata);
@@ -187,32 +219,89 @@ export async function POST(request: NextRequest) {
         case 'customer.subscription.updated':
           console.log('📅 Processing subscription event:', event.type);
           const subscription = event.data.object;
-          const subscriptionEmail = subscription.metadata?.email;
           
-          console.log('📧 Subscription email:', subscriptionEmail);
+          // For subscriptions, we need to get the customer email from the customer object
+          let customerEmail = subscription.metadata?.email;
+          
+          // If no email in metadata, try to get it from the customer object
+          if (!customerEmail && subscription.customer) {
+            try {
+              const customer = await stripe.customers.retrieve(subscription.customer as string);
+              if (customer && typeof customer === 'object' && 'email' in customer) {
+                const customerEmailFromCustomer = (customer as { email?: string }).email;
+                if (customerEmailFromCustomer) {
+                  customerEmail = customerEmailFromCustomer;
+                }
+              }
+            } catch (error) {
+              console.error('❌ Error retrieving customer:', error);
+            }
+          }
+          
+          console.log('📧 Subscription email:', customerEmail);
           console.log('🆔 Subscription ID:', subscription.id);
+          console.log('📊 Subscription status:', subscription.status);
           
-          if (subscriptionEmail) {
+          if (customerEmail) {
             console.log('💾 Attempting to upsert subscription record...');
+            
+            // Calculate current period end from subscription data
+            let currentPeriodEnd = new Date();
+            if ((subscription as { current_period_end?: number }).current_period_end) {
+              currentPeriodEnd = new Date((subscription as { current_period_end?: number }).current_period_end! * 1000);
+            } else {
+              // Fallback: 30 days from now
+              currentPeriodEnd.setDate(currentPeriodEnd.getDate() + 30);
+            }
+            
             const { error: upsertError } = await supabase
               .from('user_subscriptions')
               .upsert({
-                user_email: subscriptionEmail,
+                user_email: customerEmail,
                 stripe_subscription_id: subscription.id,
                 plan: subscription.metadata?.plan || 'monthly',
                 status: subscription.status,
-                current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default to 30 days from now
+                current_period_end: currentPeriodEnd.toISOString(),
               }, {
                 onConflict: 'stripe_subscription_id'
               });
 
             if (upsertError) {
               console.error('❌ Error upserting subscription:', upsertError);
+              
+              // Log the error to webhook_logs table
+              await supabase.from('webhook_logs').insert({
+                event_type: 'subscription_upsert',
+                stripe_event_id: event.id,
+                user_email: customerEmail,
+                plan: subscription.metadata?.plan || 'monthly',
+                status: 'failed',
+                error_message: JSON.stringify(upsertError)
+              });
             } else {
               console.log('✅ Subscription record upserted successfully!');
+              
+              // Log the success to webhook_logs table
+              await supabase.from('webhook_logs').insert({
+                event_type: 'subscription_upsert',
+                stripe_event_id: event.id,
+                user_email: customerEmail,
+                plan: subscription.metadata?.plan || 'monthly',
+                status: 'success'
+              });
             }
           } else {
-            console.log('⚠️ No subscription email found in metadata');
+            console.log('⚠️ No subscription email found');
+            
+            // Log the missing email to webhook_logs table
+            await supabase.from('webhook_logs').insert({
+              event_type: 'subscription_upsert',
+              stripe_event_id: event.id,
+              user_email: 'unknown',
+              plan: 'monthly',
+              status: 'failed',
+              error_message: 'No customer email found'
+            });
           }
           break;
 

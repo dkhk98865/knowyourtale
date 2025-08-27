@@ -53,17 +53,6 @@ This guide will walk you through setting up Stripe for your subscription plans.
 
 ### 2. Environment Variables
 
-Add these to your `.env.local` file:
-
-```bash
-# Stripe Configuration
-STRIPE_SECRET_KEY=sk_test_... # Your Stripe secret key
-STRIPE_PUBLISHABLE_KEY=pk_test_... # Your Stripe publishable key
-STRIPE_WEBHOOK_SECRET=whsec_Rhrkys37XEEyCytNiwd7yTC4I5DX4d1H # Webhook secret
-STRIPE_SINGLE_PRICE_ID=price_1S0WRdDvKY96pR0jHZkUEZ4M # Single Report price ID
-STRIPE_MONTHLY_PRICE_ID=price_1S0WSbDvKY96pR0jMSIGmjE5 # Monthly Plan price ID
-STRIPE_ALL_REPORTS_PRICE_ID=price_1S0WS2DvKY96pR0jiqSx56lv # All Reports price ID
-
 # App Configuration
 NEXT_PUBLIC_BASE_URL=http://localhost:3000 # Your app URL
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_... # Same as above
