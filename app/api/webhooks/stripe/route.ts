@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { createClient } from '@/lib/supabase-server';
+import { createWebhookClient } from '@/lib/supabase-webhook';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 import { Stripe } from 'stripe';
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
     }
 
-    const supabase: SupabaseClient = await createClient();
+    const supabase: SupabaseClient = createWebhookClient();
     console.log('🔗 Supabase client created successfully');
 
     // Test database connection and table access
