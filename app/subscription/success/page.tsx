@@ -3,11 +3,13 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { characters } from '@/types/characters';
 
 function SubscriptionSuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
   const plan = searchParams.get('plan'); // Get the plan from URL params
+  const characterId = searchParams.get('characterId'); // Get the character ID for single reports
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,9 +23,12 @@ function SubscriptionSuccessContent() {
   const getPlanDetails = () => {
     switch (plan) {
       case 'single':
+        const character = characterId ? characters.find(c => c.id === characterId) : null;
         return {
           title: 'Single Report Access Granted!',
-          description: 'You now have access to your specific personality report.',
+          description: character 
+            ? `You now have access to your ${character.name} personality report.`
+            : 'You now have access to your specific personality report.',
           features: [
             'Access to your specific character report',
             'Detailed personality insights',
@@ -31,7 +36,7 @@ function SubscriptionSuccessContent() {
             'Core traits and strengths analysis'
           ],
           nextSteps: 'View your report and explore your fairy tale personality!',
-          primaryAction: '/reports',
+          primaryAction: characterId ? `/reports/${characterId}` : '/reports',
           primaryActionText: 'View Your Report',
           secondaryAction: '/quiz',
           secondaryActionText: 'Take Quiz Again'

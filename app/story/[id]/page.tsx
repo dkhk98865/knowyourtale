@@ -76,7 +76,7 @@ export default function StoryPage({
           body: JSON.stringify({
             plan: 'single',
             characterId: id,
-            successUrl: `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=single`,
+            successUrl: `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=single&characterId=${id}`,
             cancelUrl: `${window.location.origin}/story/${id}`,
           }),
         });
