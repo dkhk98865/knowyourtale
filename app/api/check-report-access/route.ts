@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       .eq('user_email', userEmail)
       .eq('access_type', 'allReports')
       .eq('status', 'active')
-      .single();
+      .limit(1); // Changed from .single() to .limit(1)
 
     console.log('🔍 All reports query result:', { data: allReportsAccess, error: allReportsError });
 
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       console.log('⚠️ Error checking all reports access:', allReportsError);
     }
 
-    if (allReportsAccess) {
+    if (allReportsAccess && allReportsAccess.length > 0) {
       console.log('✅ User has all reports access');
       return NextResponse.json({ 
         hasAccess: true, 
@@ -64,13 +64,15 @@ export async function POST(request: NextRequest) {
         .eq('access_type', 'single')
         .eq('character_id', characterId)
         .eq('status', 'active')
-        .single();
+        .limit(1); // Changed from .single() to .limit(1)
+
+      console.log('🔍 Single report query result:', { data: singleReportAccess, error: singleReportError });
 
       if (singleReportError) {
         console.log('⚠️ Error checking single report access:', singleReportError);
       }
 
-      if (singleReportAccess) {
+      if (singleReportAccess && singleReportAccess.length > 0) {
         console.log('✅ User has single report access for character:', characterId);
         return NextResponse.json({ 
           hasAccess: true, 
@@ -81,14 +83,13 @@ export async function POST(request: NextRequest) {
     } else {
       // If no characterId provided, check for ANY single report access
       console.log('🔍 Checking for any single report access...');
-      
       const { data: anySingleReportAccess, error: anySingleError } = await supabase
         .from('user_report_access')
         .select('*')
         .eq('user_email', userEmail)
         .eq('access_type', 'single')
         .eq('status', 'active')
-        .single();
+        .limit(1); // Changed from .single() to .limit(1)
 
       console.log('🔍 Any single report query result:', { data: anySingleReportAccess, error: anySingleError });
 
@@ -96,12 +97,12 @@ export async function POST(request: NextRequest) {
         console.log('⚠️ Error checking any single report access:', anySingleError);
       }
 
-      if (anySingleReportAccess) {
-        console.log('✅ User has single report access for character:', anySingleReportAccess.character_id);
+      if (anySingleReportAccess && anySingleReportAccess.length > 0) {
+        console.log('✅ User has single report access for character:', anySingleReportAccess[0].character_id);
         return NextResponse.json({ 
           hasAccess: true, 
           accessType: 'single', 
-          characterId: anySingleReportAccess.character_id 
+          characterId: anySingleReportAccess[0].character_id 
         });
       }
     }
