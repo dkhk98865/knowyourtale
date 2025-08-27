@@ -124,7 +124,7 @@ export default function ReportsPage() {
             <p className="storybook-subtitle text-lg mb-8">
               {userAccess.accessType === 'allReports' 
                 ? 'You have access to all personality reports! Explore the full collection below.'
-                : `You have access to the ${characters.find(c => c.id === userAccess.characterId)?.name} report.`
+                : `You have access to the ${characters.find(c => c.id === userAccess.characterId)?.name} report. Click on it to view your full personality analysis!`
               }
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -143,54 +143,95 @@ export default function ReportsPage() {
         )}
       </section>
 
-      {user && userAccess?.hasAccess && (
-        <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {userAccess.accessType === 'allReports' 
-            ? characters.map((character) => (
+      {/* Temporary Debug Section - Remove after fixing webhook */}
+      {user && (
+        <section className="mb-8 p-4 bg-gray-100 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2">🔍 Debug Info (Remove after fixing)</h3>
+          <div className="text-sm space-y-1">
+            <p><strong>User Email:</strong> {user.email}</p>
+            <p><strong>User Access:</strong> {JSON.stringify(userAccess)}</p>
+            <p><strong>Has Access:</strong> {userAccess?.hasAccess ? 'Yes' : 'No'}</p>
+            <p><strong>Access Type:</strong> {userAccess?.accessType || 'None'}</p>
+            <p><strong>Character ID:</strong> {userAccess?.characterId || 'None'}</p>
+          </div>
+        </section>
+      )}
+
+      {/* Show all character cards with different access states */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        {characters.map((character) => {
+          // Determine if user has access to this specific character
+          const hasAccessToCharacter = userAccess?.hasAccess && (
+            userAccess.accessType === 'allReports' || 
+            (userAccess.accessType === 'single' && userAccess.characterId === character.id)
+          );
+
+          return (
+            <div key={character.id} className="relative">
+              {hasAccessToCharacter ? (
+                // User has access - show clickable card
                 <Link 
-                  key={character.id} 
                   href={`/reports/${character.id}`} 
                   className="storybook-card page-turn block overflow-hidden hover:scale-105 transition-transform duration-200"
                 >
                   <div className="relative w-full h-56">
                     <Image src={character.image} alt={character.name} fill className="object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    {/* Access indicator */}
+                    <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                      ✓ Access
+                    </div>
                   </div>
                   <div className="p-6">
                     <h3 className="text-xl font-semibold mb-3 text-center font-['Playfair_Display']">{character.name}</h3>
                     <p className="text-lg text-gray-700 text-center leading-relaxed">{character.description}</p>
                   </div>
                 </Link>
-              ))
-            : userAccess.characterId && (
-                <div className="col-span-full">
-                  <Link 
-                    href={`/reports/${userAccess.characterId}`} 
-                    className="storybook-card page-turn block overflow-hidden hover:scale-105 transition-transform duration-200 max-w-2xl mx-auto"
-                  >
-                    <div className="relative w-full h-56">
-                      <Image 
-                        src={characters.find(c => c.id === userAccess.characterId)?.image || ''} 
-                        alt={characters.find(c => c.id === userAccess.characterId)?.name || ''} 
-                        fill 
-                        className="object-cover" 
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+              ) : (
+                // User doesn't have access - show locked card
+                <div className="storybook-card page-turn block overflow-hidden opacity-75">
+                  <div className="relative w-full h-56">
+                    <Image src={character.image} alt={character.name} fill className="object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    {/* Lock overlay */}
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                      <div className="text-white text-center">
+                        <div className="text-3xl mb-2">🔒</div>
+                        <div className="text-sm font-semibold">Locked</div>
+                      </div>
                     </div>
-                    <div className="p-6">
-                      <h3 className="text-xl font-semibold mb-3 text-center font-['Playfair_Display']">
-                        {characters.find(c => c.id === userAccess.characterId)?.name}
-                      </h3>
-                      <p className="text-lg text-gray-700 text-center leading-relaxed">
-                        {characters.find(c => c.id === userAccess.characterId)?.description}
-                      </p>
+                    {/* Lock indicator */}
+                    <div className="absolute top-2 right-2 bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                      🔒 Locked
                     </div>
-                  </Link>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-3 text-center font-['Playfair_Display']">{character.name}</h3>
+                    <p className="text-lg text-gray-700 text-center leading-relaxed">{character.description}</p>
+                    {user ? (
+                      <div className="text-center mt-4">
+                        <Link href="/quiz">
+                          <button className="magical-button text-sm px-4 py-2">
+                            🧙‍♀️ Take Quiz
+                          </button>
+                        </Link>
+                      </div>
+                    ) : (
+                      <div className="text-center mt-4">
+                        <Link href="/auth">
+                          <button className="magical-button text-sm px-4 py-2">
+                            🔐 Sign In
+                          </button>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )
-          }
-        </section>
-      )}
+              )}
+            </div>
+          );
+        })}
+      </section>
     </main>
   );
 }

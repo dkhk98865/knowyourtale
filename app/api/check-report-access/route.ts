@@ -66,6 +66,29 @@ export async function POST(request: NextRequest) {
           characterId 
         });
       }
+    } else {
+      // If no characterId provided, check for ANY single report access
+      console.log('🔍 Checking for any single report access...');
+      const { data: anySingleReportAccess, error: anySingleError } = await supabase
+        .from('user_report_access')
+        .select('*')
+        .eq('user_email', userEmail)
+        .eq('access_type', 'single')
+        .eq('status', 'active')
+        .single();
+
+      if (anySingleError) {
+        console.log('⚠️ Error checking any single report access:', anySingleError);
+      }
+
+      if (anySingleReportAccess) {
+        console.log('✅ User has single report access for character:', anySingleReportAccess.character_id);
+        return NextResponse.json({ 
+          hasAccess: true, 
+          accessType: 'single', 
+          characterId: anySingleReportAccess.character_id 
+        });
+      }
     }
 
     console.log('❌ User has no access to reports');
