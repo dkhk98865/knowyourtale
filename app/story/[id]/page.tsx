@@ -253,6 +253,14 @@ export default function StoryPage({
               <div className="magical-sparkle text-5xl mb-6">📊</div>
               <h2 className="storybook-subtitle text-4xl mb-6 text-accent-gold font-bold">Unlock More Fairy Tale Insights</h2>
               <p className="text-gray-700 text-lg mb-8">Choose how you want to explore your fairy tale personality further</p>
+              
+              {/* Apple Pay notice */}
+              <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-lg max-w-2xl mx-auto">
+                <p className="text-blue-800 text-sm">
+                  <strong>Apple Pay Supported:</strong> We now support Apple Pay for quick and secure payments. 
+                  If you experience any redirect issues after payment, check your reports page for access.
+                </p>
+              </div>
             </div>
             
             <div className="grid md:grid-cols-2 gap-8 mb-8">

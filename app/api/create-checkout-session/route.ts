@@ -29,8 +29,8 @@ export async function POST(request: NextRequest) {
       payment_method_types: [
         'card',           // Credit/debit cards
         'us_bank_account', // ACH Direct Debit (US)
+        'apple_pay',      // Apple Pay support
       ],
-      // Explicitly exclude PayPal - it's not included in payment_method_types
       line_items: [
         {
           price: selectedPlan.priceId,
@@ -38,12 +38,18 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: isSubscription ? 'subscription' : 'payment',
-      success_url: successUrl || `http://localhost:3000/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=${plan}${characterId ? `&characterId=${characterId}` : ''}`,
-      cancel_url: cancelUrl || `http://localhost:3000/subscription`,
+      success_url: successUrl || `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=${plan}${characterId ? `&characterId=${characterId}` : ''}`,
+      cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/subscription`,
       metadata: {
         plan: plan,
         planName: selectedPlan.name,
         characterId: characterId || '', // Add character ID for single reports
+      },
+      // Add Apple Pay specific configuration
+      payment_method_options: {
+        apple_pay: {
+          setup_future_usage: 'off_session',
+        },
       },
       ...(isSubscription && {
         subscription_data: {

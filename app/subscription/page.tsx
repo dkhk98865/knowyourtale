@@ -89,6 +89,14 @@ export default function SubscriptionPage() {
           Unlock weekly journaling prompts, exclusive journaling features, and community engagement
         </p>
         <div className="magical-sparkle">✨</div>
+        
+        {/* Apple Pay notice */}
+        <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg max-w-2xl mx-auto">
+          <p className="text-blue-800 text-sm">
+            <strong>Apple Pay Users:</strong> We now support Apple Pay! If you experience any redirect issues 
+            after payment, you can manually navigate to your reports page to access your content.
+          </p>
+        </div>
       </section>
 
       {/* Pricing Cards */}
