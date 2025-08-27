@@ -20,8 +20,29 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
     console.log('🔗 Supabase client created for access check');
     
+    // Debug: Check ALL records for this user
+    console.log('🔍 DEBUG: Checking ALL records for user email:', userEmail);
+    const { data: allUserRecords, error: allUserError } = await supabase
+      .from('user_report_access')
+      .select('*')
+      .eq('user_email', userEmail);
+    
+    console.log('🔍 DEBUG: All user records found:', { data: allUserRecords, error: allUserError });
+    
+    // Debug: Check table structure
+    console.log('🔍 DEBUG: Checking table structure...');
+    const { data: tableInfo, error: tableError } = await supabase
+      .from('user_report_access')
+      .select('*')
+      .limit(1);
+    
+    console.log('🔍 DEBUG: Table structure check:', { data: tableInfo, error: tableError });
+
     // Check for all reports access first
     console.log('🔍 Checking for all reports access...');
+    console.log('🔍 SQL Query: SELECT * FROM user_report_access WHERE user_email = ? AND access_type = ? AND status = ?');
+    console.log('🔍 Query params:', { userEmail, accessType: 'allReports', status: 'active' });
+    
     const { data: allReportsAccess, error: allReportsError } = await supabase
       .from('user_report_access')
       .select('*')
@@ -29,6 +50,8 @@ export async function POST(request: NextRequest) {
       .eq('access_type', 'allReports')
       .eq('status', 'active')
       .single();
+
+    console.log('🔍 All reports query result:', { data: allReportsAccess, error: allReportsError });
 
     if (allReportsError) {
       console.log('⚠️ Error checking all reports access:', allReportsError);
@@ -69,6 +92,9 @@ export async function POST(request: NextRequest) {
     } else {
       // If no characterId provided, check for ANY single report access
       console.log('🔍 Checking for any single report access...');
+      console.log('🔍 SQL Query: SELECT * FROM user_report_access WHERE user_email = ? AND access_type = ? AND status = ?');
+      console.log('🔍 Query params:', { userEmail, accessType: 'single', status: 'active' });
+      
       const { data: anySingleReportAccess, error: anySingleError } = await supabase
         .from('user_report_access')
         .select('*')
@@ -76,6 +102,8 @@ export async function POST(request: NextRequest) {
         .eq('access_type', 'single')
         .eq('status', 'active')
         .single();
+
+      console.log('🔍 Any single report query result:', { data: anySingleReportAccess, error: anySingleError });
 
       if (anySingleError) {
         console.log('⚠️ Error checking any single report access:', anySingleError);

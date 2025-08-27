@@ -40,6 +40,20 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
     console.log('🔗 Supabase client created successfully');
 
+    // Test database connection and table access
+    console.log('🔍 Testing database connection...');
+    const { data: testData, error: testError } = await supabase
+      .from('user_report_access')
+      .select('count')
+      .limit(1);
+    
+    if (testError) {
+      console.error('❌ Database connection test failed:', testError);
+      console.error('❌ This suggests the table might not exist or there are permission issues');
+    } else {
+      console.log('✅ Database connection test successful');
+    }
+
     try {
       switch (event.type) {
         case 'checkout.session.completed':
@@ -61,8 +75,16 @@ export async function POST(request: NextRequest) {
             
             if (customerEmail) {
               console.log('💾 Attempting to create user access record...');
+              console.log('📋 Insert data:', {
+                user_email: customerEmail,
+                access_type: plan,
+                character_id: characterId || null,
+                stripe_payment_intent_id: session.payment_intent,
+                status: 'active'
+              });
+              
               // Create user access record
-              const { error: insertError } = await supabase
+              const { data: insertData, error: insertError } = await supabase
                 .from('user_report_access')
                 .insert({
                   user_email: customerEmail,
@@ -70,12 +92,20 @@ export async function POST(request: NextRequest) {
                   character_id: characterId || null,
                   stripe_payment_intent_id: session.payment_intent,
                   status: 'active'
-                });
+                })
+                .select(); // Add .select() to get the inserted data
 
               if (insertError) {
                 console.error('❌ Error creating user access record:', insertError);
+                console.error('❌ Error details:', {
+                  code: insertError.code,
+                  message: insertError.message,
+                  details: insertError.details,
+                  hint: insertError.hint
+                });
               } else {
                 console.log('✅ User access record created successfully!');
+                console.log('✅ Inserted data:', insertData);
               }
             } else {
               console.log('⚠️ No customer email found in session');
