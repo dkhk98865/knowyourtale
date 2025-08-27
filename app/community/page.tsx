@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js';
 import { characters } from '@/types/characters';
@@ -22,7 +22,7 @@ export default function CommunityPage() {
   const [selectedCharacter, setSelectedCharacter] = useState('');
   const [replyContent, setReplyContent] = useState('');
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('community_posts_view')
@@ -37,7 +37,7 @@ export default function CommunityPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase]);
 
   useEffect(() => {
     const getSession = async () => {
@@ -47,7 +47,7 @@ export default function CommunityPage() {
 
     getSession();
     fetchPosts();
-  }, [supabase]);
+  }, [supabase, fetchPosts]);
 
   const fetchReplies = async (postId: string) => {
     try {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase-client';
 import { JournalEntry, WeeklyPrompt } from '@/types/journal';
@@ -22,7 +22,7 @@ export default function JournalPage() {
   const router = useRouter();
   const supabase = createClient();
 
-  const fetchJournals = async () => {
+  const fetchJournals = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('user_journals')
@@ -36,9 +36,9 @@ export default function JournalPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase]);
 
-  const fetchPrompts = async () => {
+  const fetchPrompts = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('weekly_prompts')
@@ -48,10 +48,10 @@ export default function JournalPage() {
 
       if (error) throw error;
       setPrompts(data || []);
-      } catch (error) {
-        console.error('Error fetching prompts:', error);
-      }
-    };
+    } catch (error) {
+      console.error('Error fetching prompts:', error);
+    }
+  }, [supabase]);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -62,7 +62,7 @@ export default function JournalPage() {
     checkUser();
     fetchJournals();
     fetchPrompts();
-  }, [supabase]);
+  }, [supabase, fetchJournals, fetchPrompts]);
 
   const filteredJournals = journals.filter(journal => {
     if (filters.character_tags && journal.character_tags.includes(filters.character_tags)) return true;

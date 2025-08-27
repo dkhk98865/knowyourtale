@@ -11,7 +11,6 @@ function SubscriptionSuccessContent() {
   const plan = searchParams.get('plan'); // Get the plan from URL params
   const characterId = searchParams.get('characterId'); // Get the character ID for single reports
   const [loading, setLoading] = useState(true);
-  const [purchaseVerified, setPurchaseVerified] = useState(false);
   const [verificationError, setVerificationError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -24,11 +23,10 @@ function SubscriptionSuccessContent() {
     }
   }, [sessionId, plan, characterId]);
 
-  const verifyPurchase = async (sessionId: string) => {
+  const verifyPurchase = async (_sessionId: string) => {
     try {
       // You could add an API endpoint to verify the session
       // For now, we'll assume it's valid if we have a session ID
-      setPurchaseVerified(true);
       setLoading(false);
     } catch (error) {
       console.error('Error verifying purchase:', error);
@@ -41,7 +39,6 @@ function SubscriptionSuccessContent() {
     try {
       // Try to verify purchase by checking if user has access
       // This handles cases where redirect didn't work but purchase was successful
-      setPurchaseVerified(true);
       setLoading(false);
     } catch (error) {
       console.error('Error checking recent purchases:', error);
@@ -198,8 +195,8 @@ function SubscriptionSuccessContent() {
         {/* Apple Pay redirect notice */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
           <p className="text-blue-800 text-sm">
-            <strong>Apple Pay Users:</strong> If you used Apple Pay and this page didn't load automatically, 
-            don't worry - your purchase was successful! You can access your content from the reports page.
+            <strong>Apple Pay Users:</strong> If you used Apple Pay and this page didn&apos;t load automatically, 
+            don&apos;t worry - your purchase was successful! You can access your content from the reports page.
           </p>
           <p className="text-blue-700 text-xs mt-2">
             <strong>Having issues?</strong> You can also visit{' '}
