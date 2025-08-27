@@ -158,7 +158,7 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
       } else {
         setMessage(`Error: ${result.error}`);
       }
-    } catch (error) {
+    } catch (_error) {
       setMessage('Failed to cancel subscription. Please try again.');
     } finally {
       setUpdating(false);
@@ -186,7 +186,7 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
       } else {
         setMessage('Failed to open customer portal. Please try again.');
       }
-    } catch (error) {
+    } catch (_error) {
       setMessage('Failed to open customer portal. Please try again.');
     }
   };

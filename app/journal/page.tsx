@@ -22,41 +22,41 @@ export default function JournalPage() {
   const router = useRouter();
   const supabase = createClient();
 
+  const fetchJournals = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('user_journals')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setJournals(data || []);
+    } catch (error) {
+      console.error('Error fetching journals:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchPrompts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('weekly_prompts')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setPrompts(data || []);
+      } catch (error) {
+        console.error('Error fetching prompts:', error);
+      }
+    };
+
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
-    };
-
-    const fetchJournals = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('user_journals')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-        setJournals(data || []);
-      } catch (error) {
-        console.error('Error fetching journals:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const fetchPrompts = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('weekly_prompts')
-          .select('*')
-          .eq('is_active', true)
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-        setPrompts(data || []);
-      } catch (error) {
-        console.error('Error fetching prompts:', error);
-      }
     };
 
     checkUser();
@@ -307,7 +307,6 @@ export default function JournalPage() {
             setShowCreateForm(false);
             fetchJournals();
           }}
-          prompts={prompts}
         />
       )}
     </main>

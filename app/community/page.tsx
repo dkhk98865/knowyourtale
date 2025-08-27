@@ -22,27 +22,27 @@ export default function CommunityPage() {
   const [selectedCharacter, setSelectedCharacter] = useState('');
   const [replyContent, setReplyContent] = useState('');
 
+  const fetchPosts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('community_posts_view')
+        .select('*')
+        .order('is_pinned', { ascending: false })
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setPosts(data || []);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
-    };
-
-    const fetchPosts = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('community_posts_view')
-          .select('*')
-          .order('is_pinned', { ascending: false })
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-        setPosts(data || []);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-      } finally {
-        setLoading(false);
-      }
     };
 
     getSession();

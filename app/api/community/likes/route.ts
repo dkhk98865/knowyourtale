@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if like already exists
-    const { data: existingLike } = await supabase
+    const { data: existingLike } = await supabaseClient
       .from('community_likes')
       .select('id')
       .eq('user_email', user.email)
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { data: like, error } = await supabase
+    const { data: like, error } = await supabaseClient
       .from('community_likes')
       .insert({
         user_id: user.id,
