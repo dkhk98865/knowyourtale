@@ -66,10 +66,47 @@ export default function Header() {
         return;
       }
       
+      // Check if the session is actually valid by testing the access token
+      if (session.access_token) {
+        try {
+          // Test if the token is valid by making a simple API call
+          const { data: userData, error: userError } = await supabase.auth.getUser(session.access_token);
+          console.log('Token validation result:', { userData, userError });
+          
+          if (userError) {
+            console.log('Token is invalid, clearing session locally');
+            setUser(null);
+            // Clear any stored tokens
+            await supabase.auth.setSession({ access_token: '', refresh_token: '' });
+            alert('Your session has expired. You have been signed out.');
+            window.location.reload();
+            return;
+          }
+        } catch (tokenError) {
+          console.log('Token validation failed, clearing session locally');
+          setUser(null);
+          await supabase.auth.setSession({ access_token: '', refresh_token: '' });
+          alert('Session validation failed. You have been signed out.');
+          window.location.reload();
+          return;
+        }
+      }
+      
       // Now try to sign out
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error('Signout error:', error);
+        
+        // If we get a session missing error, clear the local state anyway
+        if (error.message.includes('Auth session missing')) {
+          console.log('Session missing error, clearing local state');
+          setUser(null);
+          await supabase.auth.setSession({ access_token: '', refresh_token: '' });
+          alert('Session was invalid. You have been signed out.');
+          window.location.reload();
+          return;
+        }
+        
         alert('Failed to sign out: ' + error.message);
       } else {
         console.log('Successfully signed out');
@@ -79,7 +116,17 @@ export default function Header() {
       }
     } catch (err) {
       console.error('Signout exception:', err);
-      alert('Failed to sign out. Please try again.');
+      
+      // If we get any error, try to clear the session locally
+      try {
+        setUser(null);
+        await supabase.auth.setSession({ access_token: '', refresh_token: '' });
+        alert('Signout failed, but your session has been cleared locally.');
+        window.location.reload();
+      } catch (clearError) {
+        console.error('Failed to clear session locally:', clearError);
+        alert('Failed to sign out. Please refresh the page and try again.');
+      }
     }
   };
 
@@ -134,6 +181,26 @@ export default function Header() {
                 style={{ position: 'relative', zIndex: 1000 }}
               >
                 🔄 Session
+              </button>
+              
+              {/* Force sign out button */}
+              <button
+                onClick={async () => {
+                  console.log('Force sign out clicked...');
+                  try {
+                    setUser(null);
+                    await supabase.auth.setSession({ access_token: '', refresh_token: '' });
+                    alert('Session cleared locally. Refreshing page...');
+                    window.location.reload();
+                  } catch (err) {
+                    console.error('Force sign out error:', err);
+                    alert('Failed to clear session. Please refresh the page manually.');
+                  }
+                }}
+                className="bg-orange-500 text-white px-4 py-2 text-sm rounded ml-2"
+                style={{ position: 'relative', zIndex: 1000 }}
+              >
+                ⚡ Force Out
               </button>
             </div>
           ) : (
