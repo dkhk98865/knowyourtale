@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Update the database
-    const supabase = createClient();
+    const supabase = await createClient();
           const { error } = await supabase
         .from('user_subscriptions')
         .update({

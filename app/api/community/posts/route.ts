@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase-server';
 
 export async function GET() {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     const { data: posts, error } = await supabase
       .from('community_posts_view')
@@ -25,7 +25,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // Get user session
     const { data: { user }, error: authError } = await supabase.auth.getUser();
