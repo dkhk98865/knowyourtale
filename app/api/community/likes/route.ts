@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase-server';
+import { requireMonthlySubscription } from '@/lib/subscription-check';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,6 +13,12 @@ export async function POST(request: NextRequest) {
         { error: 'Unauthorized' },
         { status: 401 }
       );
+    }
+
+    // Check subscription access for liking posts
+    const subscriptionCheck = await requireMonthlySubscription(user.email);
+    if (!subscriptionCheck.hasAccess) {
+      return NextResponse.json({ error: subscriptionCheck.error }, { status: 403 });
     }
 
     const { target_type, target_id } = await request.json();
@@ -73,6 +80,12 @@ export async function DELETE(request: NextRequest) {
         { error: 'Unauthorized' },
         { status: 401 }
       );
+    }
+
+    // Check subscription access for managing likes
+    const subscriptionCheck = await requireMonthlySubscription(user.email);
+    if (!subscriptionCheck.hasAccess) {
+      return NextResponse.json({ error: subscriptionCheck.error }, { status: 403 });
     }
 
     const { searchParams } = new URL(request.url);

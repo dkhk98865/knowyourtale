@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase-client';
 import { JournalEntry, WeeklyPrompt } from '@/types/journal';
 import { characters } from '@/types/characters';
 import Link from 'next/link';
+import SubscriptionAccessGate from '@/components/subscription-access-gate';
 
 export default function JournalPage() {
   const [journals, setJournals] = useState<JournalEntry[]>([]);
@@ -83,25 +84,10 @@ export default function JournalPage() {
     );
   }
 
-  if (!user) {
-    return (
-      <main className="max-w-6xl mx-auto px-4 py-12">
-        <div className="text-center">
-          <div className="text-6xl mb-6">🔐</div>
-          <h1 className="storybook-title text-4xl mb-6">Sign In Required</h1>
-          <p className="storybook-subtitle text-xl mb-8">
-            Please sign in using the button in the top right corner to access your fairy tale journal.
-          </p>
-          <div className="magical-sparkle">✨</div>
-          <Link href="/">
-            <button className="magical-button magical-glow mt-6">
-              🏠 Return Home
-            </button>
-          </Link>
-        </div>
-      </main>
-    );
-  }
+  // Wrap the main content with subscription access gate
+  return (
+    <SubscriptionAccessGate user={user} featureName="Know Your Tale Journaling">
+      <main className="max-w-6xl mx-auto px-4 py-12 relative">
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-12 relative">
@@ -309,7 +295,8 @@ export default function JournalPage() {
           }}
         />
       )}
-    </main>
+      </main>
+    </SubscriptionAccessGate>
   );
 }
 

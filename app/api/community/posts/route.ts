@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase-server';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { requireMonthlySubscription } from '@/lib/subscription-check';
 
 export async function GET() {
   try {
     const supabase: SupabaseClient = await createClient();
+    
+    // For GET requests, we'll allow reading posts but require subscription for full access
+    // This allows users to see what's available before subscribing
     
     const { data: posts, error } = await supabase
       .from('community_posts_view')
@@ -35,6 +39,12 @@ export async function POST(request: NextRequest) {
         { error: 'Unauthorized' },
         { status: 401 }
       );
+    }
+
+    // Check subscription access for creating posts
+    const subscriptionCheck = await requireMonthlySubscription(user.email);
+    if (!subscriptionCheck.hasAccess) {
+      return NextResponse.json({ error: subscriptionCheck.error }, { status: 403 });
     }
 
     const { title, content, post_type, character_id } = await request.json();

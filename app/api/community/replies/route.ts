@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase-server';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { requireMonthlySubscription } from '@/lib/subscription-check';
 
 export async function GET(request: NextRequest) {
   try {
@@ -45,6 +46,12 @@ export async function POST(request: NextRequest) {
         { error: 'Unauthorized' },
         { status: 401 }
       );
+    }
+
+    // Check subscription access for creating replies
+    const subscriptionCheck = await requireMonthlySubscription(user.email);
+    if (!subscriptionCheck.hasAccess) {
+      return NextResponse.json({ error: subscriptionCheck.error }, { status: 403 });
     }
 
     const { post_id, content } = await request.json();

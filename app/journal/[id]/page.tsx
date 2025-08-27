@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase-client';
 import { JournalEntry, UpdateJournalEntry } from '@/types/journal';
 import { characters } from '@/types/characters';
 import Link from 'next/link';
+import SubscriptionAccessGate from '@/components/subscription-access-gate';
 
 export default function JournalEntryPage({ params }: { params: Promise<{ id: string }> }) {
   const [journal, setJournal] = useState<JournalEntry | null>(null);
@@ -154,7 +155,8 @@ export default function JournalEntryPage({ params }: { params: Promise<{ id: str
   }
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-12">
+    <SubscriptionAccessGate user={user} featureName="Know Your Tale Journaling">
+      <main className="max-w-4xl mx-auto px-4 py-12">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -365,7 +367,7 @@ export default function JournalEntryPage({ params }: { params: Promise<{ id: str
         )}
       </div>
 
-      {/* Navigation */}
+            {/* Navigation */}
       <div className="mt-8 text-center">
         <Link href="/journal">
           <button className="magical-button">
@@ -373,6 +375,7 @@ export default function JournalEntryPage({ params }: { params: Promise<{ id: str
           </button>
         </Link>
       </div>
-    </main>
+      </main>
+    </SubscriptionAccessGate>
   );
 }

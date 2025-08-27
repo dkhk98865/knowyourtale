@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js';
 import { characters } from '@/types/characters';
 import { CommunityPost, CommunityReply } from '@/types/community';
+import SubscriptionAccessGate from '@/components/subscription-access-gate';
 
 
 
@@ -259,8 +260,9 @@ export default function CommunityPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-yellow-100">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+    <SubscriptionAccessGate user={user} featureName="Community Board Access">
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 to-yellow-100">
+        <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="magical-sparkle text-6xl mb-4">🌟</div>
@@ -528,7 +530,8 @@ export default function CommunityPage() {
             <p className="text-gray-500">Be the first to share your fairy tale thoughts!</p>
           </div>
         )}
+        </div>
       </div>
-    </div>
+    </SubscriptionAccessGate>
   );
 }
