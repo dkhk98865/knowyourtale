@@ -1,18 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { createClient } from '@/lib/supabase-client';
+import { createClient } from '@/lib/supabase-server';
 import { headers } from 'next/headers';
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
-  const headersList = await headers();
-  const signature = headersList.get('stripe-signature');
+  const signature = headers().get('stripe-signature');
 
   if (!signature) {
-    return NextResponse.json(
-      { error: 'Missing stripe-signature header' },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'No signature' }, { status: 400 });
   }
 
   let event;
@@ -25,70 +21,105 @@ export async function POST(request: NextRequest) {
     );
   } catch (err) {
     console.error('Webhook signature verification failed:', err);
-    return NextResponse.json(
-      { error: 'Invalid signature' },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 
   const supabase = createClient();
 
   try {
     switch (event.type) {
+      case 'checkout.session.completed':
+        const session = event.data.object;
+        const { plan, characterId } = session.metadata;
+        
+        if (plan === 'single' || plan === 'allReports') {
+          // Handle one-time report purchases
+          const customerEmail = session.customer_details?.email;
+          
+          if (customerEmail) {
+            // Get user ID from email
+            const { data: userData } = await supabase.auth.admin.getUserByEmail(customerEmail);
+            
+            if (userData?.user) {
+              // Create user access record
+              const { error: insertError } = await supabase
+                .from('user_report_access')
+                .insert({
+                  user_id: userData.user.id,
+                  user_email: customerEmail,
+                  access_type: plan,
+                  character_id: characterId || null,
+                  stripe_payment_intent_id: session.payment_intent,
+                  status: 'active',
+                  expires_at: plan === 'single' ? null : null, // Single reports don't expire, all reports are permanent
+                });
+
+              if (insertError) {
+                console.error('Error creating user access record:', insertError);
+              }
+            }
+          }
+        } else if (plan === 'monthly') {
+          // Handle monthly subscription (existing logic)
+          const customerEmail = session.customer_details?.email;
+          
+          if (customerEmail) {
+            const { error: insertError } = await supabase
+              .from('user_subscriptions')
+              .insert({
+                user_email: customerEmail,
+                stripe_subscription_id: session.subscription,
+                plan: 'monthly',
+                status: 'active',
+                current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+              });
+
+            if (insertError) {
+              console.error('Error creating subscription record:', insertError);
+            }
+          }
+        }
+        break;
+
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const subscription = event.data.object as any;
-        const customerId = subscription.customer as string;
-        const plan = subscription.metadata.plan;
-        const status = subscription.status;
-        const currentPeriodEnd = subscription.current_period_end;
-
-        // Get customer email from Stripe
-        const customer = await stripe.customers.retrieve(customerId);
+        const subscription = event.data.object;
+        const subscriptionEmail = subscription.metadata?.email;
         
-        if ('email' in customer && customer.email) {
-          const email = customer.email;
-          // Update user subscription in Supabase
-          const { error } = await supabase
+        if (subscriptionEmail) {
+          const { error: upsertError } = await supabase
             .from('user_subscriptions')
             .upsert({
-              user_email: email,
-              stripe_customer_id: customerId,
+              user_email: subscriptionEmail,
               stripe_subscription_id: subscription.id,
-              plan: plan,
-              status: status,
-              current_period_end: currentPeriodEnd ? new Date(currentPeriodEnd * 1000).toISOString() : null,
-              updated_at: new Date().toISOString()
+              plan: subscription.metadata?.plan || 'monthly',
+              status: subscription.status,
+              current_period_end: new Date(subscription.current_period_end * 1000),
+            }, {
+              onConflict: 'stripe_subscription_id'
             });
 
-          if (error) {
-            console.error('Error updating subscription in Supabase:', error);
+          if (upsertError) {
+            console.error('Error upserting subscription:', upsertError);
           }
         }
         break;
 
       case 'customer.subscription.deleted':
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const deletedSubscription = event.data.object as any;
-        const deletedCustomerId = deletedSubscription.customer as string;
-
-        // Get customer email from Stripe
-        const deletedCustomer = await stripe.customers.retrieve(deletedCustomerId);
+        const deletedSubscription = event.data.object;
+        const deletedEmail = deletedSubscription.metadata?.email;
         
-        if ('email' in deletedCustomer && deletedCustomer.email) {
-          const deletedEmail = deletedCustomer.email;
-          // Update subscription status to cancelled in Supabase
-          const { error } = await supabase
+        if (deletedEmail) {
+          const { error: updateError } = await supabase
             .from('user_subscriptions')
             .update({
               status: 'canceled',
-              updated_at: new Date().toISOString()
+              updated_at: new Date().toISOString(),
             })
-            .eq('user_email', deletedEmail);
+            .eq('stripe_subscription_id', deletedSubscription.id);
 
-          if (error) {
-            console.error('Error updating subscription status in Supabase:', error);
+          if (updateError) {
+            console.error('Error updating deleted subscription:', updateError);
           }
         }
         break;

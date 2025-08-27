@@ -3,7 +3,7 @@ import { stripe, SUBSCRIPTION_PLANS } from '@/lib/stripe';
 
 export async function POST(request: NextRequest) {
   try {
-    const { plan, successUrl, cancelUrl } = await request.json();
+    const { plan, characterId, successUrl, cancelUrl } = await request.json();
     
     if (!plan || !SUBSCRIPTION_PLANS[plan as keyof typeof SUBSCRIPTION_PLANS]) {
       return NextResponse.json(
@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         plan: plan,
         planName: selectedPlan.name,
+        characterId: characterId || '', // Add character ID for single reports
       },
       ...(isSubscription && {
         subscription_data: {

@@ -10,6 +10,9 @@ import { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { SUBSCRIPTION_PLANS } from '@/lib/stripe';
+import { createClient } from '@/lib/supabase-client';
+import { User } from '@supabase/supabase-js';
+import { useEffect } from 'react';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -21,11 +24,32 @@ export default function StoryPage({
     searchParams,
   }: Props) {
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
+    const [supabase] = useState(() => createClient());
     
     const { id } = use(params);
     const { quiz } = use(searchParams);
     const character = characters.find((a) => a.id === id);
+
+    useEffect(() => {
+      // Get initial session
+      const getSession = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        setUser(session?.user ?? null);
+      };
+
+      getSession();
+
+      // Listen for auth changes
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        async (event: string, session: { user: User | null } | null) => {
+          setUser(session?.user ?? null);
+        }
+      );
+
+      return () => subscription.unsubscribe();
+    }, [supabase]);
 
     if (!character) {
       return notFound();
@@ -38,6 +62,11 @@ export default function StoryPage({
 
     // Stripe checkout functions
     const handleSingleReportCheckout = async () => {
+      if (!user) {
+        setIsAuthModalOpen(true);
+        return;
+      }
+
       try {
         const response = await fetch('/api/create-checkout-session', {
           method: 'POST',
@@ -46,6 +75,7 @@ export default function StoryPage({
           },
           body: JSON.stringify({
             plan: 'single',
+            characterId: id,
             successUrl: `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
             cancelUrl: `${window.location.origin}/story/${id}`,
           }),
@@ -68,6 +98,11 @@ export default function StoryPage({
     };
 
     const handleAllReportsCheckout = async () => {
+      if (!user) {
+        setIsAuthModalOpen(true);
+        return;
+      }
+
       try {
         const response = await fetch('/api/create-checkout-session', {
           method: 'POST',
