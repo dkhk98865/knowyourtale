@@ -48,12 +48,16 @@ export default function SettingsPage() {
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error('Sign out error:', error);
+        alert('Failed to sign out: ' + error.message);
       } else {
         console.log('Successfully signed out');
         setUser(null);
+        // Force a page refresh to ensure state is cleared
+        window.location.reload();
       }
     } catch (error) {
       console.error('Sign out error:', error);
+      alert('Failed to sign out. Please try again.');
     } finally {
       setLoading(false);
     }

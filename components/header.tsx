@@ -33,7 +33,21 @@ export default function Header() {
   }, [supabase]);
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      console.log('Signout button clicked, attempting to sign out...');
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Signout error:', error);
+        alert('Failed to sign out: ' + error.message);
+      } else {
+        console.log('Successfully signed out');
+        // Force a page refresh to ensure state is cleared
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error('Signout exception:', err);
+      alert('Failed to sign out. Please try again.');
+    }
   };
 
   return (
@@ -46,7 +60,13 @@ export default function Header() {
                 <span className="font-medium">{user.email}</span>
               </div>
               <button
-                onClick={handleSignOut}
+                onClick={(e) => {
+                  console.log('Signout button clicked, event:', e);
+                  alert('Signout button clicked!'); // Test if click is working
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleSignOut();
+                }}
                 className="magical-button magical-glow bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm"
               >
                 🚪 Sign Out

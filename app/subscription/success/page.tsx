@@ -192,20 +192,7 @@ function SubscriptionSuccessContent() {
           </div>
         )}
 
-        {/* Apple Pay redirect notice */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <p className="text-blue-800 text-sm">
-            <strong>Apple Pay Users:</strong> If you used Apple Pay and this page didn&apos;t load automatically, 
-            don&apos;t worry - your purchase was successful! You can access your content from the reports page.
-          </p>
-          <p className="text-blue-700 text-xs mt-2">
-            <strong>Having issues?</strong> You can also visit{' '}
-            <Link href="/subscription/fallback-success" className="underline hover:text-blue-900">
-              our fallback success page
-            </Link>{' '}
-            for additional help.
-          </p>
-        </div>
+
 
         <div className="space-y-4 mb-8">
           {planDetails.features.map((feature, index) => (

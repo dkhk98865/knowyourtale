@@ -66,7 +66,21 @@ export default function Auth() {
   };
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      console.log('Signout button clicked, attempting to sign out...');
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Signout error:', error);
+        alert('Failed to sign out: ' + error.message);
+      } else {
+        console.log('Successfully signed out');
+        // Force a page refresh to ensure state is cleared
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error('Signout exception:', err);
+      alert('Failed to sign out. Please try again.');
+    }
   };
 
   if (user) {
