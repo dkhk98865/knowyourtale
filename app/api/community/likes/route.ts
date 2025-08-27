@@ -16,6 +16,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Check subscription access for liking posts
+    if (!user.email) {
+      return NextResponse.json({ error: 'User email not found' }, { status: 400 });
+    }
     const subscriptionCheck = await requireMonthlySubscription(user.email);
     if (!subscriptionCheck.hasAccess) {
       return NextResponse.json({ error: subscriptionCheck.error }, { status: 403 });
@@ -83,6 +86,9 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Check subscription access for managing likes
+    if (!user.email) {
+      return NextResponse.json({ error: 'User email not found' }, { status: 400 });
+    }
     const subscriptionCheck = await requireMonthlySubscription(user.email);
     if (!subscriptionCheck.hasAccess) {
       return NextResponse.json({ error: subscriptionCheck.error }, { status: 403 });

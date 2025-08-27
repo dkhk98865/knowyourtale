@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { User } from '@supabase/supabase-js';
 
 import { createClient } from '@/lib/supabase-client';
 import { JournalEntry, UpdateJournalEntry } from '@/types/journal';
@@ -16,7 +17,7 @@ export default function JournalEntryPage({ params }: { params: Promise<{ id: str
   const [formData, setFormData] = useState<UpdateJournalEntry>({});
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   const router = useRouter();
   const supabase = createClient();

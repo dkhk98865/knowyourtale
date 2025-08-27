@@ -7,12 +7,13 @@ import { JournalEntry, WeeklyPrompt } from '@/types/journal';
 import { characters } from '@/types/characters';
 import Link from 'next/link';
 import SubscriptionAccessGate from '@/components/subscription-access-gate';
+import { User } from '@supabase/supabase-js';
 
 export default function JournalPage() {
   const [journals, setJournals] = useState<JournalEntry[]>([]);
   const [prompts, setPrompts] = useState<WeeklyPrompt[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [filters, setFilters] = useState({
     character_tags: '',
@@ -88,217 +89,195 @@ export default function JournalPage() {
   return (
     <SubscriptionAccessGate user={user} featureName="Know Your Tale Journaling">
       <main className="max-w-6xl mx-auto px-4 py-12 relative">
+        {/* Magical floating sparkles */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="magical-sparkle"></div>
+          <div className="magical-sparkle"></div>
+          <div className="magical-sparkle"></div>
+          <div className="magical-sparkle"></div>
+          <div className="magical-sparkle"></div>
+          <div className="magical-sparkle"></div>
+        </div>
 
-  return (
-    <main className="max-w-6xl mx-auto px-4 py-12 relative">
-      {/* Magical floating sparkles */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="magical-sparkle"></div>
-        <div className="magical-sparkle"></div>
-        <div className="magical-sparkle"></div>
-        <div className="magical-sparkle"></div>
-        <div className="magical-sparkle"></div>
-        <div className="magical-sparkle"></div>
-      </div>
-
-      {/* Header Section */}
-      <section className="text-center mb-16 parchment-content">
-        <div className="magical-sparkle text-4xl mb-6">📖</div>
-        <h1 className="storybook-title text-5xl mb-6">Your Fairy Tale Journal</h1>
-        <div className="storybook-divider mb-6"></div>
-        <p className="storybook-subtitle text-xl mb-8">
-          Reflect on your personality insights, track your growth, and respond to weekly prompts
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            onClick={() => setShowCreateForm(true)}
-            className="magical-button magical-glow"
-          >
-            ✍️ New Journal Entry
-          </button>
-          <Link href="/">
-            <button className="magical-button">
-              🏠 Back to Home
+        {/* Header Section */}
+        <section className="text-center mb-16 parchment-content">
+          <div className="magical-sparkle text-4xl mb-6">📖</div>
+          <h1 className="storybook-title text-5xl mb-6">Your Fairy Tale Journal</h1>
+          <div className="storybook-divider mb-6"></div>
+          <p className="storybook-subtitle text-xl mb-8">
+            Reflect on your personality insights, track your growth, and respond to weekly prompts
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={() => setShowCreateForm(true)}
+              className="magical-button magical-glow"
+            >
+              ✍️ New Journal Entry
             </button>
-          </Link>
-        </div>
-      </section>
-
-      {/* Filters Section */}
-      <section className="mb-12">
-        <div className="storybook-card page-turn p-6">
-          <h2 className="storybook-subtitle text-2xl mb-4">Filter Your Entries</h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Character
-              </label>
-              <select
-                value={filters.character_tags}
-                onChange={(e) => setFilters({ ...filters, character_tags: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-transparent"
-              >
-                <option value="">All Characters</option>
-                {characters.map((character) => (
-                  <option key={character.id} value={character.id}>
-                    {character.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Entry Type
-              </label>
-              <select
-                value={filters.entry_type}
-                onChange={(e) => setFilters({ ...filters, entry_type: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-transparent"
-              >
-                <option value="">All Types</option>
-                <option value="personality_reflection">Personality Reflection</option>
-                <option value="prompt_response">Prompt Response</option>
-                <option value="growth_tracking">Growth Tracking</option>
-                <option value="general">General</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Search
-              </label>
-              <input
-                type="text"
-                placeholder="Search entries..."
-                value={filters.search}
-                onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-transparent"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Weekly Prompts Section */}
-      {prompts.length > 0 && (
-        <section className="mb-12">
-          <div className="storybook-card page-turn p-6">
-            <h2 className="storybook-subtitle text-2xl mb-4">🌟 Weekly Journaling Prompts</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {prompts.slice(0, 4).map((prompt) => {
-                const character = characters.find(c => c.id === prompt.character_id);
-                return (
-                  <div key={prompt.id} className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
-                    <div className="flex items-center mb-2">
-                      <span className="text-sm font-medium text-blue-800 bg-blue-100 px-2 py-1 rounded">
-                        {character?.name || 'Unknown Character'}
-                      </span>
-                    </div>
-                    <p className="text-gray-700 mb-3">{prompt.prompt_text}</p>
-                    <button
-                      onClick={() => {
-                        setShowCreateForm(true);
-                        // You could pre-populate the form with this prompt
-                      }}
-                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                    >
-                      ✍️ Write about this →
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+            <Link href="/">
+              <button className="magical-button">
+                🏠 Back to Home
+              </button>
+            </Link>
           </div>
         </section>
-      )}
 
-      {/* Journal Entries Section */}
-      <section>
-        <div className="storybook-card page-turn p-6">
-          <h2 className="storybook-subtitle text-2xl mb-6">Your Journal Entries</h2>
-          
-          {filteredJournals.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">📝</div>
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">No journal entries yet</h3>
-              <p className="text-gray-600 mb-6">Start your fairy tale journey by creating your first journal entry!</p>
-              <button
-                onClick={() => setShowCreateForm(true)}
-                className="magical-button magical-glow"
-              >
-                ✍️ Create Your First Entry
-              </button>
+        {/* Filters Section */}
+        <section className="mb-12">
+          <div className="storybook-card page-turn p-6">
+            <h2 className="storybook-subtitle text-2xl mb-4">Filter Your Entries</h2>
+            <div className="grid md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Character
+                </label>
+                <select
+                  value={filters.character_tags}
+                  onChange={(e) => setFilters({ ...filters, character_tags: e.target.value })}
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-transparent"
+                >
+                  <option value="">All Characters</option>
+                  {characters.map((character) => (
+                    <option key={character.id} value={character.id}>
+                      {character.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Entry Type
+                </label>
+                <select
+                  value={filters.entry_type}
+                  onChange={(e) => setFilters({ ...filters, entry_type: e.target.value })}
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-transparent"
+                >
+                  <option value="">All Types</option>
+                  <option value="personality_reflection">Personality Reflection</option>
+                  <option value="prompt_response">Prompt Response</option>
+                  <option value="growth_tracking">Growth Tracking</option>
+                  <option value="general">General</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Search
+                </label>
+                <input
+                  type="text"
+                  placeholder="Search entries..."
+                  value={filters.search}
+                  onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-transparent"
+                />
             </div>
-          ) : (
-            <div className="space-y-6">
-              {filteredJournals.map((journal) => (
-                <div key={journal.id} className="bg-white/60 p-6 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-xl font-semibold text-gray-800">{journal.title}</h3>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm text-gray-500">
-                        {new Date(journal.created_at).toLocaleDateString()}
-                      </span>
-                      <button
-                        onClick={() => router.push(`/journal/${journal.id}`)}
-                        className="text-accent-gold hover:text-accent-gold-dark text-sm font-medium"
-                      >
-                        ✏️ Edit
-                      </button>
+          </div>
+        </div>
+      </section>
+
+        {/* Weekly Prompts Section */}
+        {prompts.length > 0 && (
+          <section className="mb-12">
+            <div className="storybook-card page-turn p-6">
+              <h2 className="storybook-subtitle text-2xl mb-4">🌟 Weekly Journaling Prompts</h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {prompts.slice(0, 4).map((prompt) => (
+                  <div key={prompt.id} className="storybook-card p-4 bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200">
+                    <h3 className="font-semibold text-gray-800 mb-2">Week {prompt.week_number} Prompt</h3>
+                    <p className="text-gray-600 text-sm mb-3">{prompt.prompt_text}</p>
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <span>Week {prompt.week_number}</span>
+                      <span>{prompt.character_id ? `For ${characters.find(c => c.id === prompt.character_id)?.name || prompt.character_id}` : 'General'}</span>
                     </div>
                   </div>
-                  
-                  <p className="text-gray-700 mb-4 line-clamp-3">
-                    {journal.content.length > 200 
-                      ? `${journal.content.substring(0, 200)}...` 
-                      : journal.content
-                    }
-                  </p>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      {journal.character_tags.map((tag) => {
-                        const character = characters.find(c => c.id === tag);
-                        return (
-                          <span
-                            key={tag}
-                            className="text-xs bg-accent-gold/20 text-accent-gold px-2 py-1 rounded-full"
-                          >
-                            {character?.name || tag}
-                          </span>
-                        );
-                      })}
-                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                        {journal.entry_type.replace('_', ' ')}
-                      </span>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Journal Entries Section */}
+        <section>
+          <div className="storybook-card page-turn p-6">
+            <h2 className="storybook-subtitle text-2xl mb-6">Your Journal Entries</h2>
+            
+            {filteredJournals.length > 0 ? (
+              <div className="space-y-6">
+                {filteredJournals.map((journal) => (
+                  <div key={journal.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                          <Link href={`/journal/${journal.id}`} className="hover:text-accent-gold transition-colors">
+                            {journal.title}
+                          </Link>
+                        </h3>
+                        <div className="flex items-center space-x-3 text-sm text-gray-500">
+                          <span>{new Date(journal.created_at).toLocaleDateString()}</span>
+                          <span className="capitalize">{journal.entry_type.replace('_', ' ')}</span>
+                          {journal.mood_rating && (
+                            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                              Mood: {journal.mood_rating}/10
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     </div>
                     
-                    {journal.mood_rating && (
-                      <div className="text-sm text-gray-600">
-                        Mood: {journal.mood_rating}/10
+                    <p className="text-gray-600 mb-3 line-clamp-3">
+                      {journal.content.length > 200 
+                        ? `${journal.content.substring(0, 200)}...` 
+                        : journal.content
+                      }
+                    </p>
+                    
+                    {journal.character_tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {journal.character_tags.map((tag) => {
+                          const character = characters.find(c => c.id === tag);
+                          return (
+                            <span
+                              key={tag}
+                              className="text-xs bg-accent-gold/20 text-accent-gold px-2 py-1 rounded-full"
+                            >
+                              {character?.name || tag}
+                            </span>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Create Journal Entry Modal */}
-      {showCreateForm && (
-        <CreateJournalModal
-          onClose={() => setShowCreateForm(false)}
-          onSuccess={() => {
-            setShowCreateForm(false);
-            fetchJournals();
-          }}
-        />
-      )}
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">📝</div>
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">No journal entries yet</h3>
+                <p className="text-gray-500 mb-4">Start your fairy tale journey by creating your first entry!</p>
+                <button
+                  onClick={() => setShowCreateForm(true)}
+                  className="magical-button magical-glow"
+                >
+                  ✍️ Create Your First Entry
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+        {/* Create Journal Modal */}
+        {showCreateForm && (
+          <CreateJournalModal
+            onClose={() => setShowCreateForm(false)}
+            onSuccess={() => {
+              setShowCreateForm(false);
+              fetchJournals();
+            }}
+          />
+        )}
       </main>
     </SubscriptionAccessGate>
   );
-}
 
 // Create Journal Modal Component
 function CreateJournalModal({ onClose, onSuccess }: { 
@@ -470,4 +449,5 @@ function CreateJournalModal({ onClose, onSuccess }: {
       </div>
     </div>
   );
+}
 }
