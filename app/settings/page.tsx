@@ -179,6 +179,34 @@ export default function SettingsPage() {
               )}
             </button>
             
+            <button
+              onClick={async () => {
+                try {
+                  setLoading(true);
+                  console.log('Force sign out clicked...');
+                  setUser(null);
+                  await supabase.auth.setSession({ access_token: '', refresh_token: '' });
+                  alert('Session cleared locally. Refreshing page...');
+                  window.location.reload();
+                } catch (err) {
+                  console.error('Force sign out error:', err);
+                  alert('Failed to clear session. Please refresh the page manually.');
+                  setLoading(false);
+                }
+              }}
+              disabled={loading}
+              className="w-full magical-button magical-glow bg-orange-600 hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="magical-spinner"></div>
+                  <span>Processing...</span>
+                </div>
+              ) : (
+                <span>⚡ Force Sign Out</span>
+              )}
+            </button>
+            
 
             
             <Link href="/">

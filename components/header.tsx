@@ -130,11 +130,9 @@ export default function Header() {
     }
   };
 
-  console.log('Header rendering, user:', user);
-  
   return (
     <>
-      <header className="fixed top-0 right-0 z-50 p-4" style={{ zIndex: 9999 }}>
+      <header className="fixed top-0 right-0 z-40 p-4">
         <div className="flex items-center gap-4">
           {user ? (
             <div className="flex items-center gap-3">
@@ -142,65 +140,10 @@ export default function Header() {
                 <span className="font-medium">{user.email}</span>
               </div>
               <button
-                onClick={(e) => {
-                  console.log('Signout button clicked, event:', e);
-                  alert('Signout button clicked!'); // Test if click is working
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleSignOut();
-                }}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm rounded"
-                style={{ 
-                  position: 'relative', 
-                  zIndex: 1000,
-                  border: '3px solid red',
-                  padding: '8px 16px'
-                }}
+                onClick={handleSignOut}
+                className="magical-button magical-glow bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm"
               >
                 🚪 Sign Out
-              </button>
-              
-              {/* Test button to see if any button works */}
-              <button
-                onClick={() => alert('Test button works!')}
-                className="bg-blue-500 text-white px-4 py-2 text-sm rounded ml-2"
-                style={{ position: 'relative', zIndex: 1000 }}
-              >
-                Test
-              </button>
-              
-              {/* Session refresh button */}
-              <button
-                onClick={async () => {
-                  console.log('Refreshing session...');
-                  const { data: { session }, error } = await supabase.auth.getSession();
-                  console.log('Session refresh result:', { session, error });
-                  alert(`Session: ${session ? 'Valid' : 'None'}\nError: ${error ? error.message : 'None'}`);
-                }}
-                className="bg-yellow-500 text-white px-4 py-2 text-sm rounded ml-2"
-                style={{ position: 'relative', zIndex: 1000 }}
-              >
-                🔄 Session
-              </button>
-              
-              {/* Force sign out button */}
-              <button
-                onClick={async () => {
-                  console.log('Force sign out clicked...');
-                  try {
-                    setUser(null);
-                    await supabase.auth.setSession({ access_token: '', refresh_token: '' });
-                    alert('Session cleared locally. Refreshing page...');
-                    window.location.reload();
-                  } catch (err) {
-                    console.error('Force sign out error:', err);
-                    alert('Failed to clear session. Please refresh the page manually.');
-                  }
-                }}
-                className="bg-orange-500 text-white px-4 py-2 text-sm rounded ml-2"
-                style={{ position: 'relative', zIndex: 1000 }}
-              >
-                ⚡ Force Out
               </button>
             </div>
           ) : (
