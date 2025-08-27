@@ -50,9 +50,11 @@ export default function Header() {
     }
   };
 
+  console.log('Header rendering, user:', user);
+  
   return (
     <>
-      <header className="fixed top-0 right-0 z-40 p-4">
+      <header className="fixed top-0 right-0 z-50 p-4" style={{ zIndex: 9999 }}>
         <div className="flex items-center gap-4">
           {user ? (
             <div className="flex items-center gap-3">
@@ -67,9 +69,24 @@ export default function Header() {
                   e.stopPropagation();
                   handleSignOut();
                 }}
-                className="magical-button magical-glow bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm"
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm rounded"
+                style={{ 
+                  position: 'relative', 
+                  zIndex: 1000,
+                  border: '3px solid red',
+                  padding: '8px 16px'
+                }}
               >
                 🚪 Sign Out
+              </button>
+              
+              {/* Test button to see if any button works */}
+              <button
+                onClick={() => alert('Test button works!')}
+                className="bg-blue-500 text-white px-4 py-2 text-sm rounded ml-2"
+                style={{ position: 'relative', zIndex: 1000 }}
+              >
+                Test
               </button>
             </div>
           ) : (
