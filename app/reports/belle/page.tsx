@@ -1,9 +1,13 @@
+'use client';
+
 import Link from 'next/link';
+import ReportAccessGate from '@/components/report-access-gate';
 import Image from 'next/image';
 
 export default function BelleReportPage() {
   return (
-    <main className="max-w-6xl mx-auto px-4 py-12 relative">
+    <ReportAccessGate characterId="belle">
+  <main className="max-w-6xl mx-auto px-4 py-12 relative">
       {/* Magical floating sparkles */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="magical-sparkle"></div>
@@ -352,5 +356,6 @@ export default function BelleReportPage() {
         </Link>
       </section>
     </main>
+    </ReportAccessGate>
   );
 }
