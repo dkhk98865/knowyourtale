@@ -72,6 +72,9 @@ DROP POLICY IF EXISTS "Service role can manage all subscriptions" ON user_subscr
 DROP POLICY IF EXISTS "Users can view own report access" ON user_report_access;
 DROP POLICY IF EXISTS "Users can update own report access" ON user_report_access;
 DROP POLICY IF EXISTS "Service role can manage all report access" ON user_report_access;
+DROP POLICY IF EXISTS "Service role can insert report access" ON user_report_access;
+DROP POLICY IF EXISTS "Webhook can insert report access" ON user_report_access;
+DROP POLICY IF EXISTS "Users can insert own report access" ON user_report_access;
 DROP POLICY IF EXISTS "Users can view own webhook logs" ON webhook_logs;
 DROP POLICY IF EXISTS "Service role can insert webhook logs" ON webhook_logs;
 
@@ -83,27 +86,16 @@ CREATE POLICY "Users can view own subscription" ON user_subscriptions
 CREATE POLICY "Service role can manage all subscriptions" ON user_subscriptions
   FOR ALL USING (auth.role() = 'service_role');
 
--- Create policies for user_report_access table
-CREATE POLICY "Users can view own report access" ON user_report_access
-  FOR SELECT USING (auth.jwt() ->> 'email' = user_email);
-
-CREATE POLICY "Users can update own report access" ON user_report_access
-  FOR UPDATE USING (auth.jwt() ->> 'email' = user_email);
-
-CREATE POLICY "Service role can manage all report access" ON user_report_access
-  FOR ALL USING (auth.role() = 'service_role');
-
--- Add explicit INSERT policy for service role
-CREATE POLICY "Service role can insert report access" ON user_report_access
-  FOR INSERT WITH CHECK (true);
-
--- Add explicit INSERT policy for authenticated users (in case needed)
-CREATE POLICY "Users can insert own report access" ON user_report_access
-  FOR INSERT WITH CHECK (auth.jwt() ->> 'email' = user_email);
-
--- Add a more permissive policy for webhook operations
-CREATE POLICY "Webhook can insert report access" ON user_report_access
-  FOR INSERT WITH CHECK (true);
+-- Note: RLS is disabled for user_report_access, so policies are not needed
+-- When RLS is re-enabled, uncomment the following policies:
+-- CREATE POLICY "Users can view own report access" ON user_report_access
+--   FOR SELECT USING (auth.jwt() ->> 'email' = user_email);
+-- CREATE POLICY "Users can update own report access" ON user_report_access
+--   FOR UPDATE USING (auth.jwt() ->> 'email' = user_email);
+-- CREATE POLICY "Service role can manage all report access" ON user_report_access
+--   FOR ALL USING (auth.role() = 'service_role');
+-- CREATE POLICY "Users can insert own report access" ON user_report_access
+--   FOR INSERT WITH CHECK (auth.jwt() ->> 'email' = user_email);
 
 -- TEMPORARY: Disable RLS for user_report_access to allow webhook inserts
 -- Remove this after webhook is working and re-enable with proper policies
@@ -168,3 +160,195 @@ GRANT ALL ON user_report_access TO service_role;
 -- Grant permissions for webhook_logs table
 GRANT ALL ON webhook_logs TO authenticated;
 GRANT ALL ON webhook_logs TO service_role;
+
+-- Community Board Tables
+-- Create community_posts table
+CREATE TABLE IF NOT EXISTS community_posts (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_email TEXT NOT NULL,
+  user_name TEXT,
+  title TEXT NOT NULL,
+  content TEXT NOT NULL,
+  post_type TEXT NOT NULL DEFAULT 'discussion' CHECK (post_type IN ('discussion', 'question', 'story', 'announcement')),
+  character_id TEXT, -- Optional: related to a specific fairy tale character
+  likes_count INTEGER DEFAULT 0,
+  replies_count INTEGER DEFAULT 0,
+  is_pinned BOOLEAN DEFAULT FALSE,
+  is_locked BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create community_replies table
+CREATE TABLE IF NOT EXISTS community_replies (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  post_id UUID REFERENCES community_posts(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_email TEXT NOT NULL,
+  user_name TEXT,
+  content TEXT NOT NULL,
+  likes_count INTEGER DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create community_likes table for tracking likes
+CREATE TABLE IF NOT EXISTS community_likes (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_email TEXT NOT NULL,
+  target_type TEXT NOT NULL CHECK (target_type IN ('post', 'reply')),
+  target_id UUID NOT NULL, -- References either post_id or reply_id
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_email, target_type, target_id)
+);
+
+-- Create indexes for community tables
+CREATE INDEX IF NOT EXISTS idx_community_posts_user_id ON community_posts(user_id);
+CREATE INDEX IF NOT EXISTS idx_community_posts_user_email ON community_posts(user_email);
+CREATE INDEX IF NOT EXISTS idx_community_posts_character ON community_posts(character_id);
+CREATE INDEX IF NOT EXISTS idx_community_posts_type ON community_posts(post_type);
+CREATE INDEX IF NOT EXISTS idx_community_posts_created_at ON community_posts(created_at);
+CREATE INDEX IF NOT EXISTS idx_community_posts_pinned ON community_posts(is_pinned);
+
+CREATE INDEX IF NOT EXISTS idx_community_replies_post_id ON community_replies(post_id);
+CREATE INDEX IF NOT EXISTS idx_community_replies_user_id ON community_replies(user_id);
+CREATE INDEX IF NOT EXISTS idx_community_replies_created_at ON community_replies(created_at);
+
+CREATE INDEX IF NOT EXISTS idx_community_likes_user_email ON community_likes(user_email);
+CREATE INDEX IF NOT EXISTS idx_community_likes_target ON community_likes(target_type, target_id);
+
+-- Enable Row Level Security for community tables
+ALTER TABLE community_posts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE community_replies ENABLE ROW LEVEL SECURITY;
+ALTER TABLE community_likes ENABLE ROW LEVEL SECURITY;
+
+-- Create policies for community_posts
+CREATE POLICY "Anyone can view community posts" ON community_posts
+  FOR SELECT USING (true);
+
+CREATE POLICY "Authenticated users can create posts" ON community_posts
+  FOR INSERT WITH CHECK (auth.jwt() ->> 'email' = user_email);
+
+CREATE POLICY "Users can update own posts" ON community_posts
+  FOR UPDATE USING (auth.jwt() ->> 'email' = user_email);
+
+CREATE POLICY "Users can delete own posts" ON community_posts
+  FOR DELETE USING (auth.jwt() ->> 'email' = user_email);
+
+-- Create policies for community_replies
+CREATE POLICY "Anyone can view community replies" ON community_replies
+  FOR SELECT USING (true);
+
+CREATE POLICY "Authenticated users can create replies" ON community_replies
+  FOR INSERT WITH CHECK (auth.jwt() ->> 'email' = user_email);
+
+CREATE POLICY "Users can update own replies" ON community_replies
+  FOR UPDATE USING (auth.jwt() ->> 'email' = user_email);
+
+CREATE POLICY "Users can delete own replies" ON community_replies
+  FOR DELETE USING (auth.jwt() ->> 'email' = user_email);
+
+-- Create policies for community_likes
+CREATE POLICY "Anyone can view community likes" ON community_likes
+  FOR SELECT USING (true);
+
+CREATE POLICY "Authenticated users can manage own likes" ON community_likes
+  FOR ALL USING (auth.jwt() ->> 'email' = user_email);
+
+-- Create triggers for community tables
+CREATE TRIGGER update_community_posts_updated_at
+  BEFORE UPDATE ON community_posts
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_community_replies_updated_at
+  BEFORE UPDATE ON community_replies
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Create function to update post reply count
+CREATE OR REPLACE FUNCTION update_post_reply_count()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    UPDATE community_posts 
+    SET replies_count = replies_count + 1 
+    WHERE id = NEW.post_id;
+    RETURN NEW;
+  ELSIF TG_OP = 'DELETE' THEN
+    UPDATE community_posts 
+    SET replies_count = replies_count - 1 
+    WHERE id = OLD.post_id;
+    RETURN OLD;
+  END IF;
+  RETURN NULL;
+END;
+$$ language 'plpgsql';
+
+-- Create function to update post like count
+CREATE OR REPLACE FUNCTION update_post_like_count()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    IF NEW.target_type = 'post' THEN
+      UPDATE community_posts 
+      SET likes_count = likes_count + 1 
+      WHERE id = NEW.target_id;
+    ELSIF NEW.target_type = 'reply' THEN
+      UPDATE community_replies 
+      SET likes_count = likes_count + 1 
+      WHERE id = NEW.target_id;
+    END IF;
+    RETURN NEW;
+  ELSIF TG_OP = 'DELETE' THEN
+    IF OLD.target_type = 'post' THEN
+      UPDATE community_posts 
+      SET likes_count = likes_count - 1 
+      WHERE id = OLD.target_id;
+    ELSIF OLD.target_type = 'reply' THEN
+      UPDATE community_replies 
+      SET likes_count = likes_count - 1 
+      WHERE id = OLD.target_id;
+    END IF;
+    RETURN OLD;
+  END IF;
+  RETURN NULL;
+END;
+$$ language 'plpgsql';
+
+-- Create triggers for automatic counts
+CREATE TRIGGER update_reply_count
+  AFTER INSERT OR DELETE ON community_replies
+  FOR EACH ROW
+  EXECUTE FUNCTION update_post_reply_count();
+
+CREATE TRIGGER update_like_count
+  AFTER INSERT OR DELETE ON community_likes
+  FOR EACH ROW
+  EXECUTE FUNCTION update_post_like_count();
+
+-- Grant permissions for community tables
+GRANT SELECT ON community_posts TO authenticated;
+GRANT INSERT, UPDATE, DELETE ON community_posts TO authenticated;
+GRANT ALL ON community_posts TO service_role;
+
+GRANT SELECT ON community_replies TO authenticated;
+GRANT INSERT, UPDATE, DELETE ON community_replies TO authenticated;
+GRANT ALL ON community_replies TO service_role;
+
+GRANT SELECT ON community_likes TO authenticated;
+GRANT INSERT, UPDATE, DELETE ON community_likes TO authenticated;
+GRANT ALL ON community_likes TO service_role;
+
+-- Create a view for community posts with user info
+CREATE OR REPLACE VIEW community_posts_view AS
+SELECT 
+  cp.*,
+  COALESCE(cp.user_name, 'Anonymous') as display_name,
+  COUNT(cr.id) as actual_replies_count
+FROM community_posts cp
+LEFT JOIN community_replies cr ON cp.id = cr.post_id
+GROUP BY cp.id, cp.user_id, cp.user_email, cp.user_name, cp.title, cp.content, cp.post_type, cp.character_id, cp.likes_count, cp.replies_count, cp.is_pinned, cp.is_locked, cp.created_at, cp.updated_at
+ORDER BY cp.is_pinned DESC, cp.created_at DESC;
