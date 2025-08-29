@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { characters } from '@/types/characters';
+import { analytics } from '@/lib/analytics';
 
 function SubscriptionSuccessContent() {
   const searchParams = useSearchParams();
@@ -14,6 +15,9 @@ function SubscriptionSuccessContent() {
   const [verificationError, setVerificationError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Track page view
+    analytics.trackPageView('subscription_success', characterId || undefined);
+    
     // If we have a session ID, verify the purchase
     if (sessionId) {
       verifyPurchase();
@@ -25,6 +29,23 @@ function SubscriptionSuccessContent() {
 
   const verifyPurchase = async () => {
     try {
+      // Track successful payment
+      if (sessionId && plan) {
+        analytics.trackPaymentSuccess(plan, sessionId, characterId || undefined);
+        
+        // Track specific purchase type
+        if (plan === 'single' && characterId) {
+          const character = characters.find(c => c.id === characterId);
+          if (character) {
+            analytics.trackSingleReportPurchase(characterId, character.name);
+          }
+        } else if (plan === 'allReports') {
+          analytics.trackAllReportsPurchase();
+        } else if (plan === 'monthly') {
+          analytics.trackMonthlySubscriptionPurchase();
+        }
+      }
+      
       // You could add an API endpoint to verify the session
       // For now, we'll assume it's valid if we have a session ID
       setLoading(false);

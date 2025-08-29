@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js';
+import { analytics } from '@/lib/analytics';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -28,24 +29,27 @@ export default function StoryPage({
     const { quiz } = use(searchParams);
     const character = characters.find((a) => a.id === id);
 
-    useEffect(() => {
-      // Get initial session
-      const getSession = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
+      useEffect(() => {
+    // Get initial session
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+    };
+
+    getSession();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event: string, session: { user: User | null } | null) => {
         setUser(session?.user ?? null);
-      };
+      }
+    );
 
-      getSession();
+    // Track page view
+    analytics.trackPageView('story', id);
 
-      // Listen for auth changes
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(
-        async (event: string, session: { user: User | null } | null) => {
-          setUser(session?.user ?? null);
-        }
-      );
-
-      return () => subscription.unsubscribe();
-    }, [supabase]);
+    return () => subscription.unsubscribe();
+  }, [supabase, id]);
 
     if (!character) {
       return notFound();
@@ -64,6 +68,9 @@ export default function StoryPage({
       }
 
       try {
+        // Track checkout initiation
+        analytics.trackCheckoutInitiated('single', id);
+        
         const response = await fetch('/api/create-checkout-session', {
           method: 'POST',
           headers: {
@@ -100,6 +107,9 @@ export default function StoryPage({
       }
 
       try {
+        // Track checkout initiation
+        analytics.trackCheckoutInitiated('allReports');
+        
         const response = await fetch('/api/create-checkout-session', {
           method: 'POST',
           headers: {
@@ -282,7 +292,10 @@ export default function StoryPage({
                   </div>
                   
                   <button 
-                    onClick={handleSingleReportCheckout}
+                    onClick={() => {
+                      analytics.trackButtonClick('purchase_single_report', 'story_page', { characterId: id, characterName: character.name });
+                      handleSingleReportCheckout();
+                    }}
                     className="magical-button magical-glow bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 font-semibold"
                   >
                     Get {character.name} Report
@@ -314,7 +327,10 @@ export default function StoryPage({
                   </div>
                   
                   <button 
-                    onClick={handleAllReportsCheckout}
+                    onClick={() => {
+                      analytics.trackButtonClick('purchase_all_reports', 'story_page', { characterId: id, characterName: character.name });
+                      handleAllReportsCheckout();
+                    }}
                     className="magical-button magical-glow bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 font-semibold"
                   >
                     Get All Reports

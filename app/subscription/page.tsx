@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
+import { analytics } from '@/lib/analytics';
 
 export default function SubscriptionPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -31,6 +32,9 @@ export default function SubscriptionPage() {
       }
     );
 
+    // Track page view
+    analytics.trackPageView('subscription');
+
     return () => subscription.unsubscribe();
   }, [supabase]);
 
@@ -41,6 +45,9 @@ export default function SubscriptionPage() {
     }
 
     try {
+      // Track checkout initiation
+      analytics.trackCheckoutInitiated(plan.toLowerCase());
+      
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
@@ -146,7 +153,10 @@ export default function SubscriptionPage() {
             </div>
 
             <button
-              onClick={() => handleSubscribe('Monthly')}
+              onClick={() => {
+                analytics.trackButtonClick('purchase_monthly_subscription', 'subscription_page');
+                handleSubscribe('Monthly');
+              }}
               className="w-full magical-button magical-glow bg-accent-gold hover:bg-yellow-600"
               disabled={loading}
             >

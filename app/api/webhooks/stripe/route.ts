@@ -5,6 +5,7 @@ import { addMonthlySubscriber } from '@/lib/mailchimp';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 import { Stripe } from 'stripe';
+import { analytics } from '@/lib/analytics';
 
 // This route handles both /api/webhooks/stripe and /api/webhooks/stripe/
 // The 308 redirect suggests Next.js is adding trailing slashes automatically
@@ -143,6 +144,19 @@ export async function POST(request: NextRequest) {
                 console.log('✅ User access record created successfully!');
                 console.log('✅ Inserted data:', insertData);
                 
+                // Track successful purchase in analytics
+                try {
+                  if (plan === 'single' && characterId) {
+                    // For single reports, we need to get the character name
+                    // This would require importing the characters data or making a database call
+                    analytics.trackSingleReportPurchase(characterId, 'Character Report');
+                  } else if (plan === 'allReports') {
+                    analytics.trackAllReportsPurchase();
+                  }
+                } catch (analyticsError) {
+                  console.error('⚠️ Analytics tracking failed:', analyticsError);
+                }
+                
                 // Log the success to webhook_logs table
                 await supabase.from('webhook_logs').insert({
                   event_type: 'user_access_record_creation',
@@ -196,6 +210,13 @@ export async function POST(request: NextRequest) {
                 });
               } else {
                 console.log('✅ Subscription record created successfully!');
+                
+                // Track successful monthly subscription in analytics
+                try {
+                  analytics.trackMonthlySubscriptionPurchase();
+                } catch (analyticsError) {
+                  console.error('⚠️ Analytics tracking failed:', analyticsError);
+                }
                 
                 // Log the success to webhook_logs table
                 await supabase.from('webhook_logs').insert({

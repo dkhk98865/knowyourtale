@@ -1,11 +1,17 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import Link from 'next/link';
 import { characters } from '@/types/characters';
 import Image from 'next/image';
+import { analytics } from '@/lib/analytics';
 
 function HomePageContent() {
+  // Track page view
+  useEffect(() => {
+    analytics.trackPageView('home');
+  }, []);
+
   return (
     <>
       <main className="max-w-6xl mx-auto px-4 py-12">
