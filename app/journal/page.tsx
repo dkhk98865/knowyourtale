@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase-client';
 import { JournalEntry, WeeklyPrompt } from '@/types/journal';
 import { characters } from '@/types/characters';
@@ -21,7 +20,6 @@ export default function JournalPage() {
     search: ''
   });
 
-  const router = useRouter();
   const supabase = createClient();
 
   const fetchJournals = useCallback(async () => {

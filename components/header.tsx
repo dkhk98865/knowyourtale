@@ -82,7 +82,7 @@ export default function Header() {
             window.location.reload();
             return;
           }
-        } catch (tokenError) {
+        } catch {
           console.log('Token validation failed, clearing session locally');
           setUser(null);
           await supabase.auth.setSession({ access_token: '', refresh_token: '' });

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, Suspense, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { characters } from '@/types/characters';
@@ -14,20 +14,7 @@ function SubscriptionSuccessContent() {
   const [loading, setLoading] = useState(true);
   const [verificationError, setVerificationError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Track page view
-    analytics.trackPageView('subscription_success', characterId || undefined);
-    
-    // If we have a session ID, verify the purchase
-    if (sessionId) {
-      verifyPurchase();
-    } else {
-      // If no session ID, try to verify by checking recent purchases
-      checkRecentPurchases();
-    }
-  }, [sessionId, plan, characterId]);
-
-  const verifyPurchase = async () => {
+  const verifyPurchase = useCallback(async () => {
     try {
       // Track successful payment
       if (sessionId && plan) {
@@ -54,9 +41,9 @@ function SubscriptionSuccessContent() {
       setVerificationError('Failed to verify purchase');
       setLoading(false);
     }
-  };
+  }, [sessionId, plan, characterId]);
 
-  const checkRecentPurchases = async () => {
+  const checkRecentPurchases = useCallback(async () => {
     try {
       // Try to verify purchase by checking if user has access
       // This handles cases where redirect didn't work but purchase was successful
@@ -66,7 +53,20 @@ function SubscriptionSuccessContent() {
       setVerificationError('Unable to verify recent purchases');
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    // Track page view
+    analytics.trackPageView('subscription_success', characterId || undefined);
+    
+    // If we have a session ID, verify the purchase
+    if (sessionId) {
+      verifyPurchase();
+    } else {
+      // If no session ID, try to verify by checking recent purchases
+      checkRecentPurchases();
+    }
+  }, [sessionId, plan, characterId, verifyPurchase, checkRecentPurchases]);
 
   // Determine what was purchased based on the plan
   const getPlanDetails = () => {
