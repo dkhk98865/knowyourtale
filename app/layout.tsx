@@ -4,6 +4,7 @@ import "./globals.css";
 import Sidebar from "@/components/sidebar";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import { Analytics } from "@vercel/analytics/react";
 
 const crimsonText = Crimson_Text({
   variable: "--font-crimson-text",
@@ -37,6 +38,7 @@ export default function RootLayout({
           <Sidebar />
           <div className="pt-16">
             {children}
+            <Analytics />
           </div>
           <Footer />
       </body>

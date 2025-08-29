@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { createWebhookClient } from '@/lib/supabase-webhook';
+import { addMonthlySubscriber } from '@/lib/mailchimp';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 import { Stripe } from 'stripe';
@@ -204,6 +205,15 @@ export async function POST(request: NextRequest) {
                   plan: 'monthly',
                   status: 'success'
                 });
+
+                // Add subscriber to Mailchimp
+                console.log('📧 Adding subscriber to Mailchimp...');
+                const mailchimpResult = await addMonthlySubscriber(customerEmail);
+                if (mailchimpResult.success) {
+                  console.log('✅ Successfully added to Mailchimp campaign');
+                } else {
+                  console.error('❌ Failed to add to Mailchimp:', mailchimpResult.error);
+                }
               }
             } else {
               console.log('⚠️ Missing customer email or subscription ID');
