@@ -9,7 +9,7 @@ export default function RefundPolicyPage() {
           <h1 className="storybook-title">Refund & Cancellation Policy</h1>
           <div className="storybook-divider"></div>
           <p className="storybook-subtitle">
-            Clear guidelines for managing your magical subscription
+            Clear guidelines for managing your magical purchases and subscriptions
           </p>
           <div className="magical-sparkle">✨</div>
         </div>
@@ -31,7 +31,7 @@ export default function RefundPolicyPage() {
                 </div>
                 <div className="ml-3">
                   <p className="text-amber-800 font-medium">
-                    <strong>Important Notice:</strong> All subscription fees are non-refundable except as required by law or in cases of service failure on our part.
+                    <strong>Important Notice:</strong> All purchases and subscription fees are non-refundable except as required by law or in cases of service failure on our part.
                   </p>
                 </div>
               </div>
@@ -41,14 +41,15 @@ export default function RefundPolicyPage() {
             
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">General Policy</h3>
             <p className="mb-4">
-              Know Your Tale operates on a <strong>non-refundable subscription model</strong>. This means that once a subscription payment is processed, we do not provide refunds for:
+              Know Your Tale operates on a <strong>non-refundable model</strong> for both one-time purchases and monthly subscriptions. This means that once a payment is processed, we do not provide refunds for:
             </p>
             <ul className="list-disc pl-6 mb-4 space-y-2">
               <li>Change of mind or personal preference</li>
-              <li>Incomplete usage of subscription period</li>
+              <li>Incomplete usage of purchased reports or subscription period</li>
               <li>Account cancellation or deletion</li>
               <li>Service dissatisfaction (unless due to technical issues on our end)</li>
               <li>Personal circumstances or financial hardship</li>
+              <li>Accidental purchases or duplicate orders</li>
             </ul>
 
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">Why We Don&apos;t Offer Refunds</h3>
@@ -56,10 +57,11 @@ export default function RefundPolicyPage() {
               Our non-refundable policy is designed to:
             </p>
             <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li><strong>Maintain Service Quality:</strong> Ensure we can provide consistent, high-quality fairy tale experiences</li>
+              <li><strong>Maintain Service Quality:</strong> Ensure we can provide consistent, high-quality fairy tale personality insights</li>
               <li><strong>Prevent Abuse:</strong> Protect against users who might exploit refund policies</li>
-              <li><strong>Support Development:</strong> Allow us to continuously improve our magical features</li>
-              <li><strong>Fair Pricing:</strong> Keep subscription costs reasonable for all users</li>
+              <li><strong>Support Development:</strong> Allow us to continuously improve our magical features and reports</li>
+              <li><strong>Fair Pricing:</strong> Keep costs reasonable for all users</li>
+              <li><strong>Intellectual Property Protection:</strong> Protect our proprietary personality analysis content</li>
             </ul>
 
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">Legal Exceptions</h3>
@@ -70,14 +72,33 @@ export default function RefundPolicyPage() {
               <li><strong>Service Failure:</strong> If our service is completely unavailable for extended periods</li>
               <li><strong>Billing Errors:</strong> If we make an error in charging your account</li>
               <li><strong>Legal Requirements:</strong> As required by consumer protection laws in your jurisdiction</li>
-              <li><strong>Technical Issues:</strong> If technical problems prevent you from accessing paid features</li>
+              <li><strong>Technical Issues:</strong> If technical problems prevent you from accessing purchased reports</li>
+              <li><strong>Content Delivery Failure:</strong> If purchased reports cannot be delivered due to our technical issues</li>
+            </ul>
+
+            <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Purchase Types and Policies</h2>
+            
+            <h3 className="storybook-subtitle text-xl mb-3 mt-6">One-Time Report Purchases</h3>
+            <ul className="list-disc pl-6 mb-4 space-y-2">
+              <li><strong>Single Reports ($4.99):</strong> Non-refundable once purchased and accessed</li>
+              <li><strong>All Reports Bundle ($9.99):</strong> Non-refundable once purchased and accessed</li>
+              <li><strong>Access Duration:</strong> Reports remain accessible indefinitely after purchase</li>
+              <li><strong>No Partial Refunds:</strong> Cannot refund individual reports from bundles</li>
+            </ul>
+
+            <h3 className="storybook-subtitle text-xl mb-3 mt-6">Monthly Subscription Plan</h3>
+            <ul className="list-disc pl-6 mb-4 space-y-2">
+              <li><strong>Monthly Plan ($7.99/month):</strong> Non-refundable for partial billing periods</li>
+              <li><strong>Billing Cycle:</strong> Charged monthly on your renewal date</li>
+              <li><strong>Access Duration:</strong> Available until the end of your current billing period</li>
+              <li><strong>Cancellation:</strong> Can be cancelled at any time, effective at next billing cycle</li>
             </ul>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Cancellation Policy</h2>
             
-            <h3 className="storybook-subtitle text-xl mb-3 mt-6">How to Cancel</h3>
+            <h3 className="storybook-subtitle text-xl mb-3 mt-6">How to Cancel Monthly Subscription</h3>
             <p className="mb-4">
-              You can cancel your subscription at any time through the following methods:
+              You can cancel your monthly subscription at any time through the following methods:
             </p>
             <ul className="list-disc pl-6 mb-4 space-y-2">
               <li><strong>Account Settings:</strong> Go to your account settings and select &ldquo;Cancel Subscription&rdquo;</li>
@@ -87,18 +108,19 @@ export default function RefundPolicyPage() {
 
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">When Cancellation Takes Effect</h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li><strong>Immediate Access Loss:</strong> Premium features become unavailable immediately upon cancellation</li>
+              <li><strong>Access Until Billing Period End:</strong> You retain access to monthly plan features until your current billing period ends</li>
               <li><strong>No Prorated Refunds:</strong> You will not receive a refund for unused time</li>
-              <li><strong>Data Retention:</strong> Your chat history and preferences are retained for 30 days</li>
+              <li><strong>Data Retention:</strong> Your journal entries and preferences are retained for 30 days</li>
               <li><strong>Account Deletion:</strong> After 30 days, your data may be permanently deleted</li>
             </ul>
 
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">What Happens After Cancellation</h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li>You retain access to premium features until the end of your current billing period</li>
+              <li>You retain access to monthly plan features until the end of your current billing period</li>
               <li>Your account reverts to free tier limitations</li>
-              <li>You can reactivate your subscription at any time</li>
-              <li>Your fairy tale journey data is preserved for 30 days</li>
+              <li>You can reactivate your monthly subscription at any time</li>
+              <li>Your journal entries and community data are preserved for 30 days</li>
+              <li>Purchased reports remain accessible indefinitely</li>
             </ul>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Subscription Management</h2>
@@ -123,7 +145,7 @@ export default function RefundPolicyPage() {
             
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">Billing Cycles</h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li>Subscriptions are billed on a recurring basis (monthly or annually)</li>
+              <li>Monthly subscriptions are billed on a recurring basis</li>
               <li>Billing occurs automatically on your renewal date</li>
               <li>You will receive email notifications before each billing cycle</li>
               <li>Failed payments may result in service suspension</li>
@@ -148,14 +170,16 @@ export default function RefundPolicyPage() {
               <li><strong>Feature Upgrades:</strong> Temporary access to premium features</li>
               <li><strong>Account Extensions:</strong> Additional time on your subscription</li>
               <li><strong>Priority Support:</strong> Enhanced customer service assistance</li>
+              <li><strong>Report Exchanges:</strong> Swap one report for another if technical issues prevent access</li>
             </ul>
 
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">When to Request Alternatives</h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
               <li>Service interruptions lasting more than 24 hours</li>
-              <li>Technical issues preventing access to paid features</li>
+              <li>Technical issues preventing access to purchased reports</li>
               <li>Billing problems or account access issues</li>
               <li>Quality of service concerns</li>
+              <li>Report delivery failures</li>
             </ul>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">How to Request Exceptions</h2>
@@ -178,6 +202,7 @@ export default function RefundPolicyPage() {
               <li>Date and time of the problem</li>
               <li>Screenshots or error messages (if applicable)</li>
               <li>Steps you&apos;ve already taken to resolve the issue</li>
+              <li>Purchase details (order number, date, amount)</li>
             </ul>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Legal Rights and Jurisdictions</h2>
@@ -204,29 +229,34 @@ export default function RefundPolicyPage() {
             
             <div className="space-y-4 mb-6">
               <div className="border border-gray-200 rounded-lg p-4">
-                <h4 className="font-semibold text-lg mb-2">Q: Can I get a refund if I don&apos;t like the service?</h4>
-                <p className="text-gray-600">A: No, we do not provide refunds for service dissatisfaction. However, we encourage you to contact us so we can address your concerns and potentially offer alternatives.</p>
+                <h4 className="font-semibold text-lg mb-2">Q: Can I get a refund if I don&apos;t like the personality report?</h4>
+                <p className="text-gray-600">A: No, we do not provide refunds for purchased reports. However, we encourage you to contact us so we can address your concerns and potentially offer alternatives.</p>
               </div>
               
               <div className="border border-gray-200 rounded-lg p-4">
-                <h4 className="font-semibold text-lg mb-2">Q: What if I accidentally subscribed?</h4>
-                <p className="text-gray-600">A: You can cancel immediately, but no refunds are provided. We recommend carefully reviewing subscription details before confirming.</p>
+                <h4 className="font-semibold text-lg mb-2">Q: What if I accidentally purchased a report?</h4>
+                <p className="text-gray-600">A: You cannot get a refund for accidental purchases. We recommend carefully reviewing your selection before confirming any purchase.</p>
               </div>
               
               <div className="border border-gray-200 rounded-lg p-4">
-                <h4 className="font-semibold text-lg mb-2">Q: Can I pause my subscription?</h4>
+                <h4 className="font-semibold text-lg mb-2">Q: Can I pause my monthly subscription?</h4>
                 <p className="text-gray-600">A: We do not currently offer subscription pausing. You can cancel and resubscribe when you&apos;re ready to continue.</p>
               </div>
               
               <div className="border border-gray-200 rounded-lg p-4">
-                <h4 className="font-semibold text-lg mb-2">Q: What happens to my data if I cancel?</h4>
-                <p className="text-gray-600">A: Your data is retained for 30 days after cancellation. You can reactivate your subscription within this period to restore access.</p>
+                <h4 className="font-semibold text-lg mb-2">Q: What happens to my purchased reports if I cancel my subscription?</h4>
+                <p className="text-gray-600">A: Your purchased reports remain accessible indefinitely, even after cancelling your monthly subscription. Only the monthly plan features are affected.</p>
+              </div>
+              
+              <div className="border border-gray-200 rounded-lg p-4">
+                <h4 className="font-semibold text-lg mb-2">Q: Can I share my purchased reports with others?</h4>
+                <p className="text-gray-600">A: No, purchased reports are for personal use only and cannot be shared or distributed without authorization.</p>
               </div>
             </div>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Contact Us</h2>
             <p className="mb-4">
-              If you have questions about this policy or need assistance with your subscription:
+              If you have questions about this policy or need assistance with your purchases or subscription:
             </p>
             <div className="bg-gray-50 p-4 rounded-lg mb-4">
               <p className="mb-2"><strong>General Support:</strong> knowyourtale@gmail.com</p>

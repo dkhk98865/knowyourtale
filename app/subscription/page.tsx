@@ -115,6 +115,13 @@ export default function SubscriptionPage() {
                 Take the Quiz
               </button>
             </Link>
+            
+            {/* Non-refundable notice for reports */}
+            <div className="mt-4 text-center">
+              <p className="text-xs text-gray-500">
+                ⚠️ All personality reports are non-refundable once purchased and accessed.
+              </p>
+            </div>
           </div>
         </div>
 
@@ -162,6 +169,13 @@ export default function SubscriptionPage() {
             >
               {loading ? 'Loading...' : 'Start Monthly Plan'}
             </button>
+            
+            {/* Non-refundable notice */}
+            <div className="mt-4 text-center">
+              <p className="text-xs text-gray-500">
+                ⚠️ All subscriptions are non-refundable. You can cancel anytime, but no refunds for partial billing periods.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -200,6 +214,9 @@ export default function SubscriptionPage() {
             <p className="text-gray-600 text-sm">
               Yes! You can cancel your subscription at any time. You&apos;ll continue to have access until the end of your billing period.
             </p>
+            <p className="text-red-600 text-xs mt-2 font-medium">
+              ⚠️ Note: No refunds for partial billing periods
+            </p>
           </div>
 
           <div className="storybook-card page-turn p-6">
@@ -228,6 +245,16 @@ export default function SubscriptionPage() {
             <h3 className="font-semibold mb-3">Is my data secure?</h3>
             <p className="text-gray-600 text-sm">
               Your privacy and security are our top priorities. All personal data and character information are encrypted and securely stored. Payments are processed securely through Stripe, which is PCI DSS Level 1 certified - the highest level of payment security.
+            </p>
+          </div>
+          
+          <div className="storybook-card page-turn p-6">
+            <h3 className="font-semibold mb-3">What is your refund policy?</h3>
+            <p className="text-gray-600 text-sm">
+              All purchases and subscriptions are non-refundable. This includes personality reports ($4.99/$9.99) and monthly subscriptions ($7.99/month). You can cancel your monthly subscription anytime, but no refunds are provided for partial billing periods.
+            </p>
+            <p className="text-red-600 text-xs mt-2 font-medium">
+              ⚠️ For detailed refund information, see our <a href="/refund-policy" className="underline">Refund Policy</a>
             </p>
           </div>
         </div>

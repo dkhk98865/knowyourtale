@@ -34,10 +34,11 @@ export default function TermsOfServicePage() {
               Know Your Tale is a fairy tale personality assessment application that provides:
             </p>
             <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li>Interactive character selection and personality assessments</li>
-              <li>AI-powered chat conversations with fairy tale characters</li>
-              <li>Chat history storage and retrieval</li>
-              <li>Premium features for enhanced user experience</li>
+              <li>Interactive personality quiz to discover your fairy tale character type</li>
+              <li>Detailed personality analysis reports for each of the twelve fairy tale characters</li>
+              <li>Character story pages with personality insights and descriptions</li>
+              <li>Monthly subscription plan with journaling features and community access</li>
+              <li>Premium personality reports available for purchase</li>
             </ul>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">User Accounts and Registration</h2>
@@ -61,42 +62,52 @@ export default function TermsOfServicePage() {
             
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">Free Tier</h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li>Access to basic character selection</li>
-              <li>Limited chat interactions</li>
-              <li>Basic personality assessment features</li>
+              <li>Access to personality quiz and character discovery</li>
+              <li>Basic character story pages and descriptions</li>
+              <li>Character selection and personality type identification</li>
               <li>Standard customer support</li>
             </ul>
 
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">Premium Features</h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li>Access to all fairy tale characters</li>
-              <li>Unlimited chat conversations</li>
-              <li>Chat history storage and retrieval</li>
-              <li>Advanced personality insights</li>
+              <li>Detailed personality analysis reports (individual or all reports)</li>
+              <li>Monthly subscription plan with journaling access</li>
+              <li>Weekly journaling prompts and guidance</li>
+              <li>Community board access and engagement</li>
+              <li>Advanced personality insights and growth recommendations</li>
               <li>Priority customer support</li>
             </ul>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Subscription and Payment Terms</h2>
             
+            <h3 className="storybook-subtitle text-xl mb-3 mt-6">Available Plans</h3>
+            <ul className="list-disc pl-6 mb-4 space-y-2">
+              <li><strong>Single Report:</strong> $4.99 for one detailed personality analysis</li>
+              <li><strong>All Reports:</strong> $9.99 for access to all twelve character reports</li>
+              <li><strong>Monthly Plan:</strong> $7.99/month for journaling and community features</li>
+            </ul>
+
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">Billing</h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li>Premium subscriptions are billed on a recurring basis</li>
+              <li>Single and All Reports are one-time purchases</li>
+              <li>Monthly subscriptions are billed on a recurring basis</li>
               <li>All fees are non-refundable except as required by law</li>
               <li>Prices may change with 30 days notice to existing subscribers</li>
-              <li>Payment is processed securely through our payment providers</li>
+              <li>Payment is processed securely through Stripe</li>
             </ul>
 
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">Subscription Management</h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li>You may cancel your subscription at any time</li>
+              <li>You may cancel your monthly subscription at any time</li>
               <li>Cancellation takes effect at the end of the current billing period</li>
               <li>No refunds for partial billing periods</li>
-              <li>You can upgrade or downgrade your plan at any time</li>
+              <li>One-time report purchases are non-refundable</li>
+              <li>You can upgrade or downgrade your monthly plan at any time</li>
             </ul>
 
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">Payment Processing</h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li>We use secure third-party payment processors</li>
+              <li>We use Stripe as our secure payment processor</li>
               <li>Your payment information is encrypted and secure</li>
               <li>Failed payments may result in service suspension</li>
               <li>We reserve the right to change payment methods</li>
@@ -110,23 +121,26 @@ export default function TermsOfServicePage() {
               <li>Attempting to reverse engineer or hack the service</li>
               <li>Using the service for illegal or harmful purposes</li>
               <li>Sharing account credentials with others</li>
-              <li>Attempting to manipulate or abuse the AI chat system</li>
+              <li>Attempting to manipulate or abuse the personality assessment system</li>
+              <li>Sharing or distributing purchased reports without authorization</li>
             </ul>
 
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">Content Guidelines</h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li>Keep chat conversations appropriate and respectful</li>
+              <li>Keep community interactions appropriate and respectful</li>
               <li>Do not use the service to generate harmful or inappropriate content</li>
               <li>Respect the fairy tale theme and family-friendly nature</li>
               <li>Do not attempt to extract or misuse personal information</li>
+              <li>Respect intellectual property rights of purchased reports</li>
             </ul>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Intellectual Property Rights</h2>
             <ul className="list-disc pl-6 mb-4 space-y-2">
               <li>The Service and its original content, features, and functionality are owned by Know Your Tale</li>
               <li>Fairy tale characters and stories are used under fair use principles</li>
-              <li>Your chat conversations and personal data remain your property</li>
-              <li>You retain rights to content you create using our service</li>
+              <li>Personality reports and analysis content are proprietary to Know Your Tale</li>
+              <li>Your journal entries and personal data remain your property</li>
+              <li>You retain rights to content you create using our journaling features</li>
             </ul>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Privacy and Data Protection</h2>
@@ -136,7 +150,7 @@ export default function TermsOfServicePage() {
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Refunds and Cancellations</h2>
             <p className="mb-4">
-              For detailed information about our refund and cancellation policies, please review our dedicated <a href="/refund-policy" className="text-blue-600 hover:underline">Refund & Cancellation Policy</a>. This policy outlines our non-refundable subscription model and the exceptions that may apply.
+              For detailed information about our refund and cancellation policies, please review our dedicated <a href="/refund-policy" className="text-blue-600 hover:underline">Refund & Cancellation Policy</a>. This policy outlines our non-refundable model for one-time purchases and monthly subscriptions, with exceptions that may apply.
             </p>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Service Availability and Maintenance</h2>
@@ -156,8 +170,9 @@ export default function TermsOfServicePage() {
             <ul className="list-disc pl-6 mb-4 space-y-2">
               <li>The Service is provided &ldquo;as is&rdquo; and &ldquo;as available&rdquo; without warranties</li>
               <li>We do not guarantee the accuracy of personality assessments</li>
-              <li>AI-generated responses are for entertainment purposes only</li>
+              <li>Personality reports are for entertainment and self-reflection purposes only</li>
               <li>We are not responsible for decisions made based on our assessments</li>
+              <li>Journaling and community features are provided as-is without guarantees</li>
             </ul>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Termination</h2>
@@ -166,6 +181,7 @@ export default function TermsOfServicePage() {
               <li>You may terminate your account at any time</li>
               <li>Upon termination, your right to use the Service ceases immediately</li>
               <li>We may retain certain information as required by law</li>
+              <li>Access to purchased reports may be revoked upon account termination</li>
             </ul>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Governing Law</h2>

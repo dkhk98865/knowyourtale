@@ -259,6 +259,15 @@ export default function StoryPage({
           
           {/* Pricing CTAs */}
           <div className="storybook-card page-turn p-8 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-accent-gold">
+            {/* Non-refundable notice */}
+            <div className="text-center mb-6">
+              <div className="bg-amber-50 border-l-4 border-amber-400 p-3 rounded">
+                <p className="text-amber-800 text-sm font-medium">
+                  ⚠️ <strong>Important:</strong> All personality reports are non-refundable once purchased and accessed.
+                </p>
+              </div>
+            </div>
+            
             <div className="text-center mb-8">
               <div className="magical-sparkle text-5xl mb-6">📊</div>
               <h2 className="storybook-subtitle text-4xl mb-6 text-accent-gold font-bold">Unlock More Fairy Tale Insights</h2>
@@ -300,6 +309,13 @@ export default function StoryPage({
                   >
                     Get {character.name} Report
                   </button>
+                  
+                  {/* Non-refundable notice */}
+                  <div className="mt-3 text-center">
+                    <p className="text-xs text-gray-500">
+                      ⚠️ Non-refundable once purchased
+                    </p>
+                  </div>
                 </div>
               </div>
               
@@ -335,6 +351,13 @@ export default function StoryPage({
                   >
                     Get All Reports
                   </button>
+                  
+                  {/* Non-refundable notice */}
+                  <div className="mt-3 text-center">
+                    <p className="text-xs text-gray-500">
+                      ⚠️ Non-refundable once purchased
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

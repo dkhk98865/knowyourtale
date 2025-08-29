@@ -33,21 +33,23 @@ export default function PrivacyPolicyPage() {
             
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">Personal Information</h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li><strong>Account Information:</strong> When you create an account, we collect your email address and basic profile information through Clerk authentication services.</li>
-              <li><strong>Usage Data:</strong> We collect information about how you interact with our app, including character selections, chat conversations, and feature usage.</li>
-              <li><strong>Communication Data:</strong> Any messages you send through our chat interface are processed to provide AI-powered responses.</li>
+              <li><strong>Account Information:</strong> When you create an account, we collect your email address and basic profile information through Supabase authentication services.</li>
+              <li><strong>Usage Data:</strong> We collect information about how you interact with our app, including character selections, quiz responses, and feature usage.</li>
+              <li><strong>Purchase Data:</strong> When you purchase personality reports or subscribe to our monthly plan, we collect payment information through Stripe.</li>
+              <li><strong>Journal Entries:</strong> If you use our journaling features, we store your journal entries and responses to prompts.</li>
             </ul>
 
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">Automatically Collected Information</h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
               <li><strong>Device Information:</strong> Browser type, operating system, and device identifiers</li>
-              <li><strong>Usage Analytics:</strong> Page views, feature usage, and performance metrics</li>
+              <li><strong>Usage Analytics:</strong> Page views, feature usage, and performance metrics through Vercel Analytics</li>
               <li><strong>Cookies and Similar Technologies:</strong> To enhance your experience and remember your preferences</li>
             </ul>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">How We Use Your Information</h2>
             <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li><strong>Provide Services:</strong> To deliver our fairy tale personality assessment and chat features</li>
+              <li><strong>Provide Services:</strong> To deliver our fairy tale personality assessment and premium features</li>
+              <li><strong>Process Purchases:</strong> To handle payments and provide access to purchased reports</li>
               <li><strong>Improve Experience:</strong> To enhance our app&apos;s functionality and user experience</li>
               <li><strong>Customer Support:</strong> To respond to your questions and provide assistance</li>
               <li><strong>Security:</strong> To protect against fraud and ensure account security</li>
@@ -56,19 +58,24 @@ export default function PrivacyPolicyPage() {
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Third-Party Services</h2>
             
-            <h3 className="storybook-subtitle text-xl mb-3 mt-6">Clerk (Authentication)</h3>
+            <h3 className="storybook-subtitle text-xl mb-3 mt-6">Supabase (Authentication & Database)</h3>
             <p className="mb-4">
-              We use Clerk to handle user authentication and account management. Clerk processes your login credentials and account information according to their privacy policy. You can review Clerk&apos;s privacy practices at <a href="https://clerk.com/privacy" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">clerk.com/privacy</a>.
+              We use Supabase to handle user authentication, account management, and data storage. Supabase processes your login credentials, account information, and stores your quiz responses, journal entries, and purchase history. You can review Supabase&apos;s privacy practices at <a href="https://supabase.com/privacy" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">supabase.com/privacy</a>.
             </p>
 
-            <h3 className="storybook-subtitle text-xl mb-3 mt-6">OpenAI (AI Services)</h3>
+            <h3 className="storybook-subtitle text-xl mb-3 mt-6">Stripe (Payment Processing)</h3>
             <p className="mb-4">
-              Our chat functionality is powered by OpenAI&apos;s AI services. When you send messages, they are processed by OpenAI to generate responses. OpenAI may use this data to improve their services, but they do not associate it with your personal identity. You can learn more about OpenAI&apos;s data practices at <a href="https://openai.com/privacy" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">openai.com/privacy</a>.
+              We use Stripe to process payments for personality reports and monthly subscriptions. Stripe handles your payment information securely and does not share your full payment details with us. You can learn more about Stripe&apos;s data practices at <a href="https://stripe.com/privacy" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">stripe.com/privacy</a>.
             </p>
 
-            <h3 className="storybook-subtitle text-xl mb-3 mt-6">Supabase (Database)</h3>
+            <h3 className="storybook-subtitle text-xl mb-3 mt-6">Vercel (Analytics & Hosting)</h3>
             <p className="mb-4">
-              We use Supabase to store your chat history, character preferences, and account data. Supabase processes this data according to their privacy policy, which you can review at <a href="https://supabase.com/privacy" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">supabase.com/privacy</a>.
+              We use Vercel Analytics to understand how users interact with our application and to improve our services. Vercel processes anonymous usage data and does not collect personally identifiable information. You can review Vercel&apos;s privacy practices at <a href="https://vercel.com/privacy" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">vercel.com/privacy</a>.
+            </p>
+
+            <h3 className="storybook-subtitle text-xl mb-3 mt-6">Mailchimp (Email Marketing)</h3>
+            <p className="mb-4">
+              If you subscribe to our monthly plan, we use Mailchimp to send weekly journaling prompts and updates. Mailchimp processes your email address and subscription preferences. You can review Mailchimp&apos;s privacy practices at <a href="https://mailchimp.com/legal/privacy/" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">mailchimp.com/legal/privacy</a>.
             </p>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Data Storage and Security</h2>
@@ -77,6 +84,7 @@ export default function PrivacyPolicyPage() {
               <li><strong>Data Security:</strong> We implement appropriate security measures to protect your personal information</li>
               <li><strong>Data Location:</strong> Your data may be stored in various locations based on our third-party service providers</li>
               <li><strong>Encryption:</strong> We use industry-standard encryption to protect data in transit and at rest</li>
+              <li><strong>Payment Security:</strong> Payment information is processed securely through Stripe and never stored on our servers</li>
             </ul>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Your Rights and Choices</h2>
@@ -86,6 +94,7 @@ export default function PrivacyPolicyPage() {
               <li><strong>Deletion:</strong> You can request deletion of your account and associated data</li>
               <li><strong>Data Portability:</strong> You can request a copy of your data in a portable format</li>
               <li><strong>Opt-out:</strong> You can opt out of certain data collection and processing activities</li>
+              <li><strong>Email Preferences:</strong> You can unsubscribe from marketing emails at any time</li>
             </ul>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Children&apos;s Privacy</h2>
