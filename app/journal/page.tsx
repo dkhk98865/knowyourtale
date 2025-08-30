@@ -7,7 +7,7 @@ import { characters } from '@/types/characters';
 import Link from 'next/link';
 import SubscriptionAccessGate from '@/components/subscription-access-gate';
 import { User } from '@supabase/supabase-js';
-import { UserPromptProgressService, CurrentPrompt } from '@/lib/user-prompt-progress';
+import { UserPromptProgressClientService, CurrentPrompt } from '@/lib/user-prompt-progress-client';
 
 export default function JournalPage() {
   const [journals, setJournals] = useState<JournalEntry[]>([]);
@@ -49,7 +49,7 @@ export default function JournalPage() {
 
   const fetchUserPrompt = useCallback(async (userId: string) => {
     try {
-      const promptService = new UserPromptProgressService();
+      const promptService = new UserPromptProgressClientService();
       const prompt = await promptService.getCurrentPrompt(userId);
       const progress = await promptService.getUserProgress(userId);
       
