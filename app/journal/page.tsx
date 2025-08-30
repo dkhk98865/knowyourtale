@@ -226,7 +226,7 @@ export default function JournalPage() {
                 </div>
                 
                 <div className="bg-gradient-to-r from-yellow-50 to-amber-50 p-4 rounded-lg border-l-4 border-accent-gold">
-                  <h4 className="font-semibold text-gray-800 mb-2">This Week's Reflection Prompt:</h4>
+                  <h4 className="font-semibold text-gray-800 mb-2">This Week&apos;s Reflection Prompt:</h4>
                   <p className="text-gray-700 leading-relaxed">{currentPrompt.prompt}</p>
                 </div>
               </div>
