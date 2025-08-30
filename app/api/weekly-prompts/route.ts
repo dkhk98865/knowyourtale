@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Allow GET requests for manual testing
-export async function GET(_request: NextRequest) {
+export async function GET() {
   try {
     const promptService = new UserPromptProgressService();
     

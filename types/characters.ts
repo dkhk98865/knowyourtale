@@ -15,7 +15,7 @@ export const characters = [
       description: "From ashes to royalty.",
       image: "/images/cinderella.png",
       story: `After losing her parents, a kind young woman is forced into servitude by her cruel stepfamily. Despite her hardships, she remains gentle and hopeful. With the help of magical aid, she attends a royal ball in disguise, capturing the prince's heart. When the magic fades, her true identity is revealed, and she rises from obscurity to become queen.`,
-      weeklyPrompt: "Think about a situation where you felt overlooked or undervalued. How did you maintain hope and kindness? What would it look like to step into your own 'royalty' - your full potential and worth?"
+      weeklyPrompt: "Think about a situation where you felt overlooked or undervalued. How did you maintain hope and kindness? What would it look like to step into your own &apos;royalty&apos; - your full potential and worth?"
 
     },
     {
@@ -24,7 +24,7 @@ export const characters = [
       description: "A cursed slumber, awakened by destiny",
       image: "/images/sleepingbeauty.png",
       story: `A princess is cursed at birth to fall into a deep sleep on her sixteenth birthday. Hidden away for protection, the curse is fulfilled despite all efforts. After years in enchanted slumber, she is awakened by true love's kiss, breaking the spell and restoring peace to the kingdom.`,
-      weeklyPrompt: "Consider a time when you felt 'asleep' to your own potential or dreams. What finally awakened you? How can you be more conscious and present in your daily life, rather than going through the motions?"
+      weeklyPrompt: "Consider a time when you felt &apos;asleep&apos; to your own potential or dreams. What finally awakened you? How can you be more conscious and present in your daily life, rather than going through the motions?"
 
     },
     {
@@ -51,7 +51,7 @@ export const characters = [
       description: "Freedon found in a towered prison.",
       image: "/images/rapunzel.png",
       story: `Taken from her parents as a baby, a girl with magical hair is locked away in a tower by a sorceress. Isolated from the world, she grows curious and brave. When a stranger stumbles upon her hidden prison, Rapunzel dares to dream of freedom—and through love, loss, and discovery, she escapes the tower to reclaim her life.`,
-      weeklyPrompt: "What 'tower' are you currently trapped in - whether it's a limiting belief, a toxic relationship, or a comfort zone? What would it take for you to 'let down your hair' and step into the unknown?"
+      weeklyPrompt: "What &apos;tower&apos; are you currently trapped in - whether it&apos;s a limiting belief, a toxic relationship, or a comfort zone? What would it take for you to &apos;let down your hair&apos; and step into the unknown?"
 
     },
     {
@@ -60,7 +60,7 @@ export const characters = [
       description: "Love that defies the coldest magic.",
       image: "/images/gerda.png",
       story: `When a boy falls under the spell of the Snow Queen and is taken to her frozen palace, his closest friend, a brave and loving girl, sets out on a long and perilous journey to rescue him. Guided by her unwavering heart, she overcomes magical trials, melts the ice in his soul, and breaks the Snow Queen's hold through the power of love and loyalty.`,
-      weeklyPrompt: "Think about someone you love who seems distant or 'frozen' emotionally. How can you show them unconditional love and support? What would it look like to embark on a journey to help them rediscover their warmth and joy?"
+      weeklyPrompt: "Think about someone you love who seems distant or &apos;frozen&apos; emotionally. How can you show them unconditional love and support? What would it look like to embark on a journey to help them rediscover their warmth and joy?"
 
     },
     {
@@ -78,7 +78,7 @@ export const characters = [
       description: "A girl who questioned the world--and made her own.",
       image: "/images/aliceinwonderland.png",
       story: `After following a talking White Rabbit, a curious girl named Alice falls down a rabbit hole into a fantastical world. There, she encounters bizarre creatures, shifting logic, and strange rules that challenge her sense of reality. Through wit and courage, she navigates chaos and contradiction, ultimately finding her way back home—with her imagination forever changed.`,
-      weeklyPrompt: "What 'rabbit hole' are you curious about exploring in your life? How can you embrace the unknown and question the 'rules' that might be limiting you? What would it look like to approach life with more wonder and curiosity?"
+      weeklyPrompt: "What &apos;rabbit hole&apos; are you curious about exploring in your life? How can you embrace the unknown and question the &apos;rules&apos; that might be limiting you? What would it look like to approach life with more wonder and curiosity?"
 
     },
     {
@@ -87,7 +87,7 @@ export const characters = [
       description: "A storm swept her away, but she found her way home with courage.",
       image: "/images/dorothygale.png",
       story: `After a cyclone carries her from Kansas to the magical Land of Oz, Dorothy Gale sets out on a journey to find her way back home. Along the yellow brick road, she befriends a scarecrow, a tin man, and a cowardly lion—all seeking something within themselves. Facing witches, illusions, and unexpected truths, Dorothy learns that the power to return was within her all along.`,
-      weeklyPrompt: "What 'storm' has swept you away from your comfort zone recently? What companions or inner resources are helping you navigate this journey? How can you trust that you have the power to find your way 'home'?"
+      weeklyPrompt: "What &apos;storm&apos; has swept you away from your comfort zone recently? What companions or inner resources are helping you navigate this journey? How can you trust that you have the power to find your way &apos;home&apos;?"
 
     },
     {
