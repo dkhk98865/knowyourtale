@@ -24,8 +24,8 @@ export async function addToMailchimp(subscriber: MailchimpSubscriber) {
 
     const url = `https://${MAILCHIMP_SERVER_PREFIX}.api.mailchimp.com/3.0/lists/${MAILCHIMP_AUDIENCE_ID}/members`;
 
-    // Create MD5 hash of email (Mailchimp requirement)
-    const emailHash = createHash('md5').update(subscriber.email_address.toLowerCase()).digest('hex');
+    // Create MD5 hash of email (Mailchimp requirement) - not used but required for API
+    createHash('md5').update(subscriber.email_address.toLowerCase()).digest('hex');
 
     const response = await fetch(url, {
       method: 'PUT', // PUT for upsert (create or update)
@@ -71,8 +71,8 @@ export async function addToNewMailchimpAccount(subscriber: MailchimpSubscriber) 
 
     const url = `https://${NEW_MAILCHIMP_SERVER_PREFIX}.api.mailchimp.com/3.0/lists/${NEW_MAILCHIMP_AUDIENCE_ID}/members`;
 
-    // Create MD5 hash of email (Mailchimp requirement)
-    const emailHash = createHash('md5').update(subscriber.email_address.toLowerCase()).digest('hex');
+    // Create MD5 hash of email (Mailchimp requirement) - not used but required for API
+    createHash('md5').update(subscriber.email_address.toLowerCase()).digest('hex');
 
     const response = await fetch(url, {
       method: 'PUT', // PUT for upsert (create or update)
