@@ -7,10 +7,19 @@ import { characters } from '@/types/characters';
 import Link from 'next/link';
 import SubscriptionAccessGate from '@/components/subscription-access-gate';
 import { User } from '@supabase/supabase-js';
+import { UserPromptProgressService, CurrentPrompt } from '@/lib/user-prompt-progress';
 
 export default function JournalPage() {
   const [journals, setJournals] = useState<JournalEntry[]>([]);
   const [prompts, setPrompts] = useState<WeeklyPrompt[]>([]);
+  const [currentPrompt, setCurrentPrompt] = useState<CurrentPrompt | null>(null);
+  const [userProgress, setUserProgress] = useState<{
+    currentWeek: number;
+    totalWeeks: number;
+    characterName: string;
+    isActive: boolean;
+    nextPromptDate: string;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -38,6 +47,19 @@ export default function JournalPage() {
     }
   }, [supabase]);
 
+  const fetchUserPrompt = useCallback(async (userId: string) => {
+    try {
+      const promptService = new UserPromptProgressService();
+      const prompt = await promptService.getCurrentPrompt(userId);
+      const progress = await promptService.getUserProgress(userId);
+      
+      setCurrentPrompt(prompt);
+      setUserProgress(progress);
+    } catch (error) {
+      console.error('Error fetching user prompt:', error);
+    }
+  }, []);
+
   const fetchPrompts = useCallback(async () => {
     try {
       const { data, error } = await supabase
@@ -57,12 +79,16 @@ export default function JournalPage() {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
+      
+      if (user) {
+        fetchUserPrompt(user.id);
+      }
     };
 
     checkUser();
     fetchJournals();
     fetchPrompts();
-  }, [supabase, fetchJournals, fetchPrompts]);
+  }, [supabase, fetchJournals, fetchPrompts, fetchUserPrompt]);
 
   const filteredJournals = journals.filter(journal => {
     if (filters.character_tags && journal.character_tags.includes(filters.character_tags)) return true;
@@ -174,11 +200,60 @@ export default function JournalPage() {
         </div>
       </section>
 
+        {/* Current User Prompt Section */}
+        {currentPrompt && userProgress && (
+          <section className="mb-12">
+            <div className="storybook-card page-turn p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200">
+              <div className="text-center mb-6">
+                <div className="magical-sparkle text-3xl mb-3">🌟</div>
+                <h2 className="storybook-subtitle text-2xl mb-2">Your Weekly Character Prompt</h2>
+                <div className="text-sm text-gray-600">
+                  Week {userProgress.currentWeek} of {userProgress.totalWeeks} • {currentPrompt.characterName}
+                </div>
+              </div>
+              
+              <div className="bg-white p-6 rounded-lg border border-blue-200 mb-4">
+                <div className="flex items-center mb-4">
+                  <img 
+                    src={characters.find(c => c.id === currentPrompt.characterId)?.image} 
+                    alt={currentPrompt.characterName}
+                    className="w-12 h-12 rounded-full mr-4"
+                  />
+                  <div>
+                    <h3 className="font-semibold text-gray-800">{currentPrompt.characterName}</h3>
+                    <p className="text-sm text-gray-600">{currentPrompt.description}</p>
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-r from-yellow-50 to-amber-50 p-4 rounded-lg border-l-4 border-accent-gold">
+                  <h4 className="font-semibold text-gray-800 mb-2">This Week's Reflection Prompt:</h4>
+                  <p className="text-gray-700 leading-relaxed">{currentPrompt.prompt}</p>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <button
+                  onClick={() => setShowCreateForm(true)}
+                  className="magical-button magical-glow bg-accent-gold hover:bg-yellow-600"
+                >
+                  ✍️ Respond to This Prompt
+                </button>
+              </div>
+              
+              {userProgress.nextPromptDate && (
+                <div className="text-center mt-4 text-sm text-gray-500">
+                  Next prompt available: {new Date(userProgress.nextPromptDate).toLocaleDateString()}
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
         {/* Weekly Prompts Section */}
         {prompts.length > 0 && (
           <section className="mb-12">
             <div className="storybook-card page-turn p-6">
-              <h2 className="storybook-subtitle text-2xl mb-4">🌟 Weekly Journaling Prompts</h2>
+              <h2 className="storybook-subtitle text-2xl mb-4">🌟 All Weekly Journaling Prompts</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 {prompts.slice(0, 4).map((prompt) => (
                   <div key={prompt.id} className="storybook-card p-4 bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200">

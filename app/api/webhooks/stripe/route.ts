@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { createWebhookClient } from '@/lib/supabase-webhook';
-import { addMonthlySubscriber } from '@/lib/mailchimp';
+import { addMonthlySubscriberToNewAccount } from '@/lib/mailchimp';
+import { UserPromptProgressService } from '@/lib/user-prompt-progress';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 import { Stripe } from 'stripe';
@@ -227,13 +228,23 @@ export async function POST(request: NextRequest) {
                   status: 'success'
                 });
 
-                // Add subscriber to Mailchimp
-                console.log('📧 Adding subscriber to Mailchimp...');
-                const mailchimpResult = await addMonthlySubscriber(customerEmail);
+                // Add subscriber to new Mailchimp account
+                console.log('📧 Adding subscriber to new Mailchimp account...');
+                const mailchimpResult = await addMonthlySubscriberToNewAccount(customerEmail);
                 if (mailchimpResult.success) {
-                  console.log('✅ Successfully added to Mailchimp campaign');
+                  console.log('✅ Successfully added to new Mailchimp account');
                 } else {
-                  console.error('❌ Failed to add to Mailchimp:', mailchimpResult.error);
+                  console.error('❌ Failed to add to new Mailchimp account:', mailchimpResult.error);
+                }
+
+                // Initialize user for weekly prompt cycle
+                console.log('📝 Initializing user for weekly prompt cycle...');
+                const promptService = new UserPromptProgressService();
+                const promptInitResult = await promptService.initializeUser(customerEmail, customerEmail);
+                if (promptInitResult) {
+                  console.log('✅ Successfully initialized for weekly prompt cycle');
+                } else {
+                  console.error('❌ Failed to initialize for weekly prompt cycle');
                 }
               }
             } else {

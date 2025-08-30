@@ -41,6 +41,23 @@ CREATE TABLE IF NOT EXISTS webhook_logs (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Create user_prompt_progress table to track individual user progress through 12-week character prompt cycle
+CREATE TABLE IF NOT EXISTS user_prompt_progress (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_email TEXT NOT NULL,
+  current_week INTEGER NOT NULL DEFAULT 1 CHECK (current_week >= 1 AND current_week <= 12),
+  character_id TEXT NOT NULL, -- Which character's prompt they're on
+  last_prompt_date TIMESTAMP WITH TIME ZONE,
+  next_prompt_date TIMESTAMP WITH TIME ZONE,
+  total_prompts_viewed INTEGER DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+
+
 -- Create index on user_email for fast lookups
 CREATE INDEX IF NOT EXISTS idx_user_subscriptions_email ON user_subscriptions(user_email);
 
@@ -61,10 +78,19 @@ CREATE INDEX IF NOT EXISTS idx_user_report_access_status ON user_report_access(s
 CREATE INDEX IF NOT EXISTS idx_webhook_logs_user_email ON webhook_logs(user_email);
 CREATE INDEX IF NOT EXISTS idx_webhook_logs_created_at ON webhook_logs(created_at);
 
+-- Create indexes for user_prompt_progress table
+CREATE INDEX IF NOT EXISTS idx_user_prompt_progress_user_id ON user_prompt_progress(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_prompt_progress_email ON user_prompt_progress(user_email);
+CREATE INDEX IF NOT EXISTS idx_user_prompt_progress_active ON user_prompt_progress(is_active);
+CREATE INDEX IF NOT EXISTS idx_user_prompt_progress_next_date ON user_prompt_progress(next_prompt_date);
+
+
+
 -- Enable Row Level Security (RLS)
 ALTER TABLE user_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_report_access ENABLE ROW LEVEL SECURITY;
 ALTER TABLE webhook_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_prompt_progress ENABLE ROW LEVEL SECURITY;
 
 -- Drop existing policies if they exist (to avoid conflicts)
 DROP POLICY IF EXISTS "Users can view own subscription" ON user_subscriptions;
@@ -77,6 +103,23 @@ DROP POLICY IF EXISTS "Webhook can insert report access" ON user_report_access;
 DROP POLICY IF EXISTS "Users can insert own report access" ON user_report_access;
 DROP POLICY IF EXISTS "Users can view own webhook logs" ON webhook_logs;
 DROP POLICY IF EXISTS "Service role can insert webhook logs" ON webhook_logs;
+
+-- Drop existing community policies if they exist (to avoid conflicts)
+DROP POLICY IF EXISTS "Anyone can view community posts" ON community_posts;
+DROP POLICY IF EXISTS "Authenticated users can create posts" ON community_posts;
+DROP POLICY IF EXISTS "Users can update own posts" ON community_posts;
+DROP POLICY IF EXISTS "Users can delete own posts" ON community_posts;
+DROP POLICY IF EXISTS "Anyone can view community replies" ON community_replies;
+DROP POLICY IF EXISTS "Authenticated users can create replies" ON community_replies;
+DROP POLICY IF EXISTS "Users can update own replies" ON community_replies;
+DROP POLICY IF EXISTS "Users can delete own replies" ON community_replies;
+DROP POLICY IF EXISTS "Anyone can view community likes" ON community_likes;
+DROP POLICY IF EXISTS "Authenticated users can manage own likes" ON community_likes;
+
+-- Drop existing user_prompt_progress policies if they exist
+DROP POLICY IF EXISTS "Users can view own prompt progress" ON user_prompt_progress;
+DROP POLICY IF EXISTS "Users can update own prompt progress" ON user_prompt_progress;
+DROP POLICY IF EXISTS "Service role can manage all prompt progress" ON user_prompt_progress;
 
 -- Create policy to allow users to view their own subscription
 CREATE POLICY "Users can view own subscription" ON user_subscriptions
@@ -112,6 +155,16 @@ CREATE POLICY "Users can view own webhook logs" ON webhook_logs
 CREATE POLICY "Service role can insert webhook logs" ON webhook_logs
   FOR INSERT WITH CHECK (true);
 
+-- Create policies for user_prompt_progress table
+CREATE POLICY "Users can view own prompt progress" ON user_prompt_progress
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own prompt progress" ON user_prompt_progress
+  FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Service role can manage all prompt progress" ON user_prompt_progress
+  FOR ALL USING (auth.role() = 'service_role');
+
 -- Create function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -124,6 +177,11 @@ $$ language 'plpgsql';
 -- Drop existing triggers if they exist (to avoid conflicts)
 DROP TRIGGER IF EXISTS update_user_subscriptions_updated_at ON user_subscriptions;
 DROP TRIGGER IF EXISTS update_user_report_access_updated_at ON user_report_access;
+DROP TRIGGER IF EXISTS update_user_prompt_progress_updated_at ON user_prompt_progress;
+DROP TRIGGER IF EXISTS update_community_posts_updated_at ON community_posts;
+DROP TRIGGER IF EXISTS update_community_replies_updated_at ON community_replies;
+DROP TRIGGER IF EXISTS update_reply_count ON community_replies;
+DROP TRIGGER IF EXISTS update_like_count ON community_likes;
 
 -- Create trigger to automatically update updated_at
 CREATE TRIGGER update_user_subscriptions_updated_at
@@ -134,6 +192,12 @@ CREATE TRIGGER update_user_subscriptions_updated_at
 -- Create trigger for user_report_access table
 CREATE TRIGGER update_user_report_access_updated_at
   BEFORE UPDATE ON user_report_access
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Create trigger for user_prompt_progress table
+CREATE TRIGGER update_user_prompt_progress_updated_at
+  BEFORE UPDATE ON user_prompt_progress
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
@@ -160,6 +224,10 @@ GRANT ALL ON user_report_access TO service_role;
 -- Grant permissions for webhook_logs table
 GRANT ALL ON webhook_logs TO authenticated;
 GRANT ALL ON webhook_logs TO service_role;
+
+-- Grant permissions for user_prompt_progress table
+GRANT SELECT, UPDATE ON user_prompt_progress TO authenticated;
+GRANT ALL ON user_prompt_progress TO service_role;
 
 -- Community Board Tables
 -- Create community_posts table
