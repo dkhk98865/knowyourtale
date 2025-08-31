@@ -303,8 +303,8 @@ export default function RapunzelReportPage() {
             
             <div className="grid md:grid-cols-3 gap-6 mb-6">
               <div className="text-center">
-                <div className="text-green-600 text-2xl mb-2">📧</div>
-                <h4 className="font-semibold text-green-800 mb-2">Weekly Emails</h4>
+                                  <div className="text-green-600 text-2xl mb-2">📖</div>
+                <h4 className="font-semibold text-green-800 mb-2">Weekly Prompts</h4>
                 <p className="text-gray-600 text-sm">Personalized prompts for reflection and growth</p>
               </div>
               <div className="text-center">

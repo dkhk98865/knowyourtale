@@ -111,7 +111,7 @@ export default function SubscriptionAccessGate({ children, user, featureName }: 
           <div className="space-y-4 mb-8 text-left">
             <div className="flex items-center space-x-3">
               <div className="text-green-500 text-xl">✓</div>
-              <span className="text-gray-700">Weekly emails with prompts</span>
+                              <span className="text-gray-700">Weekly prompts in journal section</span>
             </div>
             <div className="flex items-center space-x-3">
               <div className="text-green-500 text-xl">✓</div>

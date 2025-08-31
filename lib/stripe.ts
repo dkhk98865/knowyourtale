@@ -64,7 +64,7 @@ export const SUBSCRIPTION_PLANS = {
     price: 799, // $7.99 in cents
     priceId: process.env.STRIPE_MONTHLY_PRICE_ID,
     features: [
-      'Weekly emails with prompts',
+              'Weekly prompts in journal section',
       'Access to Know Your Tale journaling',
       'Community board access'
     ]

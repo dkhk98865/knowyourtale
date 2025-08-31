@@ -37,7 +37,7 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
       name: 'Monthly Plan',
       price: '$7.99/month',
       priceId: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID,
-      features: ['Weekly emails with prompts', 'Access to Know Your Tale journaling', 'Community board access']
+              features: ['Weekly prompts in journal section', 'Access to Know Your Tale journaling', 'Community board access']
     },
     allReports: {
       name: 'All Reports',

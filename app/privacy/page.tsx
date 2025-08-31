@@ -75,7 +75,7 @@ export default function PrivacyPolicyPage() {
 
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">Mailchimp (Email Marketing)</h3>
             <p className="mb-4">
-              If you subscribe to our monthly plan, we use Mailchimp to send weekly journaling prompts and updates. Mailchimp processes your email address and subscription preferences. You can review Mailchimp&apos;s privacy practices at <a href="https://mailchimp.com/legal/privacy/" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">mailchimp.com/legal/privacy</a>.
+              If you subscribe to our monthly plan, we use Mailchimp to manage your subscription and send important updates. Mailchimp processes your email address and subscription preferences. You can review Mailchimp&apos;s privacy practices at <a href="https://mailchimp.com/legal/privacy/" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">mailchimp.com/legal/privacy</a>.
             </p>
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Data Storage and Security</h2>

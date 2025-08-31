@@ -240,6 +240,7 @@ export async function POST(request: NextRequest) {
                 // Initialize user for weekly prompt cycle
                 console.log('📝 Initializing user for weekly prompt cycle...');
                 const promptService = new UserPromptProgressService();
+                // For now, we'll use email as user_id since we don't have the actual user ID from auth
                 const promptInitResult = await promptService.initializeUser(customerEmail, customerEmail);
                 if (promptInitResult) {
                   console.log('✅ Successfully initialized for weekly prompt cycle');
