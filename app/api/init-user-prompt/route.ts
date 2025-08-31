@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { UserPromptProgressService } from '@/lib/user-prompt-progress';
-import { createClient } from '@/lib/supabase-server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,28 +11,16 @@ export async function POST(request: NextRequest) {
 
     console.log(`Initializing user prompt for email: ${email}`);
     
-    // Get the user ID from the email
-    const supabase = await createClient();
-    const { data: { user }, error: userError } = await supabase.auth.admin.getUserByEmail(email);
-    
-    if (userError || !user) {
-      console.error(`User not found for email: ${email}`, userError);
-      return NextResponse.json({ 
-        success: false, 
-        error: 'User not found' 
-      }, { status: 404 });
-    }
-    
     const promptService = new UserPromptProgressService();
-    const result = await promptService.initializeUser(user.id, email);
+    // Use email as both user ID and email for initialization
+    const result = await promptService.initializeUser(email, email);
     
     if (result) {
       console.log(`Successfully initialized user: ${email}`);
       return NextResponse.json({ 
         success: true, 
         message: 'User initialized successfully',
-        email: email,
-        userId: user.id
+        email: email
       });
     } else {
       console.error(`Failed to initialize user: ${email}`);
@@ -62,26 +49,13 @@ export async function GET(request: NextRequest) {
 
     console.log(`Checking user prompt status for email: ${email}`);
     
-    // Get the user ID from the email
-    const supabase = await createClient();
-    const { data: { user }, error: userError } = await supabase.auth.admin.getUserByEmail(email);
-    
-    if (userError || !user) {
-      console.error(`User not found for email: ${email}`, userError);
-      return NextResponse.json({ 
-        success: false, 
-        error: 'User not found' 
-      }, { status: 404 });
-    }
-    
     const promptService = new UserPromptProgressService();
-    const prompt = await promptService.getCurrentPrompt(user.id);
-    const progress = await promptService.getUserProgress(user.id);
+    const prompt = await promptService.getCurrentPrompt(email);
+    const progress = await promptService.getUserProgress(email);
     
     return NextResponse.json({ 
       success: true,
       email: email,
-      userId: user.id,
       hasPrompt: !!prompt,
       prompt: prompt,
       progress: progress
