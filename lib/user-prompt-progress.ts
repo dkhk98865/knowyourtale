@@ -24,15 +24,24 @@ export interface CurrentPrompt {
 }
 
 export class UserPromptProgressService {
-  private supabase = createClient();
+  private supabase: any = null;
+
+  private async getSupabase() {
+    if (!this.supabase) {
+      this.supabase = await createClient();
+    }
+    return this.supabase;
+  }
 
   /**
    * Initialize a new user for the 12-week prompt cycle
    */
   async initializeUser(userId: string, userEmail: string): Promise<boolean> {
     try {
+      const supabase = await this.getSupabase();
+      
       // Check if user already exists
-      const { data: existing } = await this.supabase
+      const { data: existing } = await supabase
         .from('user_prompt_progress')
         .select('*')
         .eq('user_id', userId)
@@ -48,7 +57,7 @@ export class UserPromptProgressService {
       const nextPromptDate = this.getNextMonday();
 
       // Create new user record
-      const { error } = await this.supabase
+      const { error } = await supabase
         .from('user_prompt_progress')
         .insert({
           user_id: userId,
@@ -78,7 +87,9 @@ export class UserPromptProgressService {
    */
   async getCurrentPrompt(userId: string): Promise<CurrentPrompt | null> {
     try {
-      const { data: progress } = await this.supabase
+      const supabase = await this.getSupabase();
+      
+      const { data: progress } = await supabase
         .from('user_prompt_progress')
         .select('*')
         .eq('user_id', userId)
@@ -115,7 +126,9 @@ export class UserPromptProgressService {
    */
   async advanceToNextPrompt(userId: string): Promise<boolean> {
     try {
-      const { data: progress } = await this.supabase
+      const supabase = await this.getSupabase();
+      
+      const { data: progress } = await supabase
         .from('user_prompt_progress')
         .select('*')
         .eq('user_id', userId)
@@ -132,7 +145,7 @@ export class UserPromptProgressService {
       const nextCharacter = characters[nextCharacterIndex];
       const nextPromptDate = this.getNextMonday();
 
-      const { error } = await this.supabase
+      const { error } = await supabase
         .from('user_prompt_progress')
         .update({
           current_week: nextWeek,
@@ -162,8 +175,10 @@ export class UserPromptProgressService {
    */
   async getUsersReadyForNewPrompt(): Promise<string[]> {
     try {
+      const supabase = await this.getSupabase();
       const today = new Date();
-      const { data: users } = await this.supabase
+      
+      const { data: users } = await supabase
         .from('user_prompt_progress')
         .select('user_id')
         .eq('is_active', true)
@@ -215,7 +230,9 @@ export class UserPromptProgressService {
     nextPromptDate: string;
   } | null> {
     try {
-      const { data: progress } = await this.supabase
+      const supabase = await this.getSupabase();
+      
+      const { data: progress } = await supabase
         .from('user_prompt_progress')
         .select('*')
         .eq('user_id', userId)
