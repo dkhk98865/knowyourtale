@@ -106,14 +106,23 @@ export default function JournalPage() {
         if (initResponse.ok) {
           console.log('User initialized successfully, fetching prompt data...');
           
+          // Wait a moment for the database to be updated
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
           // Retry fetching the prompt data after initialization
           const retryPrompt = await promptService.getCurrentPrompt(userId);
           const retryProgress = await promptService.getUserProgress(userId);
           
           console.log('Retry prompt data:', { prompt: !!retryPrompt, progress: !!retryProgress });
           
-          setCurrentPrompt(retryPrompt);
-          setUserProgress(retryProgress);
+          if (retryPrompt && retryProgress) {
+            setCurrentPrompt(retryPrompt);
+            setUserProgress(retryProgress);
+          } else {
+            console.error('Failed to fetch prompt data after initialization');
+            // Reset the flag so manual initialization can still work
+            setInitializationAttempted(false);
+          }
         } else {
           const errorData = await initResponse.json();
           console.error('Failed to initialize user for weekly prompts:', errorData);
@@ -204,7 +213,20 @@ export default function JournalPage() {
         // Reset initialization flag for new user
         setInitializationAttempted(false);
         promptFetchedRef.current = true;
-        fetchUserPrompt(user.id);
+        
+        // Check if user already has prompt data first
+        const promptService = new UserPromptProgressClientService();
+        const existingPrompt = await promptService.getCurrentPrompt(user.id);
+        const existingProgress = await promptService.getUserProgress(user.id);
+        
+        if (existingPrompt && existingProgress) {
+          console.log('User already has prompt data, setting it directly');
+          setCurrentPrompt(existingPrompt);
+          setUserProgress(existingProgress);
+        } else {
+          console.log('User does not have prompt data, initializing...');
+          fetchUserPrompt(user.id);
+        }
       } else {
         console.log('No user or user email not available, or prompt already fetched');
       }

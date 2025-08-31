@@ -56,11 +56,23 @@ export class UserPromptProgressClientService {
 
       if (error) {
         console.error(`Client: Error fetching prompt:`, error);
+        // Try a broader query to see what's in the table
+        const { data: allRecords } = await this.supabase
+          .from('user_prompt_progress')
+          .select('*')
+          .eq('user_email', userEmail);
+        console.log(`Client: All records for email:`, allRecords);
         return null;
       }
 
       if (!progress) {
         console.log(`Client: No active progress found for user ${userEmail}`);
+        // Try a broader query to see what's in the table
+        const { data: allRecords } = await this.supabase
+          .from('user_prompt_progress')
+          .select('*')
+          .eq('user_email', userEmail);
+        console.log(`Client: All records for email:`, allRecords);
         return null;
       }
 
