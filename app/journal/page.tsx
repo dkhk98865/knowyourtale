@@ -52,6 +52,13 @@ export default function JournalPage() {
     try {
       setPromptLoading(true);
       console.log(`Fetching prompt data for user: ${userId}`);
+      console.log('User object:', user);
+      
+      if (!user) {
+        console.log('User not loaded yet, skipping prompt fetch');
+        return;
+      }
+      
       const promptService = new UserPromptProgressClientService();
       const prompt = await promptService.getCurrentPrompt(userId);
       const progress = await promptService.getUserProgress(userId);
@@ -61,16 +68,24 @@ export default function JournalPage() {
       // If user doesn't have prompt data yet, initialize them
       if (!prompt || !progress) {
         console.log('User not initialized for weekly prompts, initializing now...');
+        console.log('User email:', user?.email);
+        console.log('User ID:', userId);
+        
+        if (!user?.email) {
+          console.error('User email is undefined, cannot initialize');
+          return;
+        }
         
         // Call the initialization API
+        const requestBody = { email: user.email };
+        console.log('Sending request body:', requestBody);
+        
         const initResponse = await fetch('/api/init-user-prompt', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            email: user?.email
-          }),
+          body: JSON.stringify(requestBody),
         });
 
         if (initResponse.ok) {
@@ -106,22 +121,29 @@ export default function JournalPage() {
     } finally {
       setPromptLoading(false);
     }
-  }, [user?.email]);
+  }, [user]);
 
   const handleManualInitialization = async () => {
-    if (!user?.email) return;
+    if (!user?.email) {
+      console.error('User email is undefined, cannot initialize manually');
+      alert('User email is not available. Please refresh the page and try again.');
+      return;
+    }
+    
+    console.log('Manual initialization for email:', user.email);
     
     setInitializing(true);
     setPromptLoading(true);
     try {
+      const requestBody = { email: user.email };
+      console.log('Sending manual request body:', requestBody);
+      
       const response = await fetch('/api/init-user-prompt', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email: user.email
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (response.ok) {
