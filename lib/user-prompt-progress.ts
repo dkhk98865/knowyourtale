@@ -28,7 +28,7 @@ export interface CurrentPrompt {
 export class UserPromptProgressService {
   private supabase: SupabaseClient | null = null;
 
-  private async getSupabase(): Promise<SupabaseClient> {
+  public async getSupabase(): Promise<SupabaseClient> {
     if (!this.supabase) {
       // Use service role client for server-side operations
       this.supabase = createSupabaseClient(
@@ -54,6 +54,8 @@ export class UserPromptProgressService {
       
       const supabase = await this.getSupabase();
       console.log('Got Supabase client');
+      console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+      console.log('Service role key exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
       
       // Check if user already exists
       console.log('Checking if user already exists...');
@@ -64,8 +66,11 @@ export class UserPromptProgressService {
         .eq('is_active', true)
         .single();
 
+      console.log('Check result:', { existing, checkError });
+
       if (checkError) {
         console.error('Error checking existing user:', checkError);
+        // Don't return false here, continue with initialization
       }
 
       if (existing) {
@@ -92,12 +97,21 @@ export class UserPromptProgressService {
       
       console.log('Inserting data:', insertData);
       
-      const { error } = await supabase
+      const { data: insertResult, error } = await supabase
         .from('user_prompt_progress')
-        .insert(insertData);
+        .insert(insertData)
+        .select();
+
+      console.log('Insert result:', { insertResult, error });
 
       if (error) {
         console.error('Error initializing user:', error);
+        console.error('Error details:', {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        });
         return false;
       }
 
@@ -105,6 +119,7 @@ export class UserPromptProgressService {
       return true;
     } catch (error) {
       console.error('Error in initializeUser:', error);
+      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
       return false;
     }
   }
