@@ -20,8 +20,10 @@ export default function JournalPage() {
     nextPromptDate: string;
   } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [promptLoading, setPromptLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [initializing, setInitializing] = useState(false);
   const [filters, setFilters] = useState({
     character_tags: '',
     entry_type: '',
@@ -48,17 +50,86 @@ export default function JournalPage() {
 
   const fetchUserPrompt = useCallback(async (userId: string) => {
     try {
+      setPromptLoading(true);
+      console.log(`Fetching prompt data for user: ${userId}`);
       const promptService = new UserPromptProgressClientService();
       const prompt = await promptService.getCurrentPrompt(userId);
       const progress = await promptService.getUserProgress(userId);
       
-      setCurrentPrompt(prompt);
-      setUserProgress(progress);
+      console.log('Prompt data fetched:', { prompt: !!prompt, progress: !!progress });
+      
+      // If user doesn't have prompt data yet, initialize them
+      if (!prompt || !progress) {
+        console.log('User not initialized for weekly prompts, initializing now...');
+        
+        // Call the initialization API
+        const initResponse = await fetch('/api/init-user-prompt', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: user?.email
+          }),
+        });
+
+        if (initResponse.ok) {
+          console.log('User initialized successfully, fetching prompt data...');
+          
+          // Retry fetching the prompt data after initialization
+          const retryPrompt = await promptService.getCurrentPrompt(userId);
+          const retryProgress = await promptService.getUserProgress(userId);
+          
+          console.log('Retry prompt data:', { prompt: !!retryPrompt, progress: !!retryProgress });
+          
+          setCurrentPrompt(retryPrompt);
+          setUserProgress(retryProgress);
+        } else {
+          const errorData = await initResponse.json();
+          console.error('Failed to initialize user for weekly prompts:', errorData);
+        }
+      } else {
+        setCurrentPrompt(prompt);
+        setUserProgress(progress);
+      }
     } catch (error) {
       console.error('Error fetching user prompt:', error);
+    } finally {
+      setPromptLoading(false);
     }
-  }, []);
+  }, [user?.email]);
 
+  const handleManualInitialization = async () => {
+    if (!user?.email) return;
+    
+    setInitializing(true);
+    setPromptLoading(true);
+    try {
+      const response = await fetch('/api/init-user-prompt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: user.email
+        }),
+      });
+
+      if (response.ok) {
+        // Refresh the prompt data
+        await fetchUserPrompt(user.id);
+      } else {
+        console.error('Manual initialization failed');
+        alert('Failed to initialize weekly prompts. Please try again or contact support.');
+      }
+    } catch (error) {
+      console.error('Error during manual initialization:', error);
+      alert('An error occurred during initialization. Please try again.');
+    } finally {
+      setInitializing(false);
+      setPromptLoading(false);
+    }
+  };
 
 
   useEffect(() => {
@@ -186,7 +257,19 @@ export default function JournalPage() {
       </section>
 
         {/* Current User Prompt Section */}
-        {currentPrompt && userProgress ? (
+        {promptLoading ? (
+          <section className="mb-12">
+            <div className="storybook-card page-turn p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200">
+              <div className="text-center">
+                <div className="magical-sparkle text-3xl mb-3">🔄</div>
+                <h2 className="storybook-subtitle text-2xl mb-2">Loading Your Weekly Character Prompt...</h2>
+                <p className="text-gray-600 mb-4">
+                  We&apos;re fetching your personalized weekly prompt. This might take a moment.
+                </p>
+              </div>
+            </div>
+          </section>
+        ) : currentPrompt && userProgress ? (
           <section className="mb-12">
             <div className="storybook-card page-turn p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200">
               <div className="text-center mb-6">
@@ -254,16 +337,25 @@ export default function JournalPage() {
                 <div className="magical-sparkle text-3xl mb-3">🔄</div>
                 <h2 className="storybook-subtitle text-2xl mb-2">Setting Up Your Weekly Prompts</h2>
                 <p className="text-gray-600 mb-4">
-                  We&apos;re setting up your personalized weekly prompts. This should happen automatically, but if you&apos;re seeing this message, please contact support to get your prompts activated.
+                  We&apos;re setting up your personalized weekly prompts. This should happen automatically, but if you&apos;re seeing this message, you can try initializing manually.
                 </p>
                 <div className="text-sm text-gray-500 mb-4">
                   Email: {user.email}
                 </div>
-                <Link href="/contact">
-                  <button className="magical-button magical-glow bg-accent-gold hover:bg-yellow-600">
-                    📧 Contact Support
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <button 
+                    onClick={handleManualInitialization}
+                    disabled={initializing}
+                    className="magical-button magical-glow bg-accent-gold hover:bg-yellow-600 disabled:opacity-50"
+                  >
+                    {initializing ? '🔄 Initializing...' : '✨ Initialize Now'}
                   </button>
-                </Link>
+                  <Link href="/contact">
+                    <button className="magical-button">
+                      📧 Contact Support
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
           </section>
