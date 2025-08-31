@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { createClient } from '@/lib/supabase-client';
 import { JournalEntry } from '@/types/journal';
 import { characters } from '@/types/characters';
@@ -32,6 +32,7 @@ export default function JournalPage() {
   });
 
   const supabase = createClient();
+  const promptFetchedRef = useRef(false);
 
   const fetchJournals = useCallback(async () => {
     try {
@@ -138,7 +139,7 @@ export default function JournalPage() {
     } finally {
       setPromptLoading(false);
     }
-  }, [user]);
+  }, [user, initializationAttempted]);
 
   const handleManualInitialization = async () => {
     if (!user?.email) {
@@ -198,19 +199,20 @@ export default function JournalPage() {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
       
-      if (user && user.email) {
+      if (user && user.email && !promptFetchedRef.current) {
         console.log('User loaded:', user.email);
         // Reset initialization flag for new user
         setInitializationAttempted(false);
+        promptFetchedRef.current = true;
         fetchUserPrompt(user.id);
       } else {
-        console.log('No user or user email not available');
+        console.log('No user or user email not available, or prompt already fetched');
       }
     };
 
     checkUser();
     fetchJournals();
-  }, [supabase, fetchJournals, fetchUserPrompt]);
+  }, [supabase, fetchJournals]);
 
   const filteredJournals = journals.filter(journal => {
     if (filters.character_tags && journal.character_tags.includes(filters.character_tags)) return true;
