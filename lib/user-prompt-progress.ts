@@ -39,43 +39,58 @@ export class UserPromptProgressService {
    */
   async initializeUser(userId: string, userEmail: string): Promise<boolean> {
     try {
+      console.log(`=== INITIALIZING USER: ${userEmail} with ID: ${userId} ===`);
+      
       const supabase = await this.getSupabase();
+      console.log('Got Supabase client');
       
       // Check if user already exists
-      const { data: existing } = await supabase
+      console.log('Checking if user already exists...');
+      const { data: existing, error: checkError } = await supabase
         .from('user_prompt_progress')
         .select('*')
         .eq('user_id', userId)
         .eq('is_active', true)
         .single();
 
+      if (checkError) {
+        console.error('Error checking existing user:', checkError);
+      }
+
       if (existing) {
         console.log(`User ${userEmail} already exists in prompt cycle`);
         return true;
       }
 
+      console.log('User does not exist, creating new record...');
+
       // Calculate next prompt date (next Monday)
       const nextPromptDate = this.getNextMonday();
+      console.log('Next prompt date:', nextPromptDate);
 
       // Create new user record
+      const insertData = {
+        user_id: userId,
+        user_email: userEmail,
+        current_week: 1,
+        character_id: characters[0].id, // Start with Snow White
+        next_prompt_date: nextPromptDate,
+        total_prompts_viewed: 0,
+        is_active: true
+      };
+      
+      console.log('Inserting data:', insertData);
+      
       const { error } = await supabase
         .from('user_prompt_progress')
-        .insert({
-          user_id: userId,
-          user_email: userEmail,
-          current_week: 1,
-          character_id: characters[0].id, // Start with Snow White
-          next_prompt_date: nextPromptDate,
-          total_prompts_viewed: 0,
-          is_active: true
-        });
+        .insert(insertData);
 
       if (error) {
         console.error('Error initializing user:', error);
         return false;
       }
 
-      console.log(`Initialized user ${userEmail} for prompt cycle`);
+      console.log(`Successfully initialized user ${userEmail} for prompt cycle`);
       return true;
     } catch (error) {
       console.error('Error in initializeUser:', error);

@@ -3,9 +3,26 @@ import { UserPromptProgressService } from '@/lib/user-prompt-progress';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json();
+    console.log('=== INIT USER PROMPT API CALLED ===');
+    
+    const body = await request.text();
+    console.log('Request body:', body);
+    
+    let email;
+    try {
+      const parsedBody = JSON.parse(body);
+      email = parsedBody.email;
+      console.log('Parsed email:', email);
+    } catch (parseError) {
+      console.error('Failed to parse request body:', parseError);
+      return NextResponse.json({ 
+        error: 'Invalid JSON in request body',
+        details: parseError instanceof Error ? parseError.message : 'Unknown parse error'
+      }, { status: 400 });
+    }
     
     if (!email) {
+      console.error('Email is missing from request');
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
@@ -18,7 +35,10 @@ export async function POST(request: NextRequest) {
     console.log(`Using email as user ID: ${userId}`);
     
     const promptService = new UserPromptProgressService();
+    console.log('Created prompt service, calling initializeUser...');
+    
     const result = await promptService.initializeUser(userId, email);
+    console.log('initializeUser result:', result);
     
     if (result) {
       console.log(`Successfully initialized user: ${email}`);
