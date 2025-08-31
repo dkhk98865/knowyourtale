@@ -4,6 +4,7 @@ import { UserPromptProgressService } from '@/lib/user-prompt-progress';
 export async function POST(request: NextRequest) {
   try {
     console.log('=== INIT USER PROMPT API CALLED ===');
+    console.log('Request headers:', Object.fromEntries(request.headers.entries()));
     
     const body = await request.text();
     console.log('Request body:', body);
@@ -57,6 +58,7 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     console.error('Error in init-user-prompt:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
     return NextResponse.json({ 
       success: false, 
       error: 'Internal server error',
