@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase-server';
 import { characters } from '@/types/characters';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 export interface UserPromptProgress {
   id: string;
@@ -24,9 +25,9 @@ export interface CurrentPrompt {
 }
 
 export class UserPromptProgressService {
-  private supabase: any = null;
+  private supabase: SupabaseClient | null = null;
 
-  private async getSupabase() {
+  private async getSupabase(): Promise<SupabaseClient> {
     if (!this.supabase) {
       this.supabase = await createClient();
     }
