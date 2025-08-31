@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase-client';
-import { JournalEntry, WeeklyPrompt } from '@/types/journal';
+import { JournalEntry } from '@/types/journal';
 import { characters } from '@/types/characters';
 import Link from 'next/link';
 import SubscriptionAccessGate from '@/components/subscription-access-gate';
@@ -11,7 +11,6 @@ import { UserPromptProgressClientService, CurrentPrompt } from '@/lib/user-promp
 
 export default function JournalPage() {
   const [journals, setJournals] = useState<JournalEntry[]>([]);
-  const [prompts, setPrompts] = useState<WeeklyPrompt[]>([]);
   const [currentPrompt, setCurrentPrompt] = useState<CurrentPrompt | null>(null);
   const [userProgress, setUserProgress] = useState<{
     currentWeek: number;
@@ -60,20 +59,7 @@ export default function JournalPage() {
     }
   }, []);
 
-  const fetchPrompts = useCallback(async () => {
-    try {
-      const { data, error } = await supabase
-        .from('weekly_prompts')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setPrompts(data || []);
-    } catch (error) {
-      console.error('Error fetching prompts:', error);
-    }
-  }, [supabase]);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -87,8 +73,7 @@ export default function JournalPage() {
 
     checkUser();
     fetchJournals();
-    fetchPrompts();
-  }, [supabase, fetchJournals, fetchPrompts, fetchUserPrompt]);
+  }, [supabase, fetchJournals, fetchUserPrompt]);
 
   const filteredJournals = journals.filter(journal => {
     if (filters.character_tags && journal.character_tags.includes(filters.character_tags)) return true;
@@ -281,27 +266,7 @@ export default function JournalPage() {
           </section>
         )}
 
-        {/* Weekly Prompts Section - Only show if user has no current prompt */}
-        {!currentPrompt && prompts.length > 0 && (
-          <section className="mb-12">
-            <div className="storybook-card page-turn p-6">
-              <h2 className="storybook-subtitle text-2xl mb-4">🌟 Available Weekly Journaling Prompts</h2>
-              <p className="text-gray-600 mb-4">Complete your personality quiz to get your personalized weekly prompt!</p>
-              <div className="grid md:grid-cols-2 gap-6">
-                {prompts.slice(0, 4).map((prompt) => (
-                  <div key={prompt.id} className="storybook-card p-4 bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200">
-                    <h3 className="font-semibold text-gray-800 mb-2">Week {prompt.week_number} Prompt</h3>
-                    <p className="text-gray-600 text-sm mb-3">{prompt.prompt_text}</p>
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span>Week {prompt.week_number}</span>
-                      <span>{prompt.character_id ? `For ${characters.find(c => c.id === prompt.character_id)?.name || prompt.character_id}` : 'General'}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+
 
         {/* Journal Entries Section */}
         <section>
