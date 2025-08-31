@@ -178,8 +178,11 @@ export default function JournalPage() {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
       
-      if (user) {
+      if (user && user.email) {
+        console.log('User loaded:', user.email);
         fetchUserPrompt(user.id);
+      } else {
+        console.log('No user or user email not available');
       }
     };
 

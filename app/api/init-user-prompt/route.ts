@@ -1,10 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { UserPromptProgressService } from '@/lib/user-prompt-progress';
+import { createClient } from '@supabase/supabase-js';
+
+function createServiceRoleClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    }
+  );
+}
 
 export async function POST(request: NextRequest) {
   try {
     console.log('=== INIT USER PROMPT API CALLED ===');
-    console.log('Request headers:', Object.fromEntries(request.headers.entries()));
     
     const body = await request.text();
     console.log('Request body:', body);
@@ -29,11 +42,33 @@ export async function POST(request: NextRequest) {
 
     console.log(`Initializing user prompt for email: ${email}`);
     
-    // For now, use email as user ID since we're disabling RLS
-    // This is a temporary solution until we can properly get the user ID
-    const userId = email; // Using email as user ID temporarily
+    // Get the actual user ID from auth.users table
+    const supabase = createServiceRoleClient();
+    console.log('Created service role client');
     
-    console.log(`Using email as user ID: ${userId}`);
+    const { data: { users }, error: userError } = await supabase.auth.admin.listUsers();
+    
+    if (userError) {
+      console.error('Error fetching users:', userError);
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Failed to fetch users',
+        details: userError
+      }, { status: 500 });
+    }
+    
+    const user = users?.find(u => u.email === email);
+    
+    if (!user) {
+      console.error(`User not found for email: ${email}`);
+      return NextResponse.json({ 
+        success: false, 
+        error: 'User not found in auth system' 
+      }, { status: 404 });
+    }
+
+    const userId = user.id;
+    console.log(`Found user ID: ${userId} for email: ${email}`);
     
     const promptService = new UserPromptProgressService();
     console.log('Created prompt service, calling initializeUser...');
