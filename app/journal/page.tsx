@@ -249,16 +249,19 @@ export default function JournalPage() {
           </section>
         ) : user && (
           <section className="mb-12">
-            <div className="storybook-card page-turn p-6 bg-gradient-to-r from-yellow-50 to-amber-50 border-2 border-yellow-200">
+            <div className="storybook-card page-turn p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200">
               <div className="text-center">
-                <div className="magical-sparkle text-3xl mb-3">🎭</div>
-                <h2 className="storybook-subtitle text-2xl mb-2">Start Your Weekly Character Journey</h2>
+                <div className="magical-sparkle text-3xl mb-3">🔄</div>
+                <h2 className="storybook-subtitle text-2xl mb-2">Setting Up Your Weekly Prompts</h2>
                 <p className="text-gray-600 mb-4">
-                  Subscribe to the monthly plan to begin your personalized 12-week journey through fairy tale characters!
+                  We&apos;re setting up your personalized weekly prompts. This should happen automatically, but if you&apos;re seeing this message, please contact support to get your prompts activated.
                 </p>
-                <Link href="/subscription">
+                <div className="text-sm text-gray-500 mb-4">
+                  Email: {user.email}
+                </div>
+                <Link href="/contact">
                   <button className="magical-button magical-glow bg-accent-gold hover:bg-yellow-600">
-                    🚀 Subscribe to Monthly Plan
+                    📧 Contact Support
                   </button>
                 </Link>
               </div>
