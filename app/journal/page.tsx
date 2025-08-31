@@ -21,9 +21,10 @@ export default function JournalPage() {
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [promptLoading, setPromptLoading] = useState(false);
+  const [initializing, setInitializing] = useState(false);
+  const [initializationAttempted, setInitializationAttempted] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [initializing, setInitializing] = useState(false);
   const [filters, setFilters] = useState({
     character_tags: '',
     entry_type: '',
@@ -67,6 +68,15 @@ export default function JournalPage() {
       
       // If user doesn't have prompt data yet, initialize them
       if (!prompt || !progress) {
+        console.log('User not initialized for weekly prompts, checking if already attempted...');
+        
+        if (initializationAttempted) {
+          console.log('Initialization already attempted, not trying again');
+          setCurrentPrompt(null);
+          setUserProgress(null);
+          return;
+        }
+        
         console.log('User not initialized for weekly prompts, initializing now...');
         console.log('User email:', user?.email);
         console.log('User ID:', userId);
@@ -75,6 +85,8 @@ export default function JournalPage() {
           console.error('User email is undefined, cannot initialize');
           return;
         }
+        
+        setInitializationAttempted(true);
         
         // Call the initialization API
         const requestBody = { email: user.email };
@@ -111,6 +123,9 @@ export default function JournalPage() {
           } else {
             console.error('Unknown error during initialization');
           }
+          
+          // Reset the flag so manual initialization can still work
+          setInitializationAttempted(false);
         }
       } else {
         setCurrentPrompt(prompt);
@@ -162,6 +177,9 @@ export default function JournalPage() {
         }
         
         alert(errorMessage);
+        
+        // Reset the flag so user can try again
+        setInitializationAttempted(false);
       }
     } catch (error) {
       console.error('Error during manual initialization:', error);
@@ -180,6 +198,8 @@ export default function JournalPage() {
       
       if (user && user.email) {
         console.log('User loaded:', user.email);
+        // Reset initialization flag for new user
+        setInitializationAttempted(false);
         fetchUserPrompt(user.id);
       } else {
         console.log('No user or user email not available');
