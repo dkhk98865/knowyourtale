@@ -54,6 +54,8 @@ export default function JournalPage() {
       setPromptLoading(true);
       console.log(`Fetching prompt data for user: ${userId}`);
       console.log('User object:', user);
+      console.log('User ID from auth:', user?.id);
+      console.log('User ID passed to function:', userId);
       
       if (!user) {
         console.log('User not loaded yet, skipping prompt fetch');

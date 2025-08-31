@@ -31,24 +31,47 @@ export class UserPromptProgressClientService {
    */
   async getCurrentPrompt(userId: string): Promise<CurrentPrompt | null> {
     try {
-      const { data: progress } = await this.supabase
+      console.log(`Client: Getting current prompt for user ID: ${userId}`);
+      
+      // Try to get the user's email from the auth session
+      const { data: { user } } = await this.supabase.auth.getUser();
+      const userEmail = user?.email;
+      
+      console.log(`Client: User email from auth: ${userEmail}`);
+      
+      if (!userEmail) {
+        console.error('Client: No user email available');
+        return null;
+      }
+      
+      // Query by email instead of user_id to avoid ID mismatch
+      const { data: progress, error } = await this.supabase
         .from('user_prompt_progress')
         .select('*')
-        .eq('user_id', userId)
+        .eq('user_email', userEmail)
         .eq('is_active', true)
         .single();
 
+      console.log(`Client: Query result:`, { progress, error });
+
+      if (error) {
+        console.error(`Client: Error fetching prompt:`, error);
+        return null;
+      }
+
       if (!progress) {
-        console.log(`No active progress found for user ${userId}`);
+        console.log(`Client: No active progress found for user ${userEmail}`);
         return null;
       }
 
       // Get character data
       const character = characters.find(c => c.id === progress.character_id);
       if (!character) {
-        console.error(`Character not found: ${progress.character_id}`);
+        console.error(`Client: Character not found: ${progress.character_id}`);
         return null;
       }
+
+      console.log(`Client: Found prompt for character: ${character.name}`);
 
       return {
         characterId: character.id,
@@ -58,7 +81,7 @@ export class UserPromptProgressClientService {
         description: character.description
       };
     } catch (error) {
-      console.error('Error in getCurrentPrompt:', error);
+      console.error('Client: Error in getCurrentPrompt:', error);
       return null;
     }
   }
@@ -74,18 +97,41 @@ export class UserPromptProgressClientService {
     nextPromptDate: string;
   } | null> {
     try {
-      const { data: progress } = await this.supabase
+      console.log(`Client: Getting user progress for user ID: ${userId}`);
+      
+      // Try to get the user's email from the auth session
+      const { data: { user } } = await this.supabase.auth.getUser();
+      const userEmail = user?.email;
+      
+      console.log(`Client: User email from auth: ${userEmail}`);
+      
+      if (!userEmail) {
+        console.error('Client: No user email available');
+        return null;
+      }
+      
+      // Query by email instead of user_id to avoid ID mismatch
+      const { data: progress, error } = await this.supabase
         .from('user_prompt_progress')
         .select('*')
-        .eq('user_id', userId)
+        .eq('user_email', userEmail)
         .eq('is_active', true)
         .single();
 
+      console.log(`Client: Progress query result:`, { progress, error });
+
+      if (error) {
+        console.error(`Client: Error fetching progress:`, error);
+        return null;
+      }
+
       if (!progress) {
+        console.log(`Client: No progress found for user ${userEmail}`);
         return null;
       }
 
       const character = characters.find(c => c.id === progress.character_id);
+      console.log(`Client: Found progress for character: ${character?.name}`);
 
       return {
         currentWeek: progress.current_week,
@@ -95,7 +141,7 @@ export class UserPromptProgressClientService {
         nextPromptDate: progress.next_prompt_date
       };
     } catch (error) {
-      console.error('Error in getUserProgress:', error);
+      console.error('Client: Error in getUserProgress:', error);
       return null;
     }
   }
