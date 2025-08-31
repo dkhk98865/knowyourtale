@@ -1,5 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { UserPromptProgressService } from '@/lib/user-prompt-progress';
+import { createClient } from '@supabase/supabase-js';
+
+function createServiceRoleClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    }
+  );
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,16 +25,43 @@ export async function POST(request: NextRequest) {
 
     console.log(`Initializing user prompt for email: ${email}`);
     
+    // Get the user ID from the email using Supabase admin API
+    const supabase = createServiceRoleClient();
+    
+    // Use the admin API to get user by email
+    const { data: { users }, error: userError } = await supabase.auth.admin.listUsers();
+    
+    if (userError) {
+      console.error(`Error fetching users:`, userError);
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Failed to fetch users' 
+      }, { status: 500 });
+    }
+    
+    const user = users?.find(u => u.email === email);
+    
+    if (!user) {
+      console.error(`User not found for email: ${email}`);
+      return NextResponse.json({ 
+        success: false, 
+        error: 'User not found' 
+      }, { status: 404 });
+    }
+
+    const userId = user.id;
+    console.log(`Found user ID: ${userId} for email: ${email}`);
+    
     const promptService = new UserPromptProgressService();
-    // Use email as both user ID and email for initialization
-    const result = await promptService.initializeUser(email, email);
+    const result = await promptService.initializeUser(userId, email);
     
     if (result) {
       console.log(`Successfully initialized user: ${email}`);
       return NextResponse.json({ 
         success: true, 
         message: 'User initialized successfully',
-        email: email
+        email: email,
+        userId: userId
       });
     } else {
       console.error(`Failed to initialize user: ${email}`);
@@ -49,13 +90,40 @@ export async function GET(request: NextRequest) {
 
     console.log(`Checking user prompt status for email: ${email}`);
     
+    // Get the user ID from the email using Supabase admin API
+    const supabase = createServiceRoleClient();
+    
+    // Use the admin API to get user by email
+    const { data: { users }, error: userError } = await supabase.auth.admin.listUsers();
+    
+    if (userError) {
+      console.error(`Error fetching users:`, userError);
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Failed to fetch users' 
+      }, { status: 500 });
+    }
+    
+    const user = users?.find(u => u.email === email);
+    
+    if (!user) {
+      console.error(`User not found for email: ${email}`);
+      return NextResponse.json({ 
+        success: false, 
+        error: 'User not found' 
+      }, { status: 404 });
+    }
+
+    const userId = user.id;
+    
     const promptService = new UserPromptProgressService();
-    const prompt = await promptService.getCurrentPrompt(email);
-    const progress = await promptService.getUserProgress(email);
+    const prompt = await promptService.getCurrentPrompt(userId);
+    const progress = await promptService.getUserProgress(userId);
     
     return NextResponse.json({ 
       success: true,
       email: email,
+      userId: userId,
       hasPrompt: !!prompt,
       prompt: prompt,
       progress: progress

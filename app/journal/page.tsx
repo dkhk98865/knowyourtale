@@ -87,6 +87,15 @@ export default function JournalPage() {
         } else {
           const errorData = await initResponse.json();
           console.error('Failed to initialize user for weekly prompts:', errorData);
+          
+          // Show more specific error message based on the error
+          if (initResponse.status === 404) {
+            console.error('User not found in the system');
+          } else if (initResponse.status === 500) {
+            console.error('Server error during initialization');
+          } else {
+            console.error('Unknown error during initialization');
+          }
         }
       } else {
         setCurrentPrompt(prompt);
@@ -119,8 +128,18 @@ export default function JournalPage() {
         // Refresh the prompt data
         await fetchUserPrompt(user.id);
       } else {
-        console.error('Manual initialization failed');
-        alert('Failed to initialize weekly prompts. Please try again or contact support.');
+        const errorData = await response.json();
+        console.error('Manual initialization failed:', errorData);
+        
+        let errorMessage = 'Failed to initialize weekly prompts. Please try again or contact support.';
+        
+        if (response.status === 404) {
+          errorMessage = 'User not found in the system. Please make sure you are properly signed in.';
+        } else if (response.status === 500) {
+          errorMessage = 'Server error during initialization. Please try again later.';
+        }
+        
+        alert(errorMessage);
       }
     } catch (error) {
       console.error('Error during manual initialization:', error);
