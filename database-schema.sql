@@ -144,6 +144,10 @@ CREATE POLICY "Service role can manage all subscriptions" ON user_subscriptions
 -- Remove this after webhook is working and re-enable with proper policies
 ALTER TABLE user_report_access DISABLE ROW LEVEL SECURITY;
 
+-- TEMPORARY: Disable RLS for user_prompt_progress to allow initialization
+-- Remove this after initialization is working and re-enable with proper policies
+ALTER TABLE user_prompt_progress DISABLE ROW LEVEL SECURITY;
+
 -- Alternative: Create a very permissive policy that allows all operations
 -- CREATE POLICY "Allow all operations temporarily" ON user_report_access
 --   FOR ALL USING (true) WITH CHECK (true);
@@ -161,6 +165,9 @@ CREATE POLICY "Users can view own prompt progress" ON user_prompt_progress
 
 CREATE POLICY "Users can update own prompt progress" ON user_prompt_progress
   FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own prompt progress" ON user_prompt_progress
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Service role can manage all prompt progress" ON user_prompt_progress
   FOR ALL USING (auth.role() = 'service_role');

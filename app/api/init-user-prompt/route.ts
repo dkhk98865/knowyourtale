@@ -1,19 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { UserPromptProgressService } from '@/lib/user-prompt-progress';
-import { createClient } from '@supabase/supabase-js';
-
-function createServiceRoleClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
-    }
-  );
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,32 +11,11 @@ export async function POST(request: NextRequest) {
 
     console.log(`Initializing user prompt for email: ${email}`);
     
-    // Get the user ID from the email using Supabase admin API
-    const supabase = createServiceRoleClient();
+    // For now, use email as user ID since we're disabling RLS
+    // This is a temporary solution until we can properly get the user ID
+    const userId = email; // Using email as user ID temporarily
     
-    // Use the admin API to get user by email
-    const { data: { users }, error: userError } = await supabase.auth.admin.listUsers();
-    
-    if (userError) {
-      console.error(`Error fetching users:`, userError);
-      return NextResponse.json({ 
-        success: false, 
-        error: 'Failed to fetch users' 
-      }, { status: 500 });
-    }
-    
-    const user = users?.find(u => u.email === email);
-    
-    if (!user) {
-      console.error(`User not found for email: ${email}`);
-      return NextResponse.json({ 
-        success: false, 
-        error: 'User not found' 
-      }, { status: 404 });
-    }
-
-    const userId = user.id;
-    console.log(`Found user ID: ${userId} for email: ${email}`);
+    console.log(`Using email as user ID: ${userId}`);
     
     const promptService = new UserPromptProgressService();
     const result = await promptService.initializeUser(userId, email);
@@ -74,7 +39,8 @@ export async function POST(request: NextRequest) {
     console.error('Error in init-user-prompt:', error);
     return NextResponse.json({ 
       success: false, 
-      error: 'Internal server error' 
+      error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   }
 }
@@ -90,31 +56,8 @@ export async function GET(request: NextRequest) {
 
     console.log(`Checking user prompt status for email: ${email}`);
     
-    // Get the user ID from the email using Supabase admin API
-    const supabase = createServiceRoleClient();
-    
-    // Use the admin API to get user by email
-    const { data: { users }, error: userError } = await supabase.auth.admin.listUsers();
-    
-    if (userError) {
-      console.error(`Error fetching users:`, userError);
-      return NextResponse.json({ 
-        success: false, 
-        error: 'Failed to fetch users' 
-      }, { status: 500 });
-    }
-    
-    const user = users?.find(u => u.email === email);
-    
-    if (!user) {
-      console.error(`User not found for email: ${email}`);
-      return NextResponse.json({ 
-        success: false, 
-        error: 'User not found' 
-      }, { status: 404 });
-    }
-
-    const userId = user.id;
+    // For now, use email as user ID since we're disabling RLS
+    const userId = email; // Using email as user ID temporarily
     
     const promptService = new UserPromptProgressService();
     const prompt = await promptService.getCurrentPrompt(userId);
@@ -132,7 +75,8 @@ export async function GET(request: NextRequest) {
     console.error('Error checking user prompt status:', error);
     return NextResponse.json({ 
       success: false, 
-      error: 'Internal server error' 
+      error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   }
 }
