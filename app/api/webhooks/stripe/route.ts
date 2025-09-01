@@ -389,6 +389,24 @@ export async function POST(request: NextRequest) {
                 } else {
                   console.error('❌ Failed to initialize for weekly prompt cycle');
                 }
+
+                // Create compatibility access for advanced plan
+                console.log('💕 Creating compatibility access for advanced plan...');
+                const { error: compatibilityError } = await supabase
+                  .from('user_compatibility_access')
+                  .insert({
+                    user_email: customerEmail,
+                    access_type: 'monthly_compatibility',
+                    stripe_payment_intent_id: session.payment_intent,
+                    status: 'active',
+                    expires_at: currentPeriodEnd.toISOString(),
+                  });
+
+                if (compatibilityError) {
+                  console.error('❌ Error creating compatibility access:', compatibilityError);
+                } else {
+                  console.log('✅ Compatibility access created successfully!');
+                }
               }
             } else {
               console.log('⚠️ Missing customer email or subscription ID');

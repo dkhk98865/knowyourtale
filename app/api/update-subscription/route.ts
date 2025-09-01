@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
+import { stripe, SUBSCRIPTION_PLANS } from '@/lib/stripe';
 import { createClient } from '@/lib/supabase-server';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
@@ -10,6 +10,22 @@ export async function POST(request: NextRequest) {
     if (!subscriptionId || !newPriceId) {
       return NextResponse.json(
         { error: 'Subscription ID and new price ID are required' },
+        { status: 400 }
+      );
+    }
+
+    // Find which plan this price ID corresponds to
+    let newPlan = null;
+    for (const [planKey, plan] of Object.entries(SUBSCRIPTION_PLANS)) {
+      if (plan.priceId === newPriceId) {
+        newPlan = planKey;
+        break;
+      }
+    }
+
+    if (!newPlan) {
+      return NextResponse.json(
+        { error: 'Invalid price ID provided' },
         { status: 400 }
       );
     }
@@ -27,17 +43,22 @@ export async function POST(request: NextRequest) {
 
     // Update the database
     const supabase: SupabaseClient = await createClient();
-          const { error } = await supabase
-        .from('user_subscriptions')
-        .update({
-          stripe_subscription_id: subscription.id,
-          stripe_price_id: newPriceId,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('stripe_subscription_id', subscriptionId);
+    const { error } = await supabase
+      .from('user_subscriptions')
+      .update({
+        stripe_subscription_id: subscription.id,
+        stripe_price_id: newPriceId,
+        plan: newPlan,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('stripe_subscription_id', subscriptionId);
 
     if (error) {
       console.error('Error updating database:', error);
+      return NextResponse.json(
+        { error: 'Failed to update database' },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ 
@@ -45,6 +66,7 @@ export async function POST(request: NextRequest) {
       subscription: {
         id: subscription.id,
         status: subscription.status,
+        plan: newPlan,
       }
     });
   } catch (error) {
