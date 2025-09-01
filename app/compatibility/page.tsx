@@ -96,8 +96,9 @@ export default function CompatibilityPage() {
     }
   };
 
-  const checkAccess = async (email: string) => {
+    const checkAccess = async (email: string) => {
     try {
+      console.log('🔍 Checking compatibility access for:', email);
       const response = await fetch('/api/check-compatibility-access', {
         method: 'POST',
         headers: {
@@ -108,6 +109,7 @@ export default function CompatibilityPage() {
       
       if (response.ok) {
         const access = await response.json();
+        console.log('🔍 Compatibility access result:', access);
         setUserAccess(access);
       } else {
         console.error('Error checking compatibility access:', response.statusText);
@@ -220,6 +222,32 @@ export default function CompatibilityPage() {
           </>
         )}
       </section>
+
+      {/* Debug Section - Only show if user is logged in */}
+      {user && (
+        <section className="mb-8 text-center">
+          <div className="storybook-card page-turn p-4 bg-yellow-50 border-2 border-yellow-200">
+            <h3 className="font-semibold mb-2">🔧 Debug Information</h3>
+            <p className="text-sm mb-2">User: {user.email}</p>
+            <p className="text-sm mb-2">Access: {userAccess?.hasAccess ? 'Yes' : 'No'} ({userAccess?.accessType || 'None'})</p>
+            <button 
+              onClick={async () => {
+                const response = await fetch('/api/debug-compatibility-access', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ userEmail: user.email }),
+                });
+                const data = await response.json();
+                console.log('🔧 Debug data:', data);
+                alert('Check browser console for debug data');
+              }}
+              className="magical-button text-xs px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white"
+            >
+              🔧 Debug Access
+            </button>
+          </div>
+        </section>
+      )}
 
       {/* Full Pairs Purchase Section - Top */}
       {user && (!userAccess?.hasAccess || (userAccess.accessType !== 'all_pairs' && userAccess.accessType !== 'monthly_compatibility')) && (
