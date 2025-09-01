@@ -21,7 +21,7 @@ export interface CompatibilityReport {
   keywords: string[];
 }
 
-// Generate all 66 compatibility combinations (12 choose 2 = 66)
+// Generate compatibility combinations (78 total - 66 different-character pairs + 12 self-pairs)
 export const generateCompatibilityIds = () => {
   const characterIds = [
     'snowwhite', 'cinderella', 'aurora', 'ariel', 'belle', 'rapunzel',
@@ -31,7 +31,7 @@ export const generateCompatibilityIds = () => {
   const combinations: { character1Id: string; character2Id: string; id: string }[] = [];
   
   for (let i = 0; i < characterIds.length; i++) {
-    for (let j = i + 1; j < characterIds.length; j++) {
+    for (let j = i; j < characterIds.length; j++) {
       const char1 = characterIds[i];
       const char2 = characterIds[j];
       const id = `${char1}-${char2}`;

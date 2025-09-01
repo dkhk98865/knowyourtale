@@ -2777,6 +2777,42 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
     keywords: ['loyal', 'supportive', 'gentle', 'caring', 'responsible', 'evolving']
   },
 
+  // Snow White × Snow White
+  'snowwhite-snowwhite': {
+    id: 'snowwhite-snowwhite',
+    character1: 'Snow White',
+    character2: 'Snow White',
+    character1Id: 'snowwhite',
+    character2Id: 'snowwhite',
+    title: 'The Innocent Meets Herself — Purity Reflects Purity',
+    subtitle: 'Snow White embodies innocence, kindness, and the ability to soften hearts through gentleness.',
+    compatibilityScore: 60,
+    relationshipType: 'A gentle and harmonious bond — thrives when innocence is matched with strength and action.',
+    summary: 'When paired with another Snow White, the relationship is pure, tender, and harmonious. Both cherish simplicity, trust, and love, creating a bond that feels safe and almost childlike in its sweetness. The challenge is that with two Snow Whites, the relationship risks becoming overly passive. Neither may step into strength or leadership when difficulties arise, leaving the bond vulnerable to outside influences.',
+    strengths: [
+      'Shared Innocence → Both value kindness, honesty, and loyalty.',
+      'Gentle Atmosphere → The relationship feels safe, calm, and nurturing.',
+      'Healing Energy → Their forgiveness and warmth can soothe emotional wounds.',
+      'Mutual Admiration → Each mirrors the other\'s sincerity and optimism.'
+    ],
+    challenges: [
+      'Over-Naivety → Both may trust too easily, risking betrayal.',
+      'Passivity → Without initiative, the bond can drift without direction.',
+      'Conflict Avoidance → Issues may be ignored in favor of maintaining peace.'
+    ],
+    communication: 'Sweet and loyal, though easily influenced by others.',
+    emotionalConnection: 'Tender and affectionate, but risks dependency or fragility.',
+    sharedValues: 'Innocence, kindness, trust, and the ability to soften hearts through gentleness.',
+    growthPotential: 'Learning to develop shared strength and take initiative together.',
+    advice: [
+      'Develop Shared Strength → Innocence should be paired with assertiveness to create balance.',
+      'Take Initiative Together → Step into leadership rather than waiting for rescue.',
+      'Journal Prompt: Snow White types: "Where do I confuse harmony with avoiding responsibility?"'
+    ],
+    storyParallel: 'Snow White\'s tale shows innocence tested by jealousy and betrayal, yet saved by kindness and purity of heart. Two Snow Whites together are like mirrors of goodness — beautiful but fragile if they don\'t also claim their own power.',
+    keywords: ['gentle', 'harmonious', 'innocent', 'kind', 'tender', 'evolving']
+  },
+
   // Continue this pattern for all 66 combinations...
   // You can use the generateCompatibilityIds() function to get all combinations
   // and then populate each one with the appropriate content
