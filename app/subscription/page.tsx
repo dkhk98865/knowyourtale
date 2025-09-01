@@ -101,7 +101,7 @@ export default function SubscriptionPage() {
       </section>
 
       {/* Pricing Cards */}
-      <div className="grid md:grid-cols-1 gap-8 max-w-2xl mx-auto mb-16">
+      <div className="grid md:grid-cols-1 gap-8 max-w-4xl mx-auto mb-16">
         {/* Info about personality reports */}
         <div className="storybook-card page-turn p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200">
           <div className="text-center">
@@ -148,56 +148,117 @@ export default function SubscriptionPage() {
           </div>
         </div>
 
-        {/* Monthly Plan */}
-        <div className="storybook-card page-turn relative overflow-hidden border-2 border-accent-gold">
-          {/* Popular badge */}
-          <div className="absolute top-4 right-4 bg-accent-gold text-white px-3 py-1 rounded-full text-sm font-semibold">
-            Most Popular
+        {/* Monthly Plans Grid */}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Monthly Plan */}
+          <div className="storybook-card page-turn relative overflow-hidden border-2 border-accent-gold">
+            {/* Popular badge */}
+            <div className="absolute top-4 right-4 bg-accent-gold text-white px-3 py-1 rounded-full text-sm font-semibold">
+              Most Popular
+            </div>
+            
+            <div className="p-8">
+              <div className="text-center mb-6">
+                <div className="magical-sparkle">📅</div>
+                <h2 className="storybook-subtitle text-2xl mb-3">Monthly Plan</h2>
+                <div className="magical-sparkle">💎</div>
+              </div>
+              
+              <div className="text-center mb-6">
+                <div className="text-4xl font-bold text-accent-gold mb-2">$7.99</div>
+                <div className="text-gray-600">per month</div>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center space-x-3">
+                  <div className="text-green-500 text-xl">✓</div>
+                  <span className="text-gray-700">Weekly prompts in journal section</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="text-green-500 text-xl">✓</div>
+                  <span className="text-gray-700">Access to Know Your Tale journaling</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="text-green-500 text-xl">✓</div>
+                  <span className="text-gray-700">Community board access</span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  analytics.trackButtonClick('purchase_monthly_subscription', 'subscription_page');
+                  handleSubscribe('Monthly');
+                }}
+                className="w-full magical-button magical-glow bg-accent-gold hover:bg-yellow-600"
+                disabled={loading}
+              >
+                {loading ? 'Loading...' : 'Start Monthly Plan'}
+              </button>
+              
+              {/* Non-refundable notice */}
+              <div className="mt-4 text-center">
+                <p className="text-xs text-gray-500">
+                  ⚠️ All subscriptions are non-refundable. You can cancel anytime, but no refunds for partial billing periods.
+                </p>
+              </div>
+            </div>
           </div>
-          
-          <div className="p-8">
-            <div className="text-center mb-6">
-              <div className="magical-sparkle">📅</div>
-              <h2 className="storybook-subtitle text-2xl mb-3">Monthly Plan</h2>
-              <div className="magical-sparkle">💎</div>
+
+          {/* Advanced Monthly Plan */}
+          <div className="storybook-card page-turn relative overflow-hidden border-2 border-purple-500">
+            {/* Premium badge */}
+            <div className="absolute top-4 right-4 bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+              Premium
             </div>
             
-            <div className="text-center mb-6">
-              <div className="text-4xl font-bold text-accent-gold mb-2">$7.99</div>
-              <div className="text-gray-600">per month</div>
-            </div>
+            <div className="p-8">
+              <div className="text-center mb-6">
+                <div className="magical-sparkle">🌟</div>
+                <h2 className="storybook-subtitle text-2xl mb-3">Advanced Monthly</h2>
+                <div className="magical-sparkle">💫</div>
+              </div>
+              
+              <div className="text-center mb-6">
+                <div className="text-4xl font-bold text-purple-600 mb-2">$12.99</div>
+                <div className="text-gray-600">per month</div>
+              </div>
 
-            <div className="space-y-4 mb-8">
-              <div className="flex items-center space-x-3">
-                <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Weekly prompts in journal section</span>
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center space-x-3">
+                  <div className="text-green-500 text-xl">✓</div>
+                  <span className="text-gray-700">Everything in Monthly Plan</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="text-green-500 text-xl">✓</div>
+                  <span className="text-gray-700">All compatibility reports access</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="text-green-500 text-xl">✓</div>
+                  <span className="text-gray-700">New compatibility reports as they&apos;re added</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="text-green-500 text-xl">✓</div>
+                  <span className="text-gray-700">Priority community features</span>
+                </div>
               </div>
-              <div className="flex items-center space-x-3">
-                <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Access to Know Your Tale journaling</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="text-green-500 text-xl">✓</div>
-                <span className="text-gray-700">Community board access</span>
-              </div>
-            </div>
 
-            <button
-              onClick={() => {
-                analytics.trackButtonClick('purchase_monthly_subscription', 'subscription_page');
-                handleSubscribe('Monthly');
-              }}
-              className="w-full magical-button magical-glow bg-accent-gold hover:bg-yellow-600"
-              disabled={loading}
-            >
-              {loading ? 'Loading...' : 'Start Monthly Plan'}
-            </button>
-            
-            {/* Non-refundable notice */}
-            <div className="mt-4 text-center">
-              <p className="text-xs text-gray-500">
-                ⚠️ All subscriptions are non-refundable. You can cancel anytime, but no refunds for partial billing periods.
-              </p>
+              <button
+                onClick={() => {
+                  analytics.trackButtonClick('purchase_advanced_monthly_subscription', 'subscription_page');
+                  handleSubscribe('Advanced');
+                }}
+                className="w-full magical-button magical-glow bg-purple-600 hover:bg-purple-700"
+                disabled={loading}
+              >
+                {loading ? 'Loading...' : 'Start Advanced Plan'}
+              </button>
+              
+              {/* Non-refundable notice */}
+              <div className="mt-4 text-center">
+                <p className="text-xs text-gray-500">
+                  ⚠️ All subscriptions are non-refundable. You can cancel anytime, but no refunds for partial billing periods.
+                </p>
+              </div>
             </div>
           </div>
         </div>

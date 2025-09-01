@@ -69,6 +69,17 @@ export const SUBSCRIPTION_PLANS = {
       'Community board access'
     ]
   },
+  advanced: {
+    name: 'Advanced Monthly Plan',
+    price: 1299, // $12.99 in cents
+    priceId: process.env.STRIPE_ADVANCED_MONTHLY_PRICE_ID,
+    features: [
+      'Everything in Monthly Plan',
+      'All compatibility reports access',
+      'New compatibility reports as they\'re added',
+      'Priority community features'
+    ]
+  },
   allReports: {
     name: 'All Reports',
     price: 999, // $9.99 in cents

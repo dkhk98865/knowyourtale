@@ -323,6 +323,78 @@ export async function POST(request: NextRequest) {
               console.log('📧 Customer email:', customerEmail);
               console.log('🆔 Subscription ID:', subscriptionId);
             }
+          } else if (metadata?.plan === 'advanced') {
+            console.log('🌟 Processing advanced monthly subscription...');
+            // Handle advanced monthly subscription
+            const customerEmail = session.customer_details?.email;
+            const subscriptionId = session.subscription;
+            
+            console.log('📧 Customer email:', customerEmail);
+            console.log('🆔 Subscription ID:', subscriptionId);
+            
+            if (customerEmail && subscriptionId) {
+              console.log('💾 Attempting to create advanced subscription record...');
+              
+              // Calculate current period end (30 days from now)
+              const currentPeriodEnd = new Date();
+              currentPeriodEnd.setDate(currentPeriodEnd.getDate() + 30);
+              
+              const { error: insertError } = await supabase
+                .from('user_subscriptions')
+                .insert({
+                  user_email: customerEmail,
+                  stripe_subscription_id: subscriptionId,
+                  plan: 'advanced',
+                  status: 'active',
+                  current_period_end: currentPeriodEnd.toISOString(),
+                });
+
+              if (insertError) {
+                console.error('❌ Error creating advanced subscription record:', insertError);
+                
+                // Log the error to webhook_logs table
+                await supabase.from('webhook_logs').insert({
+                  event_type: 'advanced_subscription_creation',
+                  stripe_event_id: event.id,
+                  user_email: customerEmail,
+                  plan: 'advanced',
+                  status: 'failed',
+                  error_message: JSON.stringify(insertError)
+                });
+              } else {
+                console.log('✅ Advanced subscription record created successfully!');
+                
+                // Track successful advanced subscription in analytics
+                try {
+                  analytics.trackMonthlySubscriptionPurchase(); // Reuse this for now
+                } catch (analyticsError) {
+                  console.error('⚠️ Analytics tracking failed:', analyticsError);
+                }
+                
+                // Log the success to webhook_logs table
+                await supabase.from('webhook_logs').insert({
+                  event_type: 'advanced_subscription_creation',
+                  stripe_event_id: event.id,
+                  user_email: customerEmail,
+                  plan: 'advanced',
+                  status: 'success'
+                });
+
+                // Initialize user for weekly prompt cycle
+                console.log('📝 Initializing user for weekly prompt cycle...');
+                const promptService = new UserPromptProgressService();
+                const promptInitResult = await promptService.initializeUser(customerEmail, customerEmail);
+                if (promptInitResult) {
+                  console.log('✅ Successfully initialized for weekly prompt cycle');
+                } else {
+                  console.error('❌ Failed to initialize for weekly prompt cycle');
+                }
+              }
+            } else {
+              console.log('⚠️ Missing customer email or subscription ID');
+              console.log('📧 Customer email:', customerEmail);
+              console.log('🆔 Subscription ID:', subscriptionId);
+            }
           } else if (metadata?.type === 'compatibility' && metadata.plan === 'monthly_compatibility') {
             console.log('💕 Processing monthly compatibility subscription...');
             // Handle monthly compatibility subscription

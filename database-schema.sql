@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS user_subscriptions (
   user_email TEXT NOT NULL,
   stripe_customer_id TEXT,
   stripe_subscription_id TEXT,
-  plan TEXT NOT NULL CHECK (plan IN ('single', 'monthly', 'allReports')),
+  plan TEXT NOT NULL CHECK (plan IN ('single', 'monthly', 'advanced', 'allReports')),
   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'canceled', 'past_due', 'unpaid', 'incomplete')),
   current_period_end TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -147,6 +147,9 @@ DROP POLICY IF EXISTS "Users can update own prompt progress" ON user_prompt_prog
 DROP POLICY IF EXISTS "Service role can manage all prompt progress" ON user_prompt_progress;
 
 -- Create policy to allow users to view their own subscription
+DROP POLICY IF EXISTS "Users can view own subscription" ON user_subscriptions;
+DROP POLICY IF EXISTS "Service role can manage all subscriptions" ON user_subscriptions;
+
 CREATE POLICY "Users can view own subscription" ON user_subscriptions
   FOR SELECT USING (auth.jwt() ->> 'email' = user_email);
 
@@ -182,6 +185,9 @@ ALTER TABLE user_prompt_progress DISABLE ROW LEVEL SECURITY;
 --   FOR ALL USING (true) WITH CHECK (true);
 
 -- Create policies for webhook_logs table
+DROP POLICY IF EXISTS "Users can view own webhook logs" ON webhook_logs;
+DROP POLICY IF EXISTS "Service role can insert webhook logs" ON webhook_logs;
+
 CREATE POLICY "Users can view own webhook logs" ON webhook_logs
   FOR SELECT USING (auth.email() = user_email);
 
@@ -189,6 +195,11 @@ CREATE POLICY "Service role can insert webhook logs" ON webhook_logs
   FOR INSERT WITH CHECK (true);
 
 -- Create policies for user_prompt_progress table
+DROP POLICY IF EXISTS "Users can view own prompt progress" ON user_prompt_progress;
+DROP POLICY IF EXISTS "Users can update own prompt progress" ON user_prompt_progress;
+DROP POLICY IF EXISTS "Users can insert own prompt progress" ON user_prompt_progress;
+DROP POLICY IF EXISTS "Service role can manage all prompt progress" ON user_prompt_progress;
+
 CREATE POLICY "Users can view own prompt progress" ON user_prompt_progress
   FOR SELECT USING (auth.uid() = user_id);
 
@@ -336,6 +347,11 @@ ALTER TABLE community_replies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE community_likes ENABLE ROW LEVEL SECURITY;
 
 -- Create policies for community_posts
+DROP POLICY IF EXISTS "Anyone can view community posts" ON community_posts;
+DROP POLICY IF EXISTS "Authenticated users can create posts" ON community_posts;
+DROP POLICY IF EXISTS "Users can update own posts" ON community_posts;
+DROP POLICY IF EXISTS "Users can delete own posts" ON community_posts;
+
 CREATE POLICY "Anyone can view community posts" ON community_posts
   FOR SELECT USING (true);
 
@@ -349,6 +365,11 @@ CREATE POLICY "Users can delete own posts" ON community_posts
   FOR DELETE USING (auth.jwt() ->> 'email' = user_email);
 
 -- Create policies for community_replies
+DROP POLICY IF EXISTS "Anyone can view community replies" ON community_replies;
+DROP POLICY IF EXISTS "Authenticated users can create replies" ON community_replies;
+DROP POLICY IF EXISTS "Users can update own replies" ON community_replies;
+DROP POLICY IF EXISTS "Users can delete own replies" ON community_replies;
+
 CREATE POLICY "Anyone can view community replies" ON community_replies
   FOR SELECT USING (true);
 
@@ -362,6 +383,9 @@ CREATE POLICY "Users can delete own replies" ON community_replies
   FOR DELETE USING (auth.jwt() ->> 'email' = user_email);
 
 -- Create policies for community_likes
+DROP POLICY IF EXISTS "Anyone can view community likes" ON community_likes;
+DROP POLICY IF EXISTS "Authenticated users can manage own likes" ON community_likes;
+
 CREATE POLICY "Anyone can view community likes" ON community_likes
   FOR SELECT USING (true);
 
