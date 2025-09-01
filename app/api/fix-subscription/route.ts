@@ -17,11 +17,11 @@ export async function POST(request: NextRequest) {
     
     console.log('🔧 Fixing subscription for:', userEmail);
     
-    // Update the subscription plan to 'advanced'
+    // Update the subscription plan to 'monthly' (since advanced is removed)
     const { data: updateData, error: updateError } = await supabase
       .from('user_subscriptions')
       .update({
-        plan: 'advanced',
+        plan: 'monthly',
         updated_at: new Date().toISOString()
       })
       .eq('user_email', userEmail)
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Subscription plan updated to advanced',
+      message: 'Subscription plan updated to monthly',
       subscription: subscriptionData,
       compatibilityAccess: compatibilityData
     });

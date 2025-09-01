@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Determine if this is a subscription or one-time purchase
-    const isSubscription = plan === 'monthly' || plan === 'advanced';
+    const isSubscription = plan === 'monthly';
     
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({

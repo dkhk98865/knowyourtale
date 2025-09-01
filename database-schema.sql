@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS user_subscriptions (
   user_email TEXT NOT NULL,
   stripe_customer_id TEXT,
   stripe_subscription_id TEXT,
-  plan TEXT NOT NULL CHECK (plan IN ('single', 'monthly', 'advanced', 'allReports')),
+  plan TEXT NOT NULL CHECK (plan IN ('single', 'monthly', 'allReports')),
   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'canceled', 'past_due', 'unpaid', 'incomplete')),
   current_period_end TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

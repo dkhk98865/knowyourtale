@@ -21,32 +21,6 @@ export async function POST(request: NextRequest) {
     const supabase: SupabaseClient = await createClient();
     console.log('🔗 Supabase client created for compatibility access check');
     
-    // Check for advanced monthly subscription first (gives compatibility access)
-    console.log('🔍 Checking for advanced monthly subscription...');
-    const { data: advancedSubscription, error: advancedError } = await supabase
-      .from('user_subscriptions')
-      .select('*')
-      .eq('user_email', userEmail)
-      .eq('plan', 'advanced')
-      .eq('status', 'active')
-      .limit(1);
-
-    console.log('🔍 Advanced subscription query result:', { data: advancedSubscription, error: advancedError });
-
-    if (advancedError) {
-      console.log('⚠️ Error checking advanced subscription:', advancedError);
-    }
-
-    if (advancedSubscription && advancedSubscription.length > 0) {
-      console.log('✅ User has advanced monthly subscription (includes compatibility access)');
-      return NextResponse.json({ 
-        hasAccess: true, 
-        accessType: 'monthly_compatibility' 
-      });
-    } else {
-      console.log('❌ No advanced subscription found for user:', userEmail);
-    }
-    
     // Debug: Check ALL records for this user
     console.log('🔍 DEBUG: Checking ALL compatibility records for user email:', userEmail);
     const { data: allUserRecords, error: allUserError } = await supabase

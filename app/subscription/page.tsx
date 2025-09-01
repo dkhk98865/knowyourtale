@@ -50,10 +50,10 @@ export default function SubscriptionPage() {
       
       // Set different success URLs based on plan
       let successUrl;
-      if (plan.toLowerCase() === 'advanced') {
-        successUrl = `${window.location.origin}/compatibility?session_id={CHECKOUT_SESSION_ID}&plan=advanced`;
-      } else {
+      if (plan.toLowerCase() === 'monthly') {
         successUrl = `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=monthly`;
+      } else {
+        successUrl = `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=${plan.toLowerCase()}`;
       }
       
       const response = await fetch('/api/create-checkout-session', {
@@ -157,7 +157,7 @@ export default function SubscriptionPage() {
         </div>
 
         {/* Monthly Plans Grid */}
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="max-w-4xl mx-auto">
           {/* Monthly Plan */}
           <div className="storybook-card page-turn relative overflow-hidden border-2 border-accent-gold">
             {/* Popular badge */}
@@ -211,65 +211,7 @@ export default function SubscriptionPage() {
               </div>
             </div>
           </div>
-
-          {/* Advanced Monthly Plan */}
-          <div className="storybook-card page-turn relative overflow-hidden border-2 border-purple-500">
-            {/* Premium badge */}
-            <div className="absolute top-4 right-4 bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-              Premium
-            </div>
-            
-            <div className="p-8">
-              <div className="text-center mb-6">
-                <div className="magical-sparkle">🌟</div>
-                <h2 className="storybook-subtitle text-2xl mb-3">Advanced Monthly</h2>
-                <div className="magical-sparkle">💫</div>
-              </div>
-              
-              <div className="text-center mb-6">
-                <div className="text-4xl font-bold text-purple-600 mb-2">$12.99</div>
-                <div className="text-gray-600">per month</div>
-              </div>
-
-              <div className="space-y-4 mb-8">
-                <div className="flex items-center space-x-3">
-                  <div className="text-green-500 text-xl">✓</div>
-                  <span className="text-gray-700">Everything in Monthly Plan</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="text-green-500 text-xl">✓</div>
-                  <span className="text-gray-700">All compatibility reports access</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="text-green-500 text-xl">✓</div>
-                  <span className="text-gray-700">New compatibility reports as they&apos;re added</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="text-green-500 text-xl">✓</div>
-                  <span className="text-gray-700">Priority community features</span>
-                </div>
-              </div>
-
-              <button
-                onClick={() => {
-                  analytics.trackButtonClick('purchase_advanced_monthly_subscription', 'subscription_page');
-                  handleSubscribe('Advanced');
-                }}
-                className="w-full magical-button magical-glow bg-purple-600 hover:bg-purple-700"
-                disabled={loading}
-              >
-                {loading ? 'Loading...' : 'Start Advanced Plan'}
-              </button>
-              
-              {/* Non-refundable notice */}
-              <div className="mt-4 text-center">
-                <p className="text-xs text-gray-500">
-                  ⚠️ All subscriptions are non-refundable. You can cancel anytime, but no refunds for partial billing periods.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+      </div>
       </div>
 
       {/* Free Plan Info */}

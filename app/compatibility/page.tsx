@@ -151,8 +151,8 @@ export default function CompatibilityPage() {
     const sessionId = urlParams.get('session_id');
     const plan = urlParams.get('plan');
     
-    if (sessionId && plan === 'advanced' && user?.email) {
-      console.log('🔄 Detected recent advanced plan purchase, refreshing access...');
+            if (sessionId && plan === 'monthly' && user?.email) {
+              console.log('🔄 Detected recent monthly plan purchase, refreshing access...');
       
       // Wait a bit for webhook to process, then refresh access
       const timer = setTimeout(async () => {
