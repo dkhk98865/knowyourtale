@@ -37,6 +37,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Balance Care with Courage → Kindness is their gift, but courage is their lesson. Supporting each other in taking risks builds strength.',
       'Journal Prompt: Snow White types: "Where do I avoid action out of fear of conflict?" Cinderella types: "Where am I waiting for recognition instead of claiming it myself?"'
     ],
+    storyParallel: 'Snow White lay waiting in her glass coffin, and Cinderella waited for her fairy godmother\'s intervention. Both stories highlight external rescue. Yet, their true lesson is in stepping forward themselves: Snow White choosing to trust wisely, and Cinderella embracing her worth before the ball. Together, this pair must learn that kindness paired with courage creates transformation.',
     keywords: ['gentle', 'harmonious', 'empathetic', 'patient', 'loyal', 'kind']
   },
 
@@ -72,6 +73,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Cultivate Courage → Practice facing conflict gently but directly, so neither archetype hides away.',
       'Journal Prompt: Snow White types: "When do I expect rescue instead of acting for myself?" Aurora types: "What dreams of mine need grounding in reality?"'
     ],
+    storyParallel: 'Snow White fell into a death-like sleep from a poisoned apple, while Aurora slept under a curse until awakened by true love\'s kiss. Both stories show passive waiting for rescue. Yet, their deeper lesson is about the power of inner awakening: Snow White\'s innocence that outlived envy, and Aurora\'s dreamlike intuition that guided her to destiny. Together, they embody the balance of spiritual depth and grounded action.',
     keywords: ['spiritual', 'gentle', 'dreamy', 'innocent', 'fragile', 'serene']
   },
 
@@ -107,6 +109,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Learn Timing → Ariel should pause to ensure Snow White feels safe; Snow White should risk small leaps into adventure.',
       'Journal Prompt: Snow White types: "Where am I too quick to trust without question?" Ariel types: "What drives my curiosity — discovery, or escape?"'
     ],
+    storyParallel: 'Snow White trusted the wrong person and fell into a death-like sleep, while Ariel made a dangerous bargain with the sea witch to pursue her dreams. Both stories show the risks of trusting too easily and acting without wisdom. Yet, their deeper lesson is about the balance of innocence and experience: Snow White\'s pure heart that outlived betrayal, and Ariel\'s bold spirit that learned the value of what she already possessed. Together, they embody the journey from naivety to wise wonder.',
     keywords: ['adventurous', 'magical', 'balanced', 'wondrous', 'risky', 'inspiring']
   },
 
@@ -142,6 +145,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Encourage Boldness → Both archetypes benefit from pushing each other gently into action.',
       'Journal Prompt: Snow White types: "Where do I avoid seeing deeper truths out of fear?" Belle types: "Where do I overthink instead of enjoying the simple good?"'
     ],
+    storyParallel: 'Snow White found refuge with the seven dwarfs, learning to trust and care for others, while Belle chose to stay with the Beast to save her father, discovering love beyond appearances. Both stories show the power of choosing kindness and seeing beyond surface judgments. Yet, their deeper lesson is about the balance of heart and mind: Snow White\'s innocent trust that created a loving home, and Belle\'s intellectual curiosity that led to true understanding. Together, they embody the harmony of pure heart and thoughtful mind.',
     keywords: ['thoughtful', 'gentle', 'compassionate', 'intellectual', 'safe', 'nurturing']
   },
 
@@ -177,6 +181,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Turn Pain into Wisdom → Rapunzel should share her resilience lessons; Snow White should share her faith in goodness.',
       'Journal Prompt: Snow White types: "Where do I need to see reality more clearly instead of assuming goodness?" Rapunzel types: "Where do I cling to safety when freedom is possible?"'
     ],
+    storyParallel: 'Snow White found sanctuary with the seven dwarfs, learning to trust and care for others, while Rapunzel waited in her tower until she chose to leave and discover the world. Both stories show the power of finding safe havens and the courage to step beyond them. Yet, their deeper lesson is about the balance of trust and liberation: Snow White\'s innocent faith that created a loving home, and Rapunzel\'s resilience that led to freedom. Together, they embody the journey from sanctuary to liberation.',
     keywords: ['healing', 'resilient', 'nurturing', 'liberating', 'protective', 'hopeful']
   },
 
@@ -212,6 +217,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Act with Courage → Encourage each other to take practical steps rather than only hoping for goodness.',
       'Journal Prompt: Snow White types: "Where in my life do I confuse kindness with letting things slide?" Gerda types: "Where does my loyalty become self-sacrifice instead of strength?"'
     ],
+    storyParallel: 'Snow White found refuge with the seven dwarfs, learning to trust and care for others, while Gerda journeyed tirelessly through the frozen wilderness to rescue Kai from the Snow Queen\'s icy grasp. Both stories show the power of loyalty and the courage to endure hardship for those we love. Yet, their deeper lesson is about the balance of trust and action: Snow White\'s innocent faith that created a loving home, and Gerda\'s unwavering devotion that overcame the coldest magic. Together, they embody the perfect harmony of trust and loyalty.',
     keywords: ['harmonious', 'loyal', 'gentle', 'devoted', 'trusting', 'healing']
   },
 
@@ -247,6 +253,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Speak Honestly → Snow White should voice her needs, even when Mulan\'s intensity feels overwhelming.',
       'Journal Prompt: Snow White types: "Where do I rely too much on others to shield me?" Mulan types: "Where does my bravery become control rather than support?"'
     ],
+    storyParallel: 'Snow White fell into a death-like sleep from a poisoned apple, waiting for rescue, while Mulan disguised herself as a soldier to fight for her family and country, taking action to protect those she loved. Both stories show different responses to danger: passive waiting versus active courage. Yet, their deeper lesson is about the balance of trust and action: Snow White\'s innocent faith that outlived betrayal, and Mulan\'s bravery that transformed her into a warrior. Together, they embody the journey from passive trust to empowered courage.',
     keywords: ['challenging', 'transformative', 'protective', 'courageous', 'balanced', 'inspiring']
   },
 
@@ -282,6 +289,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Stay Grounded Together → Channel imagination into practical joy instead of drifting.',
       'Journal Prompt: Snow White types: "Where do I accept without questioning, when I should be curious?" Alice types: "Where do I chase curiosity without asking if it\'s safe or meaningful?"'
     ],
+    storyParallel: 'Snow White trusted the wrong person and fell into a death-like sleep, while Alice leapt down the rabbit hole into Wonderland, questioning everything she encountered. Both stories show the risks of trusting too easily and the power of questioning reality. Yet, their deeper lesson is about the balance of trust and curiosity: Snow White\'s innocent faith that outlived betrayal, and Alice\'s curious mind that learned to navigate the surreal. Together, they embody the journey from naive trust to wise wonder.',
     keywords: ['magical', 'fragile', 'wondrous', 'imaginative', 'curious', 'trusting']
   },
 
@@ -317,6 +325,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Act Bravely → Support each other in taking initiative instead of waiting for rescue.',
       'Journal Prompt: Snow White types: "Where am I waiting for someone else to make me safe?" Dorothy types: "What does \'home\' mean to me beyond a place?"'
     ],
+    storyParallel: 'Snow White found refuge with the seven dwarfs, learning to trust and care for others, while Dorothy journeyed through Oz to return home, relying on her determination and companions. Both stories show the power of finding safe havens and the courage to seek what we truly desire. Yet, their deeper lesson is about the balance of trust and action: Snow White\'s innocent faith that created a loving home, and Dorothy\'s determination that led her back to where she belonged. Together, they embody the journey from passive trust to active seeking.',
     keywords: ['comforting', 'nurturing', 'seeking', 'belonging', 'hopeful', 'gentle']
   },
 
@@ -352,6 +361,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Embrace Shared Play → Lean into their childlike joy, not just caretaking roles.',
       'Journal Prompt: Snow White types: "Where do I expect others to take care of me instead of stepping up?" Wendy types: "Where do I over-caretake instead of letting others grow?"'
     ],
+    storyParallel: 'Snow White found refuge with the seven dwarfs, learning to trust and care for others, while Wendy played mother to the Lost Boys, sacrificing her own youth for caretaking. Both stories show the power of creating safe havens and the challenges of balancing care with personal growth. Yet, their deeper lesson is about the balance of nurturing and independence: Snow White\'s innocent trust that created a loving home, and Wendy\'s maternal instincts that guided others while she herself remained a child. Together, they embody the journey from dependent care to balanced nurturing.',
     keywords: ['nurturing', 'tender', 'familial', 'playful', 'protective', 'gentle']
   },
 
@@ -387,6 +397,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Blend Heart and Caution → Use kindness with discernment — trust tempered by awareness.',
       'Journal Prompt: Snow White types: "Where do I ignore warning signs because I want to see only goodness?" Red types: "Where do I assume danger and close myself off from joy?"'
     ],
+    storyParallel: 'Snow White trusted the wrong person and fell into a death-like sleep, while Little Red Riding Hood was deceived by the wolf but learned to recognize danger and survive. Both stories show the risks of trusting too easily and the importance of learning to discern danger. Yet, their deeper lesson is about the balance of trust and caution: Snow White\'s innocent faith that outlived betrayal, and Red\'s instinctive wisdom that protected her from harm. Together, they embody the journey from naive trust to wise discernment.',
     keywords: ['protective', 'challenging', 'balanced', 'instinctive', 'cautious', 'contrasting']
   },
 
@@ -422,6 +433,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Challenge Passive Waiting → Recognize when endurance becomes avoidance.',
       'Journal Prompt: Cinderella types: "Where am I waiting for approval instead of stepping forward?" Aurora types: "Where do I dream instead of acting on what I long for?"'
     ],
+    storyParallel: 'Cinderella endured hardship and waited for her fairy godmother\'s intervention, while Aurora slept under a curse until awakened by true love\'s kiss. Both stories show the power of patience and the challenges of passive waiting. Yet, their deeper lesson is about the balance of endurance and action: Cinderella\'s quiet strength that endured until her moment came, and Aurora\'s dreamlike surrender that led to awakening. Together, they embody the journey from passive endurance to active transformation.',
     keywords: ['serene', 'gentle', 'empathetic', 'patient', 'peaceful', 'stagnant']
   },
 
@@ -457,6 +469,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Respect Each Other\'s Dreams → Value both endurance and risk as valid paths.',
       'Journal Prompt: Cinderella types: "Where am I holding back when I should leap forward?" Ariel types: "Where am I rushing ahead without considering the consequences?"'
     ],
+    storyParallel: 'Cinderella endured hardship and waited for her fairy godmother\'s intervention, while Ariel made a dangerous bargain with the sea witch to pursue her dreams. Both stories show the power of transformation and the courage to pursue what we desire. Yet, their deeper lesson is about the balance of patience and boldness: Cinderella\'s quiet endurance that led to magical transformation, and Ariel\'s bold spirit that learned the value of what she already possessed. Together, they embody the journey from patient waiting to bold pursuit.',
     keywords: ['dynamic', 'transformative', 'balanced', 'inspiring', 'passionate', 'patient']
   },
 
@@ -492,6 +505,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Share Strengths → Belle should invite Cinderella into intellectual exploration; Cinderella should remind Belle of simple joys.',
       'Journal Prompt: Cinderella types: "Where do I wait for recognition instead of creating opportunities?" Belle types: "Where do I analyze instead of stepping into action?"'
     ],
+    storyParallel: 'Cinderella endured hardship and waited for her fairy godmother\'s intervention, while Belle chose to stay with the Beast to save her father, discovering love beyond appearances. Both stories show the power of choosing kindness and seeing beyond surface judgments. Yet, their deeper lesson is about the balance of patience and action: Cinderella\'s quiet endurance that led to transformation, and Belle\'s intellectual courage that revealed true beauty. Together, they embody the harmony of patient endurance and thoughtful action.',
     keywords: ['gentle', 'supportive', 'compassionate', 'intellectual', 'harmonious', 'thoughtful']
   },
 
@@ -527,6 +541,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Balance Hope with Bold Steps → Rapunzel can teach Cinderella to take risks, while Cinderella can remind Rapunzel that freedom unfolds patiently.',
       'Journal Prompt: Cinderella types: "Where do I endure when I could step forward?" Rapunzel types: "Where does my desire for freedom need grounding in steady effort?"'
     ],
+    storyParallel: 'Cinderella endured hardship and waited for her fairy godmother\'s intervention, while Rapunzel waited in her tower until she chose to leave and discover the world. Both stories show the power of patience and the courage to step beyond limitations. Yet, their deeper lesson is about the balance of endurance and liberation: Cinderella\'s quiet strength that endured until her moment came, and Rapunzel\'s resilience that led to freedom. Together, they embody the journey from patient endurance to bold liberation.',
     keywords: ['nurturing', 'healing', 'empathetic', 'liberating', 'resilient', 'supportive']
   },
 
@@ -562,6 +577,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Empower Each Other → Ensure the bond is not one-sided — loyalty and patience must flow both ways.',
       'Journal Prompt: Cinderella types: "Where am I enduring instead of acting to change my story?" Gerda types: "Where does my loyalty cross into over-responsibility?"'
     ],
+    storyParallel: 'Cinderella endured hardship and waited for her fairy godmother\'s intervention, while Gerda journeyed tirelessly through the frozen wilderness to rescue Kai from the Snow Queen\'s icy grasp. Both stories show the power of love and the courage to endure hardship. Yet, their deeper lesson is about the balance of patience and action: Cinderella\'s quiet endurance that led to transformation, and Gerda\'s active devotion that overcame the coldest magic. Together, they embody the harmony of patient endurance and loyal action.',
     keywords: ['gentle', 'devoted', 'compassionate', 'loyal', 'supportive', 'balanced']
   },
 
@@ -597,6 +613,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Blend Patience with Boldness → Together they can time decisions wisely — neither too slow nor too rash.',
       'Journal Prompt: Cinderella types: "Where am I waiting for others to act when I should speak or step forward?" Mulan types: "Where does my bravery need patience instead of urgency?"'
     ],
+    storyParallel: 'Cinderella endured hardship and waited for her fairy godmother\'s intervention, while Mulan disguised herself as a soldier to fight for her family and country, taking action to protect those she loved. Both stories show different responses to hardship: patient endurance versus bold action. Yet, their deeper lesson is about the balance of patience and courage: Cinderella\'s quiet strength that endured until her moment came, and Mulan\'s bravery that transformed her into a warrior. Together, they embody the journey from patient endurance to empowered action.',
     keywords: ['complementary', 'challenging', 'balanced', 'courageous', 'patient', 'dynamic']
   },
 
@@ -632,6 +649,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Set Shared Intentions → Balance Cinderella\'s need for stability with Alice\'s need for exploration.',
       'Journal Prompt: Cinderella types: "Where am I waiting instead of exploring possibility?" Alice types: "Where am I wandering without purpose?"'
     ],
+    storyParallel: 'Cinderella endured hardship and waited for her fairy godmother\'s intervention, while Alice leapt down the rabbit hole into Wonderland, questioning everything she encountered. Both stories show the power of transformation and the importance of questioning reality. Yet, their deeper lesson is about the balance of patience and curiosity: Cinderella\'s quiet endurance that led to magical transformation, and Alice\'s curious mind that learned to navigate the surreal. Together, they embody the journey from patient waiting to curious exploration.',
     keywords: ['playful', 'inspiring', 'whimsical', 'grounded', 'curious', 'patient']
   },
 
@@ -667,6 +685,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Act With Courage → Dorothy should slow down and ground herself; Cinderella should speak up and step forward.',
       'Journal Prompt: Cinderella types: "Where am I waiting for recognition when I could show my worth?" Dorothy types: "What am I searching for that I already carry within me?"'
     ],
+    storyParallel: 'Cinderella endured hardship and waited for her fairy godmother\'s intervention, while Dorothy journeyed through Oz to return home, relying on her determination and companions. Both stories show the power of patience and the courage to seek what we truly desire. Yet, their deeper lesson is about the balance of endurance and seeking: Cinderella\'s quiet strength that endured until her moment came, and Dorothy\'s determination that led her back to where she belonged. Together, they embody the journey from patient endurance to active seeking.',
     keywords: ['warm', 'nurturing', 'hopeful', 'loyal', 'supportive', 'gentle']
   },
 
@@ -702,6 +721,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Lean Into Play → Balance responsibility with lighthearted experiences together.',
       'Journal Prompt: Cinderella types: "Where do I expect others to care for me instead of stepping up myself?" Wendy types: "Where do I mother others instead of letting them grow?"'
     ],
+    storyParallel: 'Cinderella endured hardship and waited for her fairy godmother\'s intervention, while Wendy played mother to the Lost Boys, sacrificing her own youth for caretaking. Both stories show the power of patience and the challenges of balancing care with personal growth. Yet, their deeper lesson is about the balance of endurance and nurturing: Cinderella\'s quiet strength that endured until her moment came, and Wendy\'s maternal instincts that guided others while she herself remained a child. Together, they embody the journey from patient endurance to balanced nurturing.',
     keywords: ['nurturing', 'patient', 'caring', 'loyal', 'harmonious', 'protective']
   },
 
@@ -737,6 +757,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Share Responsibility → Avoid slipping into roles of protector and dependent.',
       'Journal Prompt: Cinderella types: "Where do I accept mistreatment instead of setting boundaries?" Red types: "Where do I assume danger and close off from trust?"'
     ],
+    storyParallel: 'Cinderella endured hardship and waited for her fairy godmother\'s intervention, while Little Red Riding Hood was deceived by the wolf but learned to recognize danger and survive. Both stories show the risks of trusting too easily and the importance of learning to discern danger. Yet, their deeper lesson is about the balance of patience and caution: Cinderella\'s quiet endurance that led to transformation, and Red\'s instinctive wisdom that protected her from harm. Together, they embody the journey from patient trust to wise discernment.',
     keywords: ['protective', 'vigilant', 'caring', 'loyal', 'contrasting', 'balanced']
   },
 
@@ -772,6 +793,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Balance Impulse with Reflection → Ariel can pause to consider, while Aurora can practice taking small steps into action.',
       'Journal Prompt: Aurora types: "Where do I wait for change instead of participating in it?" Ariel types: "Where do I leap without listening to inner wisdom?"'
     ],
+    storyParallel: 'Aurora slept under a curse until awakened by true love\'s kiss, while Ariel made a dangerous bargain with the sea witch to pursue her dreams. Both stories show the power of transformation and the courage to pursue what we desire. Yet, their deeper lesson is about the balance of stillness and action: Aurora\'s dreamlike surrender that led to awakening, and Ariel\'s bold spirit that learned the value of what she already possessed. Together, they embody the journey from passive dreaming to active pursuit.',
     keywords: ['fascinating', 'fragile', 'contrasting', 'magical', 'turbulent', 'balanced']
   },
 
@@ -807,6 +829,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Balance Reflection with Courage → Belle can lead with intellect, Aurora with intuition — but both must risk moving forward.',
       'Journal Prompt: Aurora types: "Where do I dream without grounding my vision in reality?" Belle types: "Where do I overanalyze instead of acting on insight?"'
     ],
+    storyParallel: 'Aurora slept under a curse until awakened by true love\'s kiss, while Belle chose to stay with the Beast to save her father, discovering love beyond appearances. Both stories show the power of transformation and the courage to see beyond surface judgments. Yet, their deeper lesson is about the balance of dreaming and insight: Aurora\'s dreamlike surrender that led to awakening, and Belle\'s intellectual courage that revealed true beauty. Together, they embody the harmony of intuitive dreaming and thoughtful insight.',
     keywords: ['gentle', 'thoughtful', 'imaginative', 'harmonious', 'nurturing', 'reflective']
   },
 
@@ -914,6 +937,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Honor Both Strengths → Mulan should value dreaming; Aurora should value courage.',
       'Journal Prompt: Aurora types: "Where am I waiting for life to move me when I should awaken myself?" Mulan types: "Where does my bravery need gentleness instead of urgency?"'
     ],
+    storyParallel: 'Aurora lay in enchanted sleep, her destiny shaped by others, while Mulan disguised herself as a soldier to fight for her family and country. Their stories represent two opposite responses to fate: surrender and action. Together, they mirror the lesson that wholeness requires both stillness and boldness.',
     keywords: ['contrasting', 'transformative', 'complementary', 'challenging', 'growth', 'balance']
   },
 
@@ -949,6 +973,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Ground Their Magic → Use wonder for practical growth, not just fantasy.',
       'Journal Prompt: Aurora types: "Where do I rely on fate instead of exploring possibilities?" Alice types: "Where do I chase curiosity without grounding myself in wisdom?"'
     ],
+    storyParallel: 'Aurora slept under a curse until awakened, while Alice leapt down the rabbit hole into Wonderland. Both illustrate surrender to the surreal — one through stillness, the other through curiosity. Together, they reflect the lesson that imagination requires both rest and exploration.',
     keywords: ['whimsical', 'magical', 'imaginative', 'fragile', 'otherworldly', 'curious']
   },
 
@@ -984,6 +1009,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Redefine "Home" → Both must see that belonging is built through choice, not only found or awaited.',
       'Journal Prompt: Aurora types: "Where am I waiting for my \'home\' instead of creating it?" Dorothy types: "What am I seeking that I already hold within?"'
     ],
+    storyParallel: 'Aurora lay asleep under a curse, her fate determined by others, while Dorothy journeyed through Oz to return home, relying on her determination and companions. One surrendered, the other sought. Together, they embody the lesson that homecoming requires both dreaming and decisive steps.',
     keywords: ['tender', 'hopeful', 'empathetic', 'seeking', 'dreaming', 'transformative']
   },
 
@@ -1019,6 +1045,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Invite Playfulness → Share joy and imagination, not just caretaking and dreaming.',
       'Journal Prompt: Aurora types: "Where do I depend on others to protect me instead of stepping into my own strength?" Wendy types: "Where do I over-caretake instead of letting others grow?"'
     ],
+    storyParallel: 'Aurora waited in enchanted sleep for rescue, while Wendy played mother to the Lost Boys, sacrificing her own youth for caretaking. Both stories reflect dependence on others to define their roles. Together, they remind us that nurturing should empower, not enable passivity.',
     keywords: ['soft', 'nurturing', 'protective', 'tender', 'comforting', 'innocent']
   },
 
