@@ -842,6 +842,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Encourage Liberation Together → Transform endurance into shared courage to step forward.',
       'Journal Prompt: Aurora types: "Where am I waiting for fate instead of moving toward freedom?" Rapunzel types: "Where does my longing need patience and timing to flourish?"'
     ],
+    storyParallel: 'Aurora slept under a curse until awakened, while Rapunzel waited in her tower until she chose to leave. Both illustrate surrender to limitation — one through magical sleep, the other through physical confinement. Together, they reflect the lesson that liberation requires both dreaming and decisive steps.',
     keywords: ['tender', 'healing', 'liberating', 'empathetic', 'enduring', 'hopeful']
   },
 
@@ -877,6 +878,7 @@ export const compatibilityReports: Record<string, CompatibilityReport> = {
       'Empower, Don\'t Rescue → Their bond is strongest when both contribute equally to growth.',
       'Journal Prompt: Aurora types: "Where am I expecting rescue instead of awakening myself?" Gerda types: "Where does my loyalty become sacrifice rather than shared strength?"'
     ],
+    storyParallel: 'Aurora slept under a spell, dependent on others for awakening, while Gerda journeyed tirelessly to free Kai from the Snow Queen\'s icy grasp. Together, their pairing highlights a powerful lesson: devotion is meaningful, but both must awaken and act for the bond to stay balanced.',
     keywords: ['gentle', 'faithful', 'devoted', 'loyal', 'harmonious', 'balanced']
   },
 

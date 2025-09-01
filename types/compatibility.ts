@@ -17,6 +17,7 @@ export interface CompatibilityReport {
   sharedValues: string;
   growthPotential: string;
   advice: string[];
+  storyParallel?: string;
   keywords: string[];
 }
 

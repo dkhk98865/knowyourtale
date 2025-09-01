@@ -375,7 +375,13 @@ export default function CompatibilityReportPage({ params }: Props) {
             <div className="magical-sparkle text-xl">🌟</div>
           </div>
           <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto">
-            {character1.name} lay waiting in her glass coffin, and {character2.name} waited for her fairy godmother&apos;s intervention. Both stories highlight external rescue. Yet, their true lesson is in stepping forward themselves: {character1.name} choosing to trust wisely, and {character2.name} embracing her worth before the ball. Together, this pair must learn that kindness paired with courage creates transformation.
+            {compatibilityData ? (
+              compatibilityData.storyParallel
+            ) : (
+              <>
+                {character1.name} lay waiting in her glass coffin, and {character2.name} waited for her fairy godmother&apos;s intervention. Both stories highlight external rescue. Yet, their true lesson is in stepping forward themselves: {character1.name} choosing to trust wisely, and {character2.name} embracing her worth before the ball. Together, this pair must learn that kindness paired with courage creates transformation.
+              </>
+            )}
           </p>
         </div>
 
