@@ -257,6 +257,58 @@ export default function StoryPage({
             <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto">{character.story}</p>
           </div>
           
+          {/* Social Media Share Section */}
+          <div className="storybook-card page-turn p-6 bg-gradient-to-r from-green-50 to-teal-50 border-2 border-green-200">
+            <div className="text-center mb-6">
+              <div className="magical-sparkle text-3xl mb-3">📱</div>
+              <h2 className="storybook-subtitle text-2xl mb-3 text-green-800">Share Your Fairy Tale Personality</h2>
+              <p className="text-gray-700 mb-6">Let your friends discover their own fairy tale personality type!</p>
+              <div className="magical-sparkle text-xl">✨</div>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-4 mb-6">
+              <button 
+                onClick={() => {
+                  analytics.trackButtonClick('share_facebook', 'story_page', { characterId: id, characterName: character.name });
+                  shareOnFacebook(character.name, character.description);
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 flex items-center space-x-2 font-semibold shadow-lg hover:shadow-xl"
+              >
+                <span className="text-xl">📘</span>
+                <span>Share on Facebook</span>
+              </button>
+              
+              <button 
+                onClick={() => {
+                  analytics.trackButtonClick('share_twitter', 'story_page', { characterId: id, characterName: character.name });
+                  shareOnTwitter(character.name, character.description);
+                }}
+                className="bg-blue-400 hover:bg-blue-500 text-white px-6 py-3 rounded-lg transition-colors duration-200 flex items-center space-x-2 font-semibold shadow-lg hover:shadow-xl"
+              >
+                <span className="text-xl">🐦</span>
+                <span>Share on Twitter</span>
+              </button>
+              
+              <button 
+                onClick={() => {
+                  analytics.trackButtonClick('share_linkedin', 'story_page', { characterId: id, characterName: character.name });
+                  shareOnLinkedIn(character.name, character.description);
+                }}
+                className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-lg transition-colors duration-200 flex items-center space-x-2 font-semibold shadow-lg hover:shadow-xl"
+              >
+                <span className="text-xl">💼</span>
+                <span>Share on LinkedIn</span>
+              </button>
+            </div>
+            
+            <div className="text-center">
+              <p className="text-gray-600 text-sm italic">
+                "I just discovered my fairy tale personality type is {character.name}! {character.description} Take the quiz at Know Your Tale!"
+              </p>
+              <div className="magical-sparkle text-lg mt-3">🌟</div>
+            </div>
+          </div>
+          
           {/* Pricing CTAs */}
           <div className="storybook-card page-turn p-8 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-accent-gold">
             {/* Non-refundable notice */}
