@@ -1,0 +1,260 @@
+'use client';
+
+import Link from 'next/link';
+import { characters } from '@/types/characters';
+import { generateCompatibilityIds } from '@/types/compatibility';
+import Image from 'next/image';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase-client';
+import { User } from '@supabase/supabase-js';
+
+export default function CompatibilityPage() {
+  const [user, setUser] = useState<User | null>(null);
+  const [userAccess, setUserAccess] = useState<{ 
+    hasAccess: boolean; 
+    accessType: string | null; 
+    characterId?: string;
+    characterIds?: string[];
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [supabase] = useState(() => createClient());
+
+  const compatibilityCombinations = generateCompatibilityIds();
+
+  const checkAccess = async (email: string) => {
+    try {
+      const response = await fetch('/api/check-report-access', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userEmail: email }),
+      });
+      
+      if (response.ok) {
+        const access = await response.json();
+        setUserAccess(access);
+      } else {
+        console.error('Error checking access:', response.statusText);
+        setUserAccess({ hasAccess: false, accessType: null });
+      }
+    } catch (error) {
+      console.error('Error checking user access:', error);
+      setUserAccess({ hasAccess: false, accessType: null });
+    }
+  };
+
+  useEffect(() => {
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+      
+      if (session?.user?.email) {
+        await checkAccess(session.user.email);
+      }
+      
+      setLoading(false);
+    };
+
+    getSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event: string, session: { user: User | null } | null) => {
+        setUser(session?.user ?? null);
+        if (session?.user?.email) {
+          await checkAccess(session.user.email);
+        }
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, [supabase]);
+
+  if (loading) {
+    return (
+      <main className="max-w-6xl mx-auto px-4 py-12 text-center">
+        <div className="magical-sparkle text-4xl mb-4">⏳</div>
+        <h1 className="storybook-title text-4xl mb-6">Loading...</h1>
+        <p className="text-gray-600">Checking your access...</p>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-red-50 py-12 px-4 sm:px-6 lg:px-8">
+      <section className="text-center mb-16 parchment-content">
+        <h1 className="storybook-title text-4xl mb-6">Character Compatibility</h1>
+        <div className="storybook-divider"></div>
+        
+        {!user ? (
+          <>
+            <p className="storybook-subtitle text-lg mb-8">
+              Sign in to access detailed compatibility reports between all fairy tale personality types.
+            </p>
+            <div className="flex justify-center">
+              <Link href="/quiz">
+                <button className="magical-button magical-glow">
+                  🧙‍♀️ Take the Quiz
+                </button>
+              </Link>
+            </div>
+          </>
+        ) : !userAccess?.hasAccess ? (
+          <>
+            <p className="storybook-subtitle text-lg mb-8">
+              You haven&apos;t purchased any reports yet. Take the quiz to discover your personality type and unlock compatibility insights!
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/quiz">
+                <button className="magical-button magical-glow">
+                  🧙‍♀️ Take the Quiz
+                </button>
+              </Link>
+              <Link href="/subscription">
+                <button className="magical-button magical-glow">
+                  🗝️ View Plans
+                </button>
+              </Link>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="storybook-subtitle text-lg mb-8">
+              {userAccess.accessType === 'allReports' 
+                ? 'You have access to all compatibility reports! Explore how different personality types interact and relate to each other.'
+                : userAccess.accessType === 'multiple_single'
+                ? `You have access to ${userAccess.characterIds?.length || 0} personality reports! Click on any accessible character combinations below.`
+                : `You have access to compatibility reports involving ${characters.find(c => c.id === userAccess.characterId)?.name}! Click on any accessible combinations below.`
+              }
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/">
+                <button className="magical-button magical-glow">
+                  🏠 Back to Home
+                </button>
+              </Link>
+              <Link href="/quiz">
+                <button className="magical-button magical-glow">
+                  🧙‍♀️ Take the Quiz
+                </button>
+              </Link>
+            </div>
+          </>
+        )}
+      </section>
+
+      {/* Show all compatibility combinations */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {compatibilityCombinations.map((combo) => {
+          const char1 = characters.find(c => c.id === combo.character1Id);
+          const char2 = characters.find(c => c.id === combo.character2Id);
+          
+          if (!char1 || !char2) return null;
+
+          // Determine if user has access to this specific combination
+          const hasAccessToCombo = userAccess?.hasAccess && (
+            userAccess.accessType === 'allReports' || 
+            (userAccess.accessType === 'single' && (userAccess.characterId === combo.character1Id || userAccess.characterId === combo.character2Id)) ||
+            (userAccess.accessType === 'multiple_single' && (userAccess.characterIds?.includes(combo.character1Id) || userAccess.characterIds?.includes(combo.character2Id)))
+          );
+
+          return (
+            <div key={combo.id} className="relative">
+              {hasAccessToCombo ? (
+                // User has access - show clickable card
+                <Link 
+                  href={`/compatibility/${combo.id}`} 
+                  className="storybook-card page-turn block overflow-hidden hover:scale-105 transition-transform duration-200"
+                >
+                  <div className="relative w-full h-48">
+                    {/* Character 1 image */}
+                    <div className="absolute left-0 top-0 w-1/2 h-full">
+                      <Image src={char1.image} alt={char1.name} fill className="object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    </div>
+                    {/* Character 2 image */}
+                    <div className="absolute right-0 top-0 w-1/2 h-full">
+                      <Image src={char2.image} alt={char2.name} fill className="object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    </div>
+                    {/* Compatibility symbol */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="bg-white/80 rounded-full p-2">
+                        <div className="text-2xl">💕</div>
+                      </div>
+                    </div>
+                    {/* Access indicator */}
+                    <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                      ✓ Access
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold mb-2 text-center font-['Playfair_Display']">
+                      {char1.name} & {char2.name}
+                    </h3>
+                    <p className="text-sm text-gray-700 text-center leading-relaxed">
+                      Compatibility Report
+                    </p>
+                  </div>
+                </Link>
+              ) : (
+                // User doesn't have access - show locked card
+                <div className="storybook-card page-turn block overflow-hidden opacity-75">
+                  <div className="relative w-full h-48">
+                    {/* Character 1 image */}
+                    <div className="absolute left-0 top-0 w-1/2 h-full">
+                      <Image src={char1.image} alt={char1.name} fill className="object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    </div>
+                    {/* Character 2 image */}
+                    <div className="absolute right-0 top-0 w-1/2 h-full">
+                      <Image src={char2.image} alt={char2.name} fill className="object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    </div>
+                    {/* Lock overlay */}
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                      <div className="text-white text-center">
+                        <div className="text-2xl mb-1">🔒</div>
+                        <div className="text-xs font-semibold">Locked</div>
+                      </div>
+                    </div>
+                    {/* Lock indicator */}
+                    <div className="absolute top-2 right-2 bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                      🔒 Locked
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold mb-2 text-center font-['Playfair_Display']">
+                      {char1.name} & {char2.name}
+                    </h3>
+                    <p className="text-sm text-gray-700 text-center leading-relaxed">
+                      Compatibility Report
+                    </p>
+                    {user ? (
+                      <div className="text-center mt-3">
+                        <Link href="/quiz">
+                          <button className="magical-button text-xs px-3 py-1">
+                            🧙‍♀️ Take Quiz
+                          </button>
+                        </Link>
+                      </div>
+                    ) : (
+                      <div className="text-center mt-3">
+                        <Link href="/auth">
+                          <button className="magical-button text-xs px-3 py-1">
+                            🔐 Sign In
+                          </button>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </section>
+    </main>
+  );
+}

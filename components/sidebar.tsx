@@ -33,6 +33,7 @@ export default function Sidebar() {
     { name: '🏠 Home', href: '/', icon: '🏠' },
     { name: '🧙‍♀️ Quiz', href: '/quiz', icon: '🧙‍♀️' },
     { name: '📊 Reports', href: '/reports', icon: '📊' },
+    { name: '💕 Compatibility', href: '/compatibility', icon: '💕' },
     { name: '📖 Journal', href: '/journal', icon: '📖' },
     { name: '🌟 Community', href: '/community', icon: '🌟' },
     { name: '🗝️ Upgrade', href: '/subscription', icon: '🗝️' },
