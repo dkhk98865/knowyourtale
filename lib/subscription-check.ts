@@ -5,7 +5,8 @@ export async function checkMonthlySubscription(userEmail: string): Promise<boole
   try {
     const supabase: SupabaseClient = await createClient();
     
-    const { data, error } = await supabase
+    // First check for monthly subscription specifically
+    const { data: monthlyData, error: monthlyError } = await supabase
       .from('user_subscriptions')
       .select('*')
       .eq('user_email', userEmail)
@@ -13,12 +14,30 @@ export async function checkMonthlySubscription(userEmail: string): Promise<boole
       .eq('plan', 'monthly')
       .single();
 
-    if (error && error.code !== 'PGRST116') {
-      console.error('Error checking subscription:', error);
+    if (monthlyError && monthlyError.code === 'PGRST116') {
+      // No monthly subscription found, check if user has any active subscription
+      const { data: anySubscription, error: anyError } = await supabase
+        .from('user_subscriptions')
+        .select('*')
+        .eq('user_email', userEmail)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      if (anyError) {
+        console.error('Error checking any subscription:', anyError);
+        return false;
+      }
+
+      // For now, we'll consider any active subscription as having access
+      // This can be refined later if needed
+      return !!anySubscription && anySubscription.length > 0;
+    } else if (monthlyError) {
+      console.error('Error checking monthly subscription:', monthlyError);
       return false;
     }
 
-    return !!data && data.status === 'active';
+    return !!monthlyData && monthlyData.status === 'active';
   } catch (error) {
     console.error('Error checking subscription:', error);
     return false;

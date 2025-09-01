@@ -8,6 +8,7 @@ interface Subscription {
   id: string;
   stripe_subscription_id: string;
   stripe_price_id: string;
+  plan: string;
   status: string;
   current_period_end: string;
   canceled_at?: string;
@@ -49,14 +50,35 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
 
   const fetchSubscription = useCallback(async () => {
     try {
-      const { data, error } = await supabase
+      // First try to get monthly subscription (highest priority)
+      const { data: monthlyData, error: monthlyError } = await supabase
         .from('user_subscriptions')
         .select('*')
         .eq('user_email', user.email)
         .eq('status', 'active')
+        .eq('plan', 'monthly')
         .single();
 
-      if (error && error.code !== 'PGRST116') {
+      let data = monthlyData;
+      let error = monthlyError;
+
+      // If no monthly subscription, get the most recent active subscription
+      if (error && error.code === 'PGRST116') {
+        const { data: allSubscriptions, error: allError } = await supabase
+          .from('user_subscriptions')
+          .select('*')
+          .eq('user_email', user.email)
+          .eq('status', 'active')
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        if (allError) {
+          console.error('Error fetching subscriptions:', allError);
+        } else {
+          data = allSubscriptions?.[0] || null;
+          error = null;
+        }
+      } else if (error) {
         console.error('Error fetching subscription:', error);
       }
 
@@ -75,14 +97,8 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
   const getCurrentPlan = () => {
     if (!subscription) return null;
     
-    if (subscription.stripe_price_id === plans.single.priceId) {
-      return 'single';
-    } else if (subscription.stripe_price_id === plans.monthly.priceId) {
-      return 'monthly';
-    } else if (subscription.stripe_price_id === plans.allReports.priceId) {
-      return 'allReports';
-    }
-    return null;
+    // Use the plan field from the database directly
+    return subscription.plan as 'single' | 'monthly' | 'allReports' | null;
   };
 
   const getUpgradePlan = () => {
