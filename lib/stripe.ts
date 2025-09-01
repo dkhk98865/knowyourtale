@@ -72,7 +72,7 @@ export const SUBSCRIPTION_PLANS = {
   advanced: {
     name: 'Advanced Monthly Plan',
     price: 1299, // $12.99 in cents
-    priceId: process.env.STRIPE_ADVANCED_MONTHLY_PRICE_ID,
+    priceId: process.env.NEXT_PUBLIC_STRIPE_ADVANCED_MONTHLY_PRICE_ID,
     features: [
       'Everything in Monthly Plan',
       'All compatibility reports access',
