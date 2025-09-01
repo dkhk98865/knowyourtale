@@ -15,6 +15,8 @@ export default function CompatibilityPage() {
     accessType: string | null; 
     characterId?: string;
     characterIds?: string[];
+    compatibilityPairId?: string;
+    compatibilityPairIds?: string[];
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [supabase] = useState(() => createClient());
@@ -23,7 +25,7 @@ export default function CompatibilityPage() {
 
   const checkAccess = async (email: string) => {
     try {
-      const response = await fetch('/api/check-report-access', {
+      const response = await fetch('/api/check-compatibility-access', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,11 +37,11 @@ export default function CompatibilityPage() {
         const access = await response.json();
         setUserAccess(access);
       } else {
-        console.error('Error checking access:', response.statusText);
+        console.error('Error checking compatibility access:', response.statusText);
         setUserAccess({ hasAccess: false, accessType: null });
       }
     } catch (error) {
-      console.error('Error checking user access:', error);
+      console.error('Error checking user compatibility access:', error);
       setUserAccess({ hasAccess: false, accessType: null });
     }
   };
@@ -121,11 +123,13 @@ export default function CompatibilityPage() {
         ) : (
           <>
             <p className="storybook-subtitle text-lg mb-8">
-              {userAccess.accessType === 'allReports' 
+              {userAccess.accessType === 'all_pairs' 
                 ? 'You have access to all compatibility reports! Explore how different personality types interact and relate to each other.'
-                : userAccess.accessType === 'multiple_single'
-                ? `You have access to ${userAccess.characterIds?.length || 0} personality reports! Click on any accessible character combinations below.`
-                : `You have access to compatibility reports involving ${characters.find(c => c.id === userAccess.characterId)?.name}! Click on any accessible combinations below.`
+                : userAccess.accessType === 'monthly_compatibility'
+                ? 'You have access to all compatibility reports with your monthly compatibility plan! Explore how different personality types interact and relate to each other.'
+                : userAccess.accessType === 'multiple_single_pairs'
+                ? `You have access to ${userAccess.compatibilityPairIds?.length || 0} compatibility reports! Click on any accessible character combinations below.`
+                : `You have access to compatibility reports involving ${characters.find(c => c.id === userAccess.compatibilityPairId)?.name}! Click on any accessible combinations below.`
               }
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -154,9 +158,10 @@ export default function CompatibilityPage() {
 
           // Determine if user has access to this specific combination
           const hasAccessToCombo = userAccess?.hasAccess && (
-            userAccess.accessType === 'allReports' || 
-            (userAccess.accessType === 'single' && (userAccess.characterId === combo.character1Id || userAccess.characterId === combo.character2Id)) ||
-            (userAccess.accessType === 'multiple_single' && (userAccess.characterIds?.includes(combo.character1Id) || userAccess.characterIds?.includes(combo.character2Id)))
+            userAccess.accessType === 'all_pairs' || 
+            userAccess.accessType === 'monthly_compatibility' ||
+            (userAccess.accessType === 'single_pair' && userAccess.compatibilityPairId === combo.id) ||
+            (userAccess.accessType === 'multiple_single_pairs' && userAccess.compatibilityPairIds?.includes(combo.id))
           );
 
           return (

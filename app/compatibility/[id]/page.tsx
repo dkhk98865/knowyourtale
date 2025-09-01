@@ -2,6 +2,7 @@
 
 import { characters } from '@/types/characters';
 import { getCompatibilityReport } from '@/lib/compatibility-data';
+import CompatibilityPurchase from '@/components/compatibility-purchase';
 
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -21,6 +22,8 @@ export default function CompatibilityReportPage({ params }: Props) {
     accessType: string | null; 
     characterId?: string;
     characterIds?: string[];
+    compatibilityPairId?: string;
+    compatibilityPairIds?: string[];
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [supabase] = useState(() => createClient());
@@ -34,23 +37,23 @@ export default function CompatibilityReportPage({ params }: Props) {
 
   const checkAccess = async (email: string) => {
     try {
-      const response = await fetch('/api/check-report-access', {
+      const response = await fetch('/api/check-compatibility-access', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userEmail: email }),
+        body: JSON.stringify({ userEmail: email, compatibilityPairId: id }),
       });
       
       if (response.ok) {
         const access = await response.json();
         setUserAccess(access);
       } else {
-        console.error('Error checking access:', response.statusText);
+        console.error('Error checking compatibility access:', response.statusText);
         setUserAccess({ hasAccess: false, accessType: null });
       }
     } catch (error) {
-      console.error('Error checking user access:', error);
+      console.error('Error checking user compatibility access:', error);
       setUserAccess({ hasAccess: false, accessType: null });
     }
   };
@@ -87,9 +90,10 @@ export default function CompatibilityReportPage({ params }: Props) {
 
   // Check if user has access to this compatibility report
   const hasAccess = userAccess?.hasAccess && (
-    userAccess.accessType === 'allReports' || 
-    (userAccess.accessType === 'single' && (userAccess.characterId === character1Id || userAccess.characterId === character2Id)) ||
-    (userAccess.accessType === 'multiple_single' && (userAccess.characterIds?.includes(character1Id) || userAccess.characterIds?.includes(character2Id)))
+    userAccess.accessType === 'all_pairs' || 
+    userAccess.accessType === 'monthly_compatibility' ||
+    (userAccess.accessType === 'single_pair' && userAccess.compatibilityPairId === id) ||
+    (userAccess.accessType === 'multiple_single_pairs' && userAccess.compatibilityPairIds?.includes(id))
   );
 
   if (loading) {
@@ -126,27 +130,11 @@ export default function CompatibilityReportPage({ params }: Props) {
   if (!hasAccess) {
     return (
       <main className="max-w-4xl mx-auto px-4 py-12">
-        <div className="text-center">
-          <div className="storybook-card page-turn p-8">
-            <div className="magical-sparkle">🔒</div>
-            <h1 className="storybook-title text-2xl mb-4">Access Required</h1>
-            <p className="storybook-subtitle text-lg mb-6">
-              You need to purchase reports to access compatibility insights.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/quiz">
-                <button className="magical-button magical-glow">
-                  🧙‍♀️ Take the Quiz
-                </button>
-              </Link>
-              <Link href="/subscription">
-                <button className="magical-button magical-glow">
-                  🗝️ View Plans
-                </button>
-              </Link>
-            </div>
-          </div>
-        </div>
+        <CompatibilityPurchase 
+          compatibilityPairId={id}
+          character1Name={character1.name}
+          character2Name={character2.name}
+        />
       </main>
     );
   }

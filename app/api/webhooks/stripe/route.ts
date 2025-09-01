@@ -170,6 +170,84 @@ export async function POST(request: NextRequest) {
             } else {
               console.log('⚠️ No customer email found in session');
             }
+          } else if (metadata?.type === 'compatibility' && (metadata.plan === 'single_pair' || metadata.plan === 'all_pairs')) {
+            console.log('💕 Processing compatibility purchase:', metadata.plan);
+            // Handle one-time compatibility purchases
+            const { plan, compatibilityPairId } = metadata;
+            const customerEmail = session.customer_details?.email;
+            
+            console.log('💕 Compatibility pair ID:', compatibilityPairId);
+            console.log('📧 Customer email:', customerEmail);
+            
+            if (customerEmail) {
+              console.log('💾 Attempting to create compatibility access record...');
+              console.log('📋 Insert data:', {
+                user_email: customerEmail,
+                access_type: plan,
+                compatibility_pair_id: compatibilityPairId || null,
+                stripe_payment_intent_id: session.payment_intent,
+                status: 'active'
+              });
+              
+              // Create compatibility access record
+              const { data: insertData, error: insertError } = await supabase
+                .from('user_compatibility_access')
+                .insert({
+                  user_email: customerEmail,
+                  access_type: plan,
+                  compatibility_pair_id: compatibilityPairId || null,
+                  stripe_payment_intent_id: session.payment_intent,
+                  status: 'active'
+                })
+                .select();
+
+              if (insertError) {
+                console.error('❌ Error creating compatibility access record:', insertError);
+                console.error('❌ Error details:', {
+                  code: insertError.code,
+                  message: insertError.message,
+                  details: insertError.details,
+                  hint: insertError.hint
+                });
+                
+                // Log the error to webhook_logs table
+                await supabase.from('webhook_logs').insert({
+                  event_type: 'compatibility_access_record_creation',
+                  stripe_event_id: event.id,
+                  user_email: customerEmail,
+                  plan: plan,
+                  character_id: compatibilityPairId || null,
+                  status: 'failed',
+                  error_message: JSON.stringify(insertError)
+                });
+              } else {
+                console.log('✅ Compatibility access record created successfully!');
+                console.log('✅ Inserted data:', insertData);
+                
+                // Track successful compatibility purchase in analytics
+                try {
+                  if (plan === 'single_pair' && compatibilityPairId) {
+                    analytics.trackSingleReportPurchase(compatibilityPairId, 'Compatibility Report');
+                  } else if (plan === 'all_pairs') {
+                    analytics.trackAllReportsPurchase(); // Reuse this for now
+                  }
+                } catch (analyticsError) {
+                  console.error('⚠️ Analytics tracking failed:', analyticsError);
+                }
+                
+                // Log the success to webhook_logs table
+                await supabase.from('webhook_logs').insert({
+                  event_type: 'compatibility_access_record_creation',
+                  stripe_event_id: event.id,
+                  user_email: customerEmail,
+                  plan: plan,
+                  character_id: compatibilityPairId || null,
+                  status: 'success'
+                });
+              }
+            } else {
+              console.log('⚠️ No customer email found in session');
+            }
           } else if (metadata?.plan === 'monthly') {
             console.log('📅 Processing monthly subscription...');
             // Handle monthly subscription
@@ -239,6 +317,68 @@ export async function POST(request: NextRequest) {
                 } else {
                   console.error('❌ Failed to initialize for weekly prompt cycle');
                 }
+              }
+            } else {
+              console.log('⚠️ Missing customer email or subscription ID');
+              console.log('📧 Customer email:', customerEmail);
+              console.log('🆔 Subscription ID:', subscriptionId);
+            }
+          } else if (metadata?.type === 'compatibility' && metadata.plan === 'monthly_compatibility') {
+            console.log('💕 Processing monthly compatibility subscription...');
+            // Handle monthly compatibility subscription
+            const customerEmail = session.customer_details?.email;
+            const subscriptionId = session.subscription;
+            
+            console.log('📧 Customer email:', customerEmail);
+            console.log('🆔 Subscription ID:', subscriptionId);
+            
+            if (customerEmail && subscriptionId) {
+              console.log('💾 Attempting to create compatibility subscription record...');
+              
+              // Calculate current period end (30 days from now)
+              const currentPeriodEnd = new Date();
+              currentPeriodEnd.setDate(currentPeriodEnd.getDate() + 30);
+              
+              const { error: insertError } = await supabase
+                .from('user_compatibility_access')
+                .insert({
+                  user_email: customerEmail,
+                  access_type: 'monthly_compatibility',
+                  stripe_payment_intent_id: session.payment_intent,
+                  status: 'active',
+                  expires_at: currentPeriodEnd.toISOString(),
+                });
+
+              if (insertError) {
+                console.error('❌ Error creating compatibility subscription record:', insertError);
+                
+                // Log the error to webhook_logs table
+                await supabase.from('webhook_logs').insert({
+                  event_type: 'monthly_compatibility_subscription_creation',
+                  stripe_event_id: event.id,
+                  user_email: customerEmail,
+                  plan: 'monthly_compatibility',
+                  status: 'failed',
+                  error_message: JSON.stringify(insertError)
+                });
+              } else {
+                console.log('✅ Compatibility subscription record created successfully!');
+                
+                // Track successful monthly compatibility subscription in analytics
+                try {
+                  analytics.trackMonthlySubscriptionPurchase(); // Reuse this for now
+                } catch (analyticsError) {
+                  console.error('⚠️ Analytics tracking failed:', analyticsError);
+                }
+                
+                // Log the success to webhook_logs table
+                await supabase.from('webhook_logs').insert({
+                  event_type: 'monthly_compatibility_subscription_creation',
+                  stripe_event_id: event.id,
+                  user_email: customerEmail,
+                  plan: 'monthly_compatibility',
+                  status: 'success'
+                });
               }
             } else {
               console.log('⚠️ Missing customer email or subscription ID');

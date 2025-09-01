@@ -28,6 +28,20 @@ CREATE TABLE IF NOT EXISTS user_report_access (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Create user_compatibility_access table to track which compatibility reports users can access
+CREATE TABLE IF NOT EXISTS user_compatibility_access (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_email TEXT NOT NULL,
+  access_type TEXT NOT NULL CHECK (access_type IN ('single_pair', 'all_pairs', 'monthly_compatibility')),
+  compatibility_pair_id TEXT, -- For single pair reports, which pair they can access (e.g., 'snowwhite-cinderella')
+  stripe_payment_intent_id TEXT, -- To track the specific purchase
+  status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'expired', 'refunded')),
+  expires_at TIMESTAMP WITH TIME ZONE, -- For monthly subscriptions, when access expires
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Create webhook_logs table for debugging
 CREATE TABLE IF NOT EXISTS webhook_logs (
   id SERIAL PRIMARY KEY,
@@ -74,6 +88,13 @@ CREATE INDEX IF NOT EXISTS idx_user_report_access_character ON user_report_acces
 CREATE INDEX IF NOT EXISTS idx_user_report_access_type ON user_report_access(access_type);
 CREATE INDEX IF NOT EXISTS idx_user_report_access_status ON user_report_access(status);
 
+-- Create indexes for user_compatibility_access table
+CREATE INDEX IF NOT EXISTS idx_user_compatibility_access_user_id ON user_compatibility_access(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_compatibility_access_email ON user_compatibility_access(user_email);
+CREATE INDEX IF NOT EXISTS idx_user_compatibility_access_pair ON user_compatibility_access(compatibility_pair_id);
+CREATE INDEX IF NOT EXISTS idx_user_compatibility_access_type ON user_compatibility_access(access_type);
+CREATE INDEX IF NOT EXISTS idx_user_compatibility_access_status ON user_compatibility_access(status);
+
 -- Create index for faster queries
 CREATE INDEX IF NOT EXISTS idx_webhook_logs_user_email ON webhook_logs(user_email);
 CREATE INDEX IF NOT EXISTS idx_webhook_logs_created_at ON webhook_logs(created_at);
@@ -89,6 +110,7 @@ CREATE INDEX IF NOT EXISTS idx_user_prompt_progress_next_date ON user_prompt_pro
 -- Enable Row Level Security (RLS)
 ALTER TABLE user_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_report_access ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_compatibility_access ENABLE ROW LEVEL SECURITY;
 ALTER TABLE webhook_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_prompt_progress ENABLE ROW LEVEL SECURITY;
 
@@ -98,6 +120,9 @@ DROP POLICY IF EXISTS "Service role can manage all subscriptions" ON user_subscr
 DROP POLICY IF EXISTS "Users can view own report access" ON user_report_access;
 DROP POLICY IF EXISTS "Users can update own report access" ON user_report_access;
 DROP POLICY IF EXISTS "Service role can manage all report access" ON user_report_access;
+DROP POLICY IF EXISTS "Users can view own compatibility access" ON user_compatibility_access;
+DROP POLICY IF EXISTS "Users can update own compatibility access" ON user_compatibility_access;
+DROP POLICY IF EXISTS "Service role can manage all compatibility access" ON user_compatibility_access;
 DROP POLICY IF EXISTS "Service role can insert report access" ON user_report_access;
 DROP POLICY IF EXISTS "Webhook can insert report access" ON user_report_access;
 DROP POLICY IF EXISTS "Users can insert own report access" ON user_report_access;
@@ -144,6 +169,10 @@ CREATE POLICY "Service role can manage all subscriptions" ON user_subscriptions
 -- Remove this after webhook is working and re-enable with proper policies
 ALTER TABLE user_report_access DISABLE ROW LEVEL SECURITY;
 
+-- TEMPORARY: Disable RLS for user_compatibility_access to allow webhook inserts
+-- Remove this after webhook is working and re-enable with proper policies
+ALTER TABLE user_compatibility_access DISABLE ROW LEVEL SECURITY;
+
 -- TEMPORARY: Disable RLS for user_prompt_progress to allow initialization
 -- Remove this after initialization is working and re-enable with proper policies
 ALTER TABLE user_prompt_progress DISABLE ROW LEVEL SECURITY;
@@ -184,6 +213,7 @@ $$ language 'plpgsql';
 -- Drop existing triggers if they exist (to avoid conflicts)
 DROP TRIGGER IF EXISTS update_user_subscriptions_updated_at ON user_subscriptions;
 DROP TRIGGER IF EXISTS update_user_report_access_updated_at ON user_report_access;
+DROP TRIGGER IF EXISTS update_user_compatibility_access_updated_at ON user_compatibility_access;
 DROP TRIGGER IF EXISTS update_user_prompt_progress_updated_at ON user_prompt_progress;
 DROP TRIGGER IF EXISTS update_community_posts_updated_at ON community_posts;
 DROP TRIGGER IF EXISTS update_community_replies_updated_at ON community_replies;
@@ -199,6 +229,12 @@ CREATE TRIGGER update_user_subscriptions_updated_at
 -- Create trigger for user_report_access table
 CREATE TRIGGER update_user_report_access_updated_at
   BEFORE UPDATE ON user_report_access
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Create trigger for user_compatibility_access table
+CREATE TRIGGER update_user_compatibility_access_updated_at
+  BEFORE UPDATE ON user_compatibility_access
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 

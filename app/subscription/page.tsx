@@ -125,6 +125,29 @@ export default function SubscriptionPage() {
           </div>
         </div>
 
+        {/* Info about compatibility reports */}
+        <div className="storybook-card page-turn p-6 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200">
+          <div className="text-center">
+            <div className="magical-sparkle text-3xl mb-3">💕</div>
+            <h3 className="storybook-subtitle text-xl mb-3 text-purple-800">Compatibility Reports</h3>
+            <p className="text-gray-700 mb-4">
+              Discover how different personality types interact and relate to each other. Purchase individual compatibility pairs ($1.99), all pairs ($24.99), or get monthly access ($12.99/mo).
+            </p>
+            <Link href="/compatibility">
+              <button className="magical-button bg-purple-600 hover:bg-purple-700 text-white px-6 py-2">
+                View Compatibility
+              </button>
+            </Link>
+            
+            {/* Non-refundable notice for compatibility reports */}
+            <div className="mt-4 text-center">
+              <p className="text-xs text-gray-500">
+                ⚠️ All compatibility reports are non-refundable once purchased and accessed.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Monthly Plan */}
         <div className="storybook-card page-turn relative overflow-hidden border-2 border-accent-gold">
           {/* Popular badge */}
@@ -251,7 +274,7 @@ export default function SubscriptionPage() {
           <div className="storybook-card page-turn p-6">
             <h3 className="font-semibold mb-3">What is your refund policy?</h3>
             <p className="text-gray-600 text-sm">
-              All purchases and subscriptions are non-refundable. This includes personality reports ($4.99/$9.99) and monthly subscriptions ($7.99/month). You can cancel your monthly subscription anytime, but no refunds are provided for partial billing periods.
+              All purchases and subscriptions are non-refundable. This includes personality reports ($4.99/$9.99), compatibility reports ($1.99/$24.99), and monthly subscriptions ($7.99/month). You can cancel your monthly subscription anytime, but no refunds are provided for partial billing periods.
             </p>
             <p className="text-red-600 text-xs mt-2 font-medium">
               ⚠️ For detailed refund information, see our <a href="/refund-policy" className="underline">Refund Policy</a>

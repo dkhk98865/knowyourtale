@@ -78,3 +78,32 @@ export const SUBSCRIPTION_PLANS = {
     ]
   }
 };
+
+// Define compatibility report plans
+export const COMPATIBILITY_PLANS = {
+  single_pair: {
+    name: 'Single Compatibility Pair',
+    price: 199, // $1.99 in cents
+    priceId: process.env.STRIPE_SINGLE_PAIR_PRICE_ID,
+    features: [
+      'Single compatibility report between two characters'
+    ]
+  },
+  all_pairs: {
+    name: 'All Compatibility Pairs',
+    price: 2499, // $24.99 in cents
+    priceId: process.env.STRIPE_ALL_PAIRS_PRICE_ID,
+    features: [
+      'All 78 compatibility reports'
+    ]
+  },
+  monthly_compatibility: {
+    name: 'Monthly Compatibility Plan',
+    price: 1299, // $12.99 in cents
+    priceId: process.env.STRIPE_MONTHLY_COMPATIBILITY_PRICE_ID,
+    features: [
+      'Access to all compatibility reports',
+      'New compatibility reports as they\'re added'
+    ]
+  }
+};
