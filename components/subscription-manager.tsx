@@ -360,6 +360,28 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
         >
           🔧 Debug Subscription
         </button>
+        <button 
+          onClick={async () => {
+            if (confirm('This will fix your subscription plan to "advanced". Continue?')) {
+              const response = await fetch('/api/fix-subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userEmail: user.email }),
+              });
+              const data = await response.json();
+              console.log('🔧 Fix subscription result:', data);
+              if (data.success) {
+                alert('Subscription fixed! Refreshing page...');
+                window.location.reload();
+              } else {
+                alert('Failed to fix subscription. Check console for details.');
+              }
+            }
+          }}
+          className="magical-button text-xs px-3 py-1 bg-green-600 hover:bg-green-700 text-white ml-2"
+        >
+          🔧 Fix Subscription
+        </button>
       </div>
 
       {/* Plan Features */}

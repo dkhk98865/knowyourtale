@@ -258,7 +258,7 @@ export async function POST(request: NextRequest) {
             console.log('🆔 Subscription ID:', subscriptionId);
             
             if (customerEmail && subscriptionId) {
-              console.log('💾 Attempting to create subscription record...');
+              console.log('💾 Attempting to upsert subscription record...');
               
               // Calculate current period end (30 days from now)
               const currentPeriodEnd = new Date();
@@ -266,12 +266,14 @@ export async function POST(request: NextRequest) {
               
               const { error: insertError } = await supabase
                 .from('user_subscriptions')
-                .insert({
+                .upsert({
                   user_email: customerEmail,
                   stripe_subscription_id: subscriptionId,
                   plan: 'monthly',
                   status: 'active',
                   current_period_end: currentPeriodEnd.toISOString(),
+                }, {
+                  onConflict: 'stripe_subscription_id'
                 });
 
               if (insertError) {
@@ -287,7 +289,7 @@ export async function POST(request: NextRequest) {
                   error_message: JSON.stringify(insertError)
                 });
               } else {
-                console.log('✅ Subscription record created successfully!');
+                console.log('✅ Subscription record upserted successfully!');
                 
                 // Track successful monthly subscription in analytics
                 try {
@@ -298,7 +300,7 @@ export async function POST(request: NextRequest) {
                 
                 // Log the success to webhook_logs table
                 await supabase.from('webhook_logs').insert({
-                  event_type: 'monthly_subscription_creation',
+                  event_type: 'subscription_upsert',
                   stripe_event_id: event.id,
                   user_email: customerEmail,
                   plan: 'monthly',
@@ -333,7 +335,7 @@ export async function POST(request: NextRequest) {
             console.log('🆔 Subscription ID:', subscriptionId);
             
             if (customerEmail && subscriptionId) {
-              console.log('💾 Attempting to create advanced subscription record...');
+              console.log('💾 Attempting to upsert advanced subscription record...');
               
               // Calculate current period end (30 days from now)
               const currentPeriodEnd = new Date();
@@ -341,12 +343,14 @@ export async function POST(request: NextRequest) {
               
               const { error: insertError } = await supabase
                 .from('user_subscriptions')
-                .insert({
+                .upsert({
                   user_email: customerEmail,
                   stripe_subscription_id: subscriptionId,
                   plan: 'advanced',
                   status: 'active',
                   current_period_end: currentPeriodEnd.toISOString(),
+                }, {
+                  onConflict: 'stripe_subscription_id'
                 });
 
               if (insertError) {
@@ -362,7 +366,7 @@ export async function POST(request: NextRequest) {
                   error_message: JSON.stringify(insertError)
                 });
               } else {
-                console.log('✅ Advanced subscription record created successfully!');
+                console.log('✅ Advanced subscription record upserted successfully!');
                 
                 // Track successful advanced subscription in analytics
                 try {
@@ -373,7 +377,7 @@ export async function POST(request: NextRequest) {
                 
                 // Log the success to webhook_logs table
                 await supabase.from('webhook_logs').insert({
-                  event_type: 'advanced_subscription_creation',
+                  event_type: 'subscription_upsert',
                   stripe_event_id: event.id,
                   user_email: customerEmail,
                   plan: 'advanced',
@@ -394,12 +398,14 @@ export async function POST(request: NextRequest) {
                 console.log('💕 Creating compatibility access for advanced plan...');
                 const { error: compatibilityError } = await supabase
                   .from('user_compatibility_access')
-                  .insert({
+                  .upsert({
                     user_email: customerEmail,
                     access_type: 'monthly_compatibility',
                     stripe_payment_intent_id: session.payment_intent,
                     status: 'active',
                     expires_at: currentPeriodEnd.toISOString(),
+                  }, {
+                    onConflict: 'user_email,access_type'
                   });
 
                 if (compatibilityError) {
