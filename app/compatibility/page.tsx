@@ -145,6 +145,27 @@ export default function CompatibilityPage() {
     return () => subscription.unsubscribe();
   }, [supabase]);
 
+  // Check for recent purchase and refresh access
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+    const plan = urlParams.get('plan');
+    
+    if (sessionId && plan === 'advanced' && user?.email) {
+      console.log('🔄 Detected recent advanced plan purchase, refreshing access...');
+      
+      // Wait a bit for webhook to process, then refresh access
+      const timer = setTimeout(async () => {
+        if (user?.email) {
+          await checkAccess(user.email);
+          console.log('✅ Access refreshed after purchase');
+        }
+      }, 3000); // Wait 3 seconds for webhook to process
+      
+      return () => clearTimeout(timer);
+    }
+  }, [user?.email]);
+
   if (loading) {
     return (
       <main className="max-w-6xl mx-auto px-4 py-12 text-center">
