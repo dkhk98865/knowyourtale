@@ -1,6 +1,7 @@
 'use client';
 
 import { characters } from '@/types/characters';
+import { getCompatibilityReport } from '@/lib/compatibility-data';
 
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -29,6 +30,7 @@ export default function CompatibilityReportPage({ params }: Props) {
   
   const character1 = characters.find((c) => c.id === character1Id);
   const character2 = characters.find((c) => c.id === character2Id);
+  const compatibilityData = getCompatibilityReport(id);
 
   const checkAccess = async (email: string) => {
     try {
@@ -199,80 +201,232 @@ export default function CompatibilityReportPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Compatibility Analysis Placeholder */}
-        <div className="storybook-card page-turn p-6 mb-8 bg-gradient-to-r from-pink-50 to-purple-50 border-2 border-pink-200">
+        {/* Core Dynamic */}
+        <div className="storybook-card page-turn p-6 mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200">
           <div className="text-center mb-6">
-            <div className="magical-sparkle text-3xl mb-3">📊</div>
-            <h2 className="storybook-subtitle text-2xl mb-3 text-pink-800">Compatibility Analysis</h2>
-            <p className="text-gray-700 mb-6">
-              Detailed compatibility insights will be provided here once you supply the content.
-            </p>
+            <div className="magical-sparkle text-3xl mb-3">🌙</div>
+            <h2 className="storybook-subtitle text-2xl mb-3 text-blue-800">Core Dynamic</h2>
             <div className="magical-sparkle text-xl">✨</div>
           </div>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-white p-6 rounded-lg border border-pink-200">
-              <h3 className="text-xl font-semibold mb-4 text-pink-800">Compatibility Score</h3>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-pink-600 mb-2">85%</div>
-                <p className="text-gray-600">Excellent Compatibility</p>
-              </div>
+          {compatibilityData ? (
+            <>
+              <h3 className="text-center text-xl font-semibold text-blue-800 mb-4">{compatibilityData.title}</h3>
+              <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto">
+                {compatibilityData.subtitle}
+              </p>
+              <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto mt-4">
+                {compatibilityData.summary}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto">
+                When {character1.name} and {character2.name} meet, there&apos;s an immediate recognition of shared sweetness. Both archetypes embody purity and kindness, though expressed differently: {character1.name}&apos;s innocence shines in her trusting heart, while {character2.name}&apos;s endurance shows in her quiet patience under hardship. Together, they create a gentle bond rooted in empathy and compassion.
+              </p>
+              <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto mt-4">
+                Yet, the very similarity that draws them together can also lead to passivity. Each waits for life to happen rather than shaping it boldly. Their relationship flourishes in warmth, but risks becoming stagnant without intentional action.
+              </p>
+            </>
+          )}
+        </div>
+
+        {/* Strengths Together */}
+        <div className="storybook-card page-turn p-6 mb-8 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200">
+          <div className="text-center mb-6">
+            <div className="magical-sparkle text-3xl mb-3">✨</div>
+            <h2 className="storybook-subtitle text-2xl mb-3 text-green-800">Strengths Together</h2>
+            <div className="magical-sparkle text-xl">🌟</div>
+          </div>
+          <ul className="space-y-3 max-w-4xl mx-auto">
+            {compatibilityData ? (
+              compatibilityData.strengths.map((strength, index) => (
+                <li key={index} className="flex items-start space-x-3">
+                  <div className="text-green-500 text-xl mt-1">•</div>
+                  <div>
+                    {strength.includes('→') ? (
+                      <>
+                        <strong>{strength.split('→')[0]}</strong> → {strength.split('→')[1]}
+                      </>
+                    ) : (
+                      strength
+                    )}
+                  </div>
+                </li>
+              ))
+            ) : (
+              <>
+                <li className="flex items-start space-x-3">
+                  <div className="text-green-500 text-xl mt-1">•</div>
+                  <div>
+                    <strong>Empathy & Understanding</strong> → Both naturally forgive and comfort each other, avoiding cruelty.
+                  </div>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <div className="text-green-500 text-xl mt-1">•</div>
+                  <div>
+                    <strong>Shared Values</strong> → Loyalty, family, and harmony matter deeply to both.
+                  </div>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <div className="text-green-500 text-xl mt-1">•</div>
+                  <div>
+                    <strong>Mutual Gentleness</strong> → They provide a safe haven where neither fears judgment.
+                  </div>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <div className="text-green-500 text-xl mt-1">•</div>
+                  <div>
+                    <strong>Emotional Healing</strong> → {character2.name} reassures {character1.name}&apos;s fears, while {character1.name} lightens {character2.name}&apos;s burdens.
+                  </div>
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
+
+        {/* Challenges & Tensions */}
+        <div className="storybook-card page-turn p-6 mb-8 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-200">
+          <div className="text-center mb-6">
+            <div className="magical-sparkle text-3xl mb-3">⚡</div>
+            <h2 className="storybook-subtitle text-2xl mb-3 text-orange-800">Challenges & Tensions</h2>
+            <div className="magical-sparkle text-xl">🌟</div>
+          </div>
+          <ul className="space-y-3 max-w-4xl mx-auto">
+            {compatibilityData ? (
+              compatibilityData.challenges.map((challenge, index) => (
+                <li key={index} className="flex items-start space-x-3">
+                  <div className="text-orange-500 text-xl mt-1">•</div>
+                  <div>
+                    {challenge.includes('→') ? (
+                      <>
+                        <strong>{challenge.split('→')[0]}</strong> → {challenge.split('→')[1]}
+                      </>
+                    ) : (
+                      challenge
+                    )}
+                  </div>
+                </li>
+              ))
+            ) : (
+              <>
+                <li className="flex items-start space-x-3">
+                  <div className="text-orange-500 text-xl mt-1">•</div>
+                  <div>
+                    <strong>Over-Passivity</strong> → Both tend to endure rather than confront. They may stay too long in toxic dynamics without pushing for change.
+                  </div>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <div className="text-orange-500 text-xl mt-1">•</div>
+                  <div>
+                    <strong>Lack of Initiative</strong> → Neither archetype is naturally bold — together they risk &ldquo;waiting for rescue.&rdquo;
+                  </div>
+                </li>
+                <li className="flex items-start space-x-3">
+                  <div className="text-orange-500 text-xl mt-1">•</div>
+                  <div>
+                    <strong>Suppressed Frustration</strong> → Their politeness can hide resentment if they avoid tough conversations.
+                  </div>
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
+
+        {/* Advice for Growth */}
+        <div className="storybook-card page-turn p-6 mb-8 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200">
+          <div className="text-center mb-6">
+            <div className="magical-sparkle text-3xl mb-3">🧭</div>
+            <h2 className="storybook-subtitle text-2xl mb-3 text-purple-800">Advice for Growth</h2>
+            <div className="magical-sparkle text-xl">🌟</div>
+          </div>
+          <div className="space-y-4 max-w-4xl mx-auto">
+            {compatibilityData ? (
+              compatibilityData.advice.map((advice, index) => (
+                <div key={index} className="bg-white p-4 rounded-lg border border-purple-200">
+                  <h3 className="font-semibold text-purple-800 mb-2">{index + 1}. {advice.split('→')[0]}</h3>
+                  <p className="text-gray-700">{advice.split('→')[1] || advice}</p>
+                </div>
+              ))
+            ) : (
+              <>
+                <div className="bg-white p-4 rounded-lg border border-purple-200">
+                  <h3 className="font-semibold text-purple-800 mb-2">1. Practice Small Acts of Boldness</h3>
+                  <p className="text-gray-700">Try making decisions without waiting for outside approval — even small choices like planning a trip or starting a project.</p>
+                </div>
+                <div className="bg-white p-4 rounded-lg border border-purple-200">
+                  <h3 className="font-semibold text-purple-800 mb-2">2. Balance Care with Courage</h3>
+                  <p className="text-gray-700">Kindness is their gift, but courage is their lesson. Supporting each other in taking risks builds strength.</p>
+                </div>
+                <div className="bg-white p-4 rounded-lg border border-purple-200">
+                  <h3 className="font-semibold text-purple-800 mb-2">3. Journal Prompts</h3>
+                  <p className="text-gray-700 mb-2"><em>{character1.name} types:</em> &ldquo;Where do I avoid action out of fear of conflict?&rdquo;</p>
+                  <p className="text-gray-700"><em>{character2.name} types:</em> &ldquo;Where am I waiting for recognition instead of claiming it myself?&rdquo;</p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Story Parallel */}
+        <div className="storybook-card page-turn p-6 mb-8 bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-200">
+          <div className="text-center mb-6">
+            <div className="magical-sparkle text-3xl mb-3">📖</div>
+            <h2 className="storybook-subtitle text-2xl mb-3 text-amber-800">Story Parallel</h2>
+            <div className="magical-sparkle text-xl">🌟</div>
+          </div>
+          <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto">
+            {character1.name} lay waiting in her glass coffin, and {character2.name} waited for her fairy godmother&apos;s intervention. Both stories highlight external rescue. Yet, their true lesson is in stepping forward themselves: {character1.name} choosing to trust wisely, and {character2.name} embracing her worth before the ball. Together, this pair must learn that kindness paired with courage creates transformation.
+          </p>
+        </div>
+
+        {/* Relationship Outlook */}
+        <div className="storybook-card page-turn p-6 mb-8 bg-gradient-to-r from-pink-50 to-rose-50 border-2 border-pink-200">
+          <div className="text-center mb-6">
+            <div className="magical-sparkle text-3xl mb-3">💞</div>
+            <h2 className="storybook-subtitle text-2xl mb-3 text-pink-800">Relationship Outlook</h2>
+            <div className="magical-sparkle text-xl">🌟</div>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="bg-white p-4 rounded-lg border border-pink-200 text-center">
+              <div className="text-2xl mb-2">🤝</div>
+              <h3 className="font-semibold text-pink-800 mb-2">Friendship</h3>
+              <p className="text-gray-700 text-sm">Deeply supportive, nonjudgmental, but needs outside inspiration to stay dynamic.</p>
             </div>
-            
-            <div className="bg-white p-6 rounded-lg border border-pink-200">
-              <h3 className="text-xl font-semibold mb-4 text-pink-800">Relationship Type</h3>
-              <div className="text-center">
-                <div className="text-2xl mb-2">🌟</div>
-                <p className="text-gray-700">Complementary Partnership</p>
-              </div>
+            <div className="bg-white p-4 rounded-lg border border-pink-200 text-center">
+              <div className="text-2xl mb-2">💕</div>
+              <h3 className="font-semibold text-pink-800 mb-2">Romance</h3>
+              <p className="text-gray-700 text-sm">Gentle, affectionate love with lasting loyalty, though prone to inertia.</p>
+            </div>
+            <div className="bg-white p-4 rounded-lg border border-pink-200 text-center">
+              <div className="text-2xl mb-2">💼</div>
+              <h3 className="font-semibold text-pink-800 mb-2">Work/Creative</h3>
+              <p className="text-gray-700 text-sm">Harmonious and supportive, but needs a proactive third partner to spark bold moves.</p>
             </div>
           </div>
         </div>
 
-        {/* Content Sections Placeholder */}
-        <div className="space-y-8">
-          <div className="storybook-card page-turn p-6">
-            <div className="text-center mb-6">
-              <div className="magical-sparkle">💬</div>
-              <h2 className="storybook-subtitle text-xl mb-3">Communication Style</h2>
-              <div className="magical-sparkle">🌟</div>
+        {/* Compatibility Rating */}
+        <div className="storybook-card page-turn p-6 mb-8 bg-gradient-to-r from-indigo-50 to-blue-50 border-2 border-indigo-200">
+          <div className="text-center">
+            <div className="magical-sparkle text-3xl mb-3">✅</div>
+            <h2 className="storybook-subtitle text-2xl mb-3 text-indigo-800">Compatibility Rating</h2>
+            <div className="text-4xl font-bold text-indigo-600 mb-2">
+              {compatibilityData ? (
+                <>
+                  {'★'.repeat(Math.floor(compatibilityData.compatibilityScore / 20))}
+                  {'☆'.repeat(5 - Math.floor(compatibilityData.compatibilityScore / 20))}
+                </>
+              ) : (
+                '★★★★☆'
+              )}
             </div>
-            <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto">
-              [Communication analysis content will be provided here]
+            <p className="text-gray-700 text-lg mb-2">
+              {compatibilityData ? `${compatibilityData.compatibilityScore}/100` : '4/5 Stars'}
             </p>
-          </div>
-
-          <div className="storybook-card page-turn p-6">
-            <div className="text-center mb-6">
-              <div className="magical-sparkle">💝</div>
-              <h2 className="storybook-subtitle text-xl mb-3">Emotional Connection</h2>
-              <div className="magical-sparkle">🌟</div>
-            </div>
-            <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto">
-              [Emotional connection analysis content will be provided here]
+            <p className="text-gray-600 italic">
+              {compatibilityData ? compatibilityData.relationshipType : 'Beautiful harmony, but requires conscious courage to avoid stagnation.'}
             </p>
-          </div>
-
-          <div className="storybook-card page-turn p-6">
-            <div className="text-center mb-6">
-              <div className="magical-sparkle">🎯</div>
-              <h2 className="storybook-subtitle text-xl mb-3">Shared Values & Goals</h2>
-              <div className="magical-sparkle">🌟</div>
-            </div>
-            <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto">
-              [Shared values analysis content will be provided here]
-            </p>
-          </div>
-
-          <div className="storybook-card page-turn p-6">
-            <div className="text-center mb-6">
-              <div className="magical-sparkle">🌱</div>
-              <h2 className="storybook-subtitle text-xl mb-3">Growth Potential</h2>
-              <div className="magical-sparkle">🌟</div>
-            </div>
-            <p className="text-gray-700 leading-relaxed text-lg max-w-4xl mx-auto">
-              [Growth potential analysis content will be provided here]
-            </p>
+            <div className="magical-sparkle text-xl mt-4">✨</div>
           </div>
         </div>
 
