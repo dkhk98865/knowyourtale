@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js';
+import Link from 'next/link';
 
 interface Subscription {
   id: string;
@@ -28,30 +29,39 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
 
   // Plan details
   const plans = {
-    single: {
-      name: 'Single Report',
-      price: '$4.99',
-      priceId: process.env.NEXT_PUBLIC_STRIPE_SINGLE_PRICE_ID,
-      features: ['Single personality analysis report']
-    },
     monthly: {
       name: 'Monthly Plan',
       price: '$7.99/month',
       priceId: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID,
-              features: ['Weekly prompts in journal section', 'Access to Know Your Tale journaling', 'Community board access']
+      features: ['Weekly prompts in journal section', 'Access to Know Your Tale journaling', 'Community board access']
     },
-    allReports: {
-      name: 'All Reports',
-      price: '$9.99',
-      priceId: process.env.NEXT_PUBLIC_STRIPE_ALL_REPORTS_PRICE_ID,
-      features: ['All 12 personality analysis reports']
+    advanced: {
+      name: 'Advanced Monthly Plan',
+      price: '$12.99/month',
+      priceId: process.env.NEXT_PUBLIC_STRIPE_ADVANCED_MONTHLY_PRICE_ID,
+      features: ['Everything in Monthly Plan', 'All compatibility reports access', 'New compatibility reports as they\'re added', 'Priority community features']
     }
   };
 
-  const fetchSubscription = useCallback(async () => {
+    const fetchSubscription = useCallback(async () => {
     try {
-      // First try to get monthly subscription (highest priority)
-      const { data: monthlyData, error: monthlyError } = await supabase
+      // First try to get advanced subscription (highest priority)
+      const { data: advancedData } = await supabase
+        .from('user_subscriptions')
+        .select('*')
+        .eq('user_email', user.email)
+        .eq('status', 'active')
+        .eq('plan', 'advanced')
+        .single();
+
+      if (advancedData) {
+        setSubscription(advancedData);
+        setLoading(false);
+        return;
+      }
+
+      // If no advanced subscription, try monthly subscription
+      const { data: monthlyData } = await supabase
         .from('user_subscriptions')
         .select('*')
         .eq('user_email', user.email)
@@ -59,30 +69,14 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
         .eq('plan', 'monthly')
         .single();
 
-      let data = monthlyData;
-      let error = monthlyError;
-
-      // If no monthly subscription, get the most recent active subscription
-      if (error && error.code === 'PGRST116') {
-        const { data: allSubscriptions, error: allError } = await supabase
-          .from('user_subscriptions')
-          .select('*')
-          .eq('user_email', user.email)
-          .eq('status', 'active')
-          .order('created_at', { ascending: false })
-          .limit(1);
-
-        if (allError) {
-          console.error('Error fetching subscriptions:', allError);
-        } else {
-          data = allSubscriptions?.[0] || null;
-          error = null;
-        }
-      } else if (error) {
-        console.error('Error fetching subscription:', error);
+      if (monthlyData) {
+        setSubscription(monthlyData);
+        setLoading(false);
+        return;
       }
 
-      setSubscription(data);
+      // No active monthly or advanced subscription found
+      setSubscription(null);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching subscription:', error);
@@ -98,14 +92,18 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
     if (!subscription) return null;
     
     // Use the plan field from the database directly
-    return subscription.plan as 'single' | 'monthly' | 'allReports' | null;
+    return subscription.plan as 'monthly' | 'advanced' | null;
   };
 
   const getUpgradePlan = () => {
     const current = getCurrentPlan();
-    if (current === 'single') return 'monthly';
-    if (current === 'monthly') return 'allReports';
-    if (current === 'allReports') return 'single';
+    if (current === 'monthly') return 'advanced';
+    return null; // Advanced is the highest tier
+  };
+
+  const getDowngradePlan = () => {
+    const current = getCurrentPlan();
+    if (current === 'advanced') return 'monthly';
     return null;
   };
 
@@ -140,6 +138,42 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
       }
     } catch {
       setMessage('Failed to upgrade subscription. Please try again.');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleDowngrade = async () => {
+    if (!subscription) return;
+    
+    const downgradeTo = getDowngradePlan();
+    if (!downgradeTo) return;
+
+    setUpdating(true);
+    setMessage('');
+
+    try {
+      const response = await fetch('/api/update-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          subscriptionId: subscription.stripe_subscription_id,
+          newPriceId: plans[downgradeTo as keyof typeof plans].priceId,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setMessage(`Successfully downgraded to ${plans[downgradeTo as keyof typeof plans].name}!`);
+        await fetchSubscription(); // Refresh subscription data
+      } else {
+        setMessage(`Error: ${result.error}`);
+      }
+    } catch {
+      setMessage('Failed to downgrade subscription. Please try again.');
     } finally {
       setUpdating(false);
     }
@@ -267,6 +301,16 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
           </button>
         )}
 
+        {getDowngradePlan() && !subscription.canceled_at && (
+          <button
+            onClick={handleDowngrade}
+            disabled={updating}
+            className="w-full magical-button bg-blue-600 hover:bg-blue-700"
+          >
+            {updating ? 'Downgrading...' : `Downgrade to ${plans[getDowngradePlan() as keyof typeof plans]?.name}`}
+          </button>
+        )}
+
         {!subscription.canceled_at && (
           <button
             onClick={handleCancel}
@@ -308,6 +352,42 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
           ))}
         </ul>
       </div>
+
+      {/* Compatibility Access Info */}
+      {(currentPlan === 'advanced' || currentPlan === 'monthly') && (
+        <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg">
+          <h4 className="font-semibold mb-3 text-purple-800">💕 Compatibility Reports Access:</h4>
+          {currentPlan === 'advanced' ? (
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <div className="text-green-500">✓</div>
+                <span className="text-gray-700">Full access to all compatibility reports</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="text-green-500">✓</div>
+                <span className="text-gray-700">New compatibility reports as they&apos;re added</span>
+              </div>
+              <div className="mt-3">
+                <Link href="/compatibility" className="text-purple-600 hover:text-purple-800 underline">
+                  View all compatibility reports →
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <div className="text-gray-400">○</div>
+                <span className="text-gray-500">Compatibility reports not included</span>
+              </div>
+              <div className="mt-3">
+                <Link href="/subscription" className="text-purple-600 hover:text-purple-800 underline">
+                  Upgrade to Advanced Plan for compatibility access →
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -222,7 +222,7 @@ export default function CompatibilityPage() {
       </section>
 
       {/* Full Pairs Purchase Section - Top */}
-      {user && !userAccess?.hasAccess && (
+      {user && (!userAccess?.hasAccess || (userAccess.accessType !== 'all_pairs' && userAccess.accessType !== 'monthly_compatibility')) && (
         <section className="mb-12">
           <div className="storybook-card page-turn p-8 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200">
             <div className="text-center mb-6">
@@ -373,7 +373,7 @@ export default function CompatibilityPage() {
       </section>
 
       {/* Full Pairs Purchase Section - Bottom */}
-      {user && !userAccess?.hasAccess && (
+      {user && (!userAccess?.hasAccess || (userAccess.accessType !== 'all_pairs' && userAccess.accessType !== 'monthly_compatibility')) && (
         <section className="mt-16">
           <div className="storybook-card page-turn p-8 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200">
             <div className="text-center mb-6">
