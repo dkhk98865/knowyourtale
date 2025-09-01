@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js';
 import { analytics } from '@/lib/analytics';
+import Link from 'next/link';
 
 interface CompatibilityPurchaseProps {
   compatibilityPairId: string;
@@ -15,9 +16,8 @@ interface CompatibilityPurchaseProps {
 export default function CompatibilityPurchase({ 
   compatibilityPairId, 
   character1Name, 
-  character2Name, 
-  onPurchaseComplete 
-}: CompatibilityPurchaseProps) {
+  character2Name
+}: Omit<CompatibilityPurchaseProps, 'onPurchaseComplete'>) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [supabase] = useState(() => createClient());
@@ -177,7 +177,7 @@ export default function CompatibilityPurchase({
             </li>
             <li className="flex items-center text-sm">
               <span className="text-green-500 mr-2">✓</span>
-              New reports as they're added
+              New reports as they&apos;re added
             </li>
             <li className="flex items-center text-sm">
               <span className="text-green-500 mr-2">✓</span>
@@ -201,12 +201,12 @@ export default function CompatibilityPurchase({
           <a href="/refund-policy" className="underline">refund policy</a> for details.
         </p>
         <div className="flex justify-center space-x-4">
-          <a href="/compatibility" className="magical-button">
+          <Link href="/compatibility" className="magical-button">
             🔙 Back to Compatibility
-          </a>
-          <a href="/subscription" className="magical-button">
+          </Link>
+          <Link href="/subscription" className="magical-button">
             🗝️ View All Plans
-          </a>
+          </Link>
         </div>
       </div>
     </div>

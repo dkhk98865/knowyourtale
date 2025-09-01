@@ -7,7 +7,7 @@ import CompatibilityPurchase from '@/components/compatibility-purchase';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, use, useCallback } from 'react';
 import { createClient } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js';
 
@@ -35,7 +35,7 @@ export default function CompatibilityReportPage({ params }: Props) {
   const character2 = characters.find((c) => c.id === character2Id);
   const compatibilityData = getCompatibilityReport(id);
 
-  const checkAccess = async (email: string) => {
+  const checkAccess = useCallback(async (email: string) => {
     try {
       const response = await fetch('/api/check-compatibility-access', {
         method: 'POST',
@@ -56,7 +56,7 @@ export default function CompatibilityReportPage({ params }: Props) {
       console.error('Error checking user compatibility access:', error);
       setUserAccess({ hasAccess: false, accessType: null });
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     const getSession = async () => {
@@ -82,7 +82,7 @@ export default function CompatibilityReportPage({ params }: Props) {
     );
 
     return () => subscription.unsubscribe();
-  }, [supabase]);
+  }, [supabase, checkAccess]);
 
   if (!character1 || !character2) {
     return notFound();
