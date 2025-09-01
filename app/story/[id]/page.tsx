@@ -303,7 +303,7 @@ export default function StoryPage({
             
             <div className="text-center">
               <p className="text-gray-600 text-sm italic">
-                "I just discovered my fairy tale personality type is {character.name}! {character.description} Take the quiz at Know Your Tale!"
+                &ldquo;I just discovered my fairy tale personality type is {character.name}! {character.description} Take the quiz at Know Your Tale!&rdquo;
               </p>
               <div className="magical-sparkle text-lg mt-3">🌟</div>
             </div>

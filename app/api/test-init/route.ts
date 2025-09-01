@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { UserPromptProgressService } from '@/lib/user-prompt-progress';
 
 export async function GET() {

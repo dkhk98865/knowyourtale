@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase-client';
 import { JournalEntry } from '@/types/journal';
 import { characters } from '@/types/characters';
 import Link from 'next/link';
+import Image from 'next/image';
 import SubscriptionAccessGate from '@/components/subscription-access-gate';
 import { User } from '@supabase/supabase-js';
 import { UserPromptProgressClientService, CurrentPrompt } from '@/lib/user-prompt-progress-client';
@@ -234,7 +235,7 @@ export default function JournalPage() {
 
     checkUser();
     fetchJournals();
-  }, [supabase, fetchJournals]);
+  }, [supabase, fetchJournals, fetchUserPrompt]);
 
   const filteredJournals = journals.filter(journal => {
     if (filters.character_tags && journal.character_tags.includes(filters.character_tags)) return true;
@@ -387,9 +388,11 @@ export default function JournalPage() {
               
               <div className="bg-white p-6 rounded-lg border border-blue-200 mb-4">
                 <div className="flex items-center mb-4">
-                  <img 
-                    src={characters.find(c => c.id === currentPrompt.characterId)?.image} 
+                  <Image 
+                    src={characters.find(c => c.id === currentPrompt.characterId)?.image || ''} 
                     alt={currentPrompt.characterName}
+                    width={64}
+                    height={64}
                     className="w-16 h-16 rounded-full mr-4 object-cover border-2 border-accent-gold"
                   />
                   <div>
