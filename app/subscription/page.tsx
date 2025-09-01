@@ -48,6 +48,14 @@ export default function SubscriptionPage() {
       // Track checkout initiation
       analytics.trackCheckoutInitiated(plan.toLowerCase());
       
+      // Set different success URLs based on plan
+      let successUrl;
+      if (plan.toLowerCase() === 'advanced') {
+        successUrl = `${window.location.origin}/compatibility?session_id={CHECKOUT_SESSION_ID}&plan=advanced`;
+      } else {
+        successUrl = `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=monthly`;
+      }
+      
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
@@ -55,7 +63,7 @@ export default function SubscriptionPage() {
         },
         body: JSON.stringify({
           plan: plan.toLowerCase(),
-          successUrl: `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=monthly`,
+          successUrl: successUrl,
           cancelUrl: `${window.location.origin}/subscription`,
         }),
       });
