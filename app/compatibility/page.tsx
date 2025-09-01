@@ -23,6 +23,79 @@ export default function CompatibilityPage() {
 
   const compatibilityCombinations = generateCompatibilityIds();
 
+  const handlePurchase = async (compatibilityPairId: string) => {
+    if (!user) {
+      alert('Please sign in to purchase compatibility reports');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/create-compatibility-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          plan: 'single_pair',
+          compatibilityPairId,
+          successUrl: `${window.location.origin}/compatibility/${compatibilityPairId}?session_id={CHECKOUT_SESSION_ID}&plan=single_pair`,
+          cancelUrl: `${window.location.origin}/compatibility`,
+        }),
+      });
+
+      const { url, error } = await response.json();
+
+      if (error) {
+        alert(`Error: ${error}`);
+        return;
+      }
+
+      if (url) {
+        // Redirect to Stripe Checkout
+        window.location.href = url;
+      }
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      alert('Failed to create checkout session. Please try again.');
+    }
+  };
+
+  const handleFullPairsPurchase = async () => {
+    if (!user) {
+      alert('Please sign in to purchase compatibility reports');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/create-compatibility-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          plan: 'all_pairs',
+          successUrl: `${window.location.origin}/compatibility?session_id={CHECKOUT_SESSION_ID}&plan=all_pairs`,
+          cancelUrl: `${window.location.origin}/compatibility`,
+        }),
+      });
+
+      const { url, error } = await response.json();
+
+      if (error) {
+        alert(`Error: ${error}`);
+        return;
+      }
+
+      if (url) {
+        // Redirect to Stripe Checkout
+        window.location.href = url;
+      }
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      alert('Failed to create checkout session. Please try again.');
+    }
+  };
+
   const checkAccess = async (email: string) => {
     try {
       const response = await fetch('/api/check-compatibility-access', {
@@ -148,6 +221,43 @@ export default function CompatibilityPage() {
         )}
       </section>
 
+      {/* Full Pairs Purchase Section - Top */}
+      {user && !userAccess?.hasAccess && (
+        <section className="mb-12">
+          <div className="storybook-card page-turn p-8 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200">
+            <div className="text-center mb-6">
+              <div className="magical-sparkle text-4xl mb-3">💫</div>
+              <h2 className="storybook-subtitle text-2xl mb-3 text-purple-800">Get All Compatibility Reports</h2>
+              <div className="magical-sparkle text-xl">✨</div>
+            </div>
+            
+            <div className="text-center mb-6">
+              <div className="text-4xl font-bold text-purple-600 mb-2">$24.99</div>
+              <div className="text-gray-600 mb-4">One-time purchase for all 78 compatibility reports</div>
+              <div className="text-sm text-gray-600 mb-6">
+                • Complete relationship insights for all character combinations<br/>
+                • Detailed analysis of strengths, challenges, and growth potential<br/>
+                • Future compatibility reports included at no extra cost
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={handleFullPairsPurchase}
+                className="magical-button bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 text-lg font-semibold"
+              >
+                💫 Buy All Pairs $24.99
+              </button>
+              <Link href="/subscription">
+                <button className="magical-button bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 text-lg font-semibold">
+                  🗝️ View All Plans
+                </button>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Show all compatibility combinations */}
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {compatibilityCombinations.map((combo) => {
@@ -238,11 +348,12 @@ export default function CompatibilityPage() {
                     </p>
                     {user ? (
                       <div className="text-center mt-3">
-                        <Link href="/quiz">
-                          <button className="magical-button text-xs px-3 py-1">
-                            🧙‍♀️ Take Quiz
-                          </button>
-                        </Link>
+                        <button 
+                          onClick={() => handlePurchase(combo.id)}
+                          className="magical-button text-xs px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white"
+                        >
+                          💕 Buy Report $1.99
+                        </button>
                       </div>
                     ) : (
                       <div className="text-center mt-3">
@@ -260,6 +371,43 @@ export default function CompatibilityPage() {
           );
         })}
       </section>
+
+      {/* Full Pairs Purchase Section - Bottom */}
+      {user && !userAccess?.hasAccess && (
+        <section className="mt-16">
+          <div className="storybook-card page-turn p-8 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200">
+            <div className="text-center mb-6">
+              <div className="magical-sparkle text-4xl mb-3">💫</div>
+              <h2 className="storybook-subtitle text-2xl mb-3 text-purple-800">Unlock All Compatibility Insights</h2>
+              <div className="magical-sparkle text-xl">✨</div>
+            </div>
+            
+            <div className="text-center mb-6">
+              <div className="text-4xl font-bold text-purple-600 mb-2">$24.99</div>
+              <div className="text-gray-600 mb-4">Complete access to all 78 compatibility reports</div>
+              <div className="text-sm text-gray-600 mb-6">
+                • Discover how every character combination interacts<br/>
+                • Deep insights into relationship dynamics and growth<br/>
+                • Access to future compatibility reports included
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={handleFullPairsPurchase}
+                className="magical-button bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 text-lg font-semibold"
+              >
+                💫 Buy All Pairs $24.99
+              </button>
+              <Link href="/subscription">
+                <button className="magical-button bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 text-lg font-semibold">
+                  🗝️ View All Plans
+                </button>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }
