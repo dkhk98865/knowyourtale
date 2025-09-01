@@ -73,10 +73,7 @@ export default function PrivacyPolicyPage() {
               We use Vercel Analytics to understand how users interact with our application and to improve our services. Vercel processes anonymous usage data and does not collect personally identifiable information. You can review Vercel&apos;s privacy practices at <a href="https://vercel.com/privacy" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">vercel.com/privacy</a>.
             </p>
 
-            <h3 className="storybook-subtitle text-xl mb-3 mt-6">Mailchimp (Email Marketing)</h3>
-            <p className="mb-4">
-              If you subscribe to our monthly plan, we use Mailchimp to manage your subscription and send important updates. Mailchimp processes your email address and subscription preferences. You can review Mailchimp&apos;s privacy practices at <a href="https://mailchimp.com/legal/privacy/" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">mailchimp.com/legal/privacy</a>.
-            </p>
+
 
             <h2 className="storybook-subtitle text-2xl mb-4 mt-8">Data Storage and Security</h2>
             <ul className="list-disc pl-6 mb-4 space-y-2">
@@ -118,7 +115,7 @@ export default function PrivacyPolicyPage() {
             </p>
             <div className="bg-gray-50 p-4 rounded-lg mb-4">
               <p className="mb-2"><strong>Email:</strong> knowyourtale@gmail.com</p>
-              <p className="mb-2"><strong>Website:</strong> knowyourtale.com</p>
+              <p className="mb-2"><strong>Website:</strong> knowyourtale.me</p>
               <p><strong>Contact Form:</strong> <a href="/contact" className="text-blue-600 hover:underline">Contact Us</a></p>
             </div>
 

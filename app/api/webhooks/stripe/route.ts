@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { createWebhookClient } from '@/lib/supabase-webhook';
-import { addMonthlySubscriberToNewAccount } from '@/lib/mailchimp';
 import { UserPromptProgressService } from '@/lib/user-prompt-progress';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
@@ -228,14 +227,7 @@ export async function POST(request: NextRequest) {
                   status: 'success'
                 });
 
-                // Add subscriber to new Mailchimp account
-                console.log('📧 Adding subscriber to new Mailchimp account...');
-                const mailchimpResult = await addMonthlySubscriberToNewAccount(customerEmail);
-                if (mailchimpResult.success) {
-                  console.log('✅ Successfully added to new Mailchimp account');
-                } else {
-                  console.error('❌ Failed to add to new Mailchimp account:', mailchimpResult.error);
-                }
+
 
                 // Initialize user for weekly prompt cycle
                 console.log('📝 Initializing user for weekly prompt cycle...');

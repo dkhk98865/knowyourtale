@@ -200,7 +200,7 @@ export default function TermsOfServicePage() {
             </p>
             <div className="bg-gray-50 p-4 rounded-lg mb-4">
               <p className="mb-2"><strong>Email:</strong> knowyourtale@gmail.com</p>
-              <p className="mb-2"><strong>Website:</strong> knowyourtale.com</p>
+              <p className="mb-2"><strong>Website:</strong> knowyourtale.me</p>
               <p><strong>Contact Form:</strong> <a href="/contact" className="text-blue-600 hover:underline">Contact Us</a></p>
             </div>
 
