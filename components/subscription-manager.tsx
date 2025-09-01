@@ -340,6 +340,28 @@ export default function SubscriptionManager({ user }: SubscriptionManagerProps) 
         </div>
       )}
 
+      {/* Debug Section */}
+      <div className="mt-6 p-4 bg-yellow-50 border-2 border-yellow-200 rounded-lg">
+        <h4 className="font-semibold mb-2">🔧 Debug Subscription</h4>
+        <p className="text-sm mb-2">Current Plan: {getCurrentPlan() || 'None'}</p>
+        <p className="text-sm mb-2">Subscription ID: {subscription?.stripe_subscription_id || 'None'}</p>
+        <button 
+          onClick={async () => {
+            const response = await fetch('/api/debug-subscription', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ userEmail: user.email }),
+            });
+            const data = await response.json();
+            console.log('🔧 Subscription debug data:', data);
+            alert('Check browser console for subscription debug data');
+          }}
+          className="magical-button text-xs px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white"
+        >
+          🔧 Debug Subscription
+        </button>
+      </div>
+
       {/* Plan Features */}
       <div className="mt-6">
         <h4 className="font-semibold mb-3">Your Current Plan Features:</h4>
