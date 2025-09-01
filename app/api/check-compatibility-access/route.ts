@@ -43,6 +43,8 @@ export async function POST(request: NextRequest) {
         hasAccess: true, 
         accessType: 'monthly_compatibility' 
       });
+    } else {
+      console.log('❌ No advanced subscription found for user:', userEmail);
     }
     
     // Debug: Check ALL records for this user
