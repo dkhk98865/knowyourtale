@@ -31,11 +31,13 @@ export async function POST(request: NextRequest) {
       userEmail,
       subscriptions: {
         data: subscriptions,
-        error: subscriptionsError
+        error: subscriptionsError,
+        count: subscriptions?.length || 0
       },
       compatibilityAccess: {
         data: compatibilityAccess,
-        error: compatibilityError
+        error: compatibilityError,
+        count: compatibilityAccess?.length || 0
       }
     });
 

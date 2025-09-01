@@ -23,7 +23,16 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    console.log('🔍 Update subscription debug:', {
+      subscriptionId,
+      newPriceId,
+      newPlan,
+      availablePlans: Object.keys(SUBSCRIPTION_PLANS),
+      planPriceIds: Object.entries(SUBSCRIPTION_PLANS).map(([key, plan]) => ({ key, priceId: plan.priceId }))
+    });
+
     if (!newPlan) {
+      console.error('❌ Invalid price ID provided:', newPriceId);
       return NextResponse.json(
         { error: 'Invalid price ID provided' },
         { status: 400 }
@@ -43,6 +52,13 @@ export async function POST(request: NextRequest) {
 
     // Update the database
     const supabase: SupabaseClient = await createClient();
+    console.log('🔍 Updating database with:', {
+      stripe_subscription_id: subscription.id,
+      stripe_price_id: newPriceId,
+      plan: newPlan,
+      updated_at: new Date().toISOString()
+    });
+    
     const { error } = await supabase
       .from('user_subscriptions')
       .update({
@@ -54,12 +70,14 @@ export async function POST(request: NextRequest) {
       .eq('stripe_subscription_id', subscriptionId);
 
     if (error) {
-      console.error('Error updating database:', error);
+      console.error('❌ Error updating database:', error);
       return NextResponse.json(
         { error: 'Failed to update database' },
         { status: 500 }
       );
     }
+
+    console.log('✅ Database updated successfully');
 
     return NextResponse.json({ 
       success: true, 

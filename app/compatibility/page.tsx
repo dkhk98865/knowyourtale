@@ -239,6 +239,8 @@ export default function CompatibilityPage() {
                 });
                 const data = await response.json();
                 console.log('🔧 Debug data:', data);
+                console.log('🔧 Subscription details:', data.subscriptions.data);
+                console.log('🔧 Compatibility access details:', data.compatibilityAccess.data);
                 alert('Check browser console for debug data');
               }}
               className="magical-button text-xs px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white"
