@@ -96,14 +96,5 @@ export const COMPATIBILITY_PLANS = {
     features: [
       'All 78 compatibility reports'
     ]
-  },
-  monthly_compatibility: {
-    name: 'Monthly Compatibility Plan',
-    price: 1299, // $12.99 in cents
-    priceId: process.env.STRIPE_MONTHLY_COMPATIBILITY_PRICE_ID,
-    features: [
-      'Access to all compatibility reports',
-      'New compatibility reports as they\'re added'
-    ]
   }
 };

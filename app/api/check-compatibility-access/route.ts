@@ -55,31 +55,6 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Check for monthly compatibility access
-    console.log('🔍 Checking for monthly compatibility access...');
-    
-    const { data: monthlyAccess, error: monthlyError } = await supabase
-      .from('user_compatibility_access')
-      .select('*')
-      .eq('user_email', userEmail)
-      .eq('access_type', 'monthly_compatibility')
-      .eq('status', 'active')
-      .limit(1);
-
-    console.log('🔍 Monthly compatibility query result:', { data: monthlyAccess, error: monthlyError });
-
-    if (monthlyError) {
-      console.log('⚠️ Error checking monthly compatibility access:', monthlyError);
-    }
-
-    if (monthlyAccess && monthlyAccess.length > 0) {
-      console.log('✅ User has monthly compatibility access');
-      return NextResponse.json({ 
-        hasAccess: true, 
-        accessType: 'monthly_compatibility' 
-      });
-    }
-
     // If no all pairs or monthly access, check for specific pair access
     if (compatibilityPairId) {
       console.log('🔍 Checking for single pair access for compatibility:', compatibilityPairId);

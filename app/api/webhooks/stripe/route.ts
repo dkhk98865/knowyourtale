@@ -325,68 +325,6 @@ export async function POST(request: NextRequest) {
               console.log('📧 Customer email:', customerEmail);
               console.log('🆔 Subscription ID:', subscriptionId);
             }
-          } else if (metadata?.type === 'compatibility' && metadata.plan === 'monthly_compatibility') {
-            console.log('💕 Processing monthly compatibility subscription...');
-            // Handle monthly compatibility subscription
-            const customerEmail = session.customer_details?.email;
-            const subscriptionId = session.subscription;
-            
-            console.log('📧 Customer email:', customerEmail);
-            console.log('🆔 Subscription ID:', subscriptionId);
-            
-            if (customerEmail && subscriptionId) {
-              console.log('💾 Attempting to create compatibility subscription record...');
-              
-              // Calculate current period end (30 days from now)
-              const currentPeriodEnd = new Date();
-              currentPeriodEnd.setDate(currentPeriodEnd.getDate() + 30);
-              
-              const { error: insertError } = await supabase
-                .from('user_compatibility_access')
-                .insert({
-                  user_email: customerEmail,
-                  access_type: 'monthly_compatibility',
-                  stripe_payment_intent_id: session.payment_intent,
-                  status: 'active',
-                  expires_at: currentPeriodEnd.toISOString(),
-                });
-
-              if (insertError) {
-                console.error('❌ Error creating compatibility subscription record:', insertError);
-                
-                // Log the error to webhook_logs table
-                await supabase.from('webhook_logs').insert({
-                  event_type: 'monthly_compatibility_subscription_creation',
-                  stripe_event_id: event.id,
-                  user_email: customerEmail,
-                  plan: 'monthly_compatibility',
-                  status: 'failed',
-                  error_message: JSON.stringify(insertError)
-                });
-              } else {
-                console.log('✅ Compatibility subscription record created successfully!');
-                
-                // Track successful monthly compatibility subscription in analytics
-                try {
-                  analytics.trackMonthlySubscriptionPurchase(); // Reuse this for now
-                } catch (analyticsError) {
-                  console.error('⚠️ Analytics tracking failed:', analyticsError);
-                }
-                
-                // Log the success to webhook_logs table
-                await supabase.from('webhook_logs').insert({
-                  event_type: 'monthly_compatibility_subscription_creation',
-                  stripe_event_id: event.id,
-                  user_email: customerEmail,
-                  plan: 'monthly_compatibility',
-                  status: 'success'
-                });
-              }
-            } else {
-              console.log('⚠️ Missing customer email or subscription ID');
-              console.log('📧 Customer email:', customerEmail);
-              console.log('🆔 Subscription ID:', subscriptionId);
-            }
           } else {
             console.log('⚠️ No valid plan found in metadata:', metadata);
           }

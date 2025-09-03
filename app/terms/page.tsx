@@ -71,6 +71,7 @@ export default function TermsOfServicePage() {
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">Premium Features</h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
               <li>Detailed personality analysis reports (individual or all reports)</li>
+              <li>Compatibility reports between different personality types</li>
               <li>Monthly subscription plan with journaling access</li>
               <li>Weekly journaling prompts and guidance</li>
               <li>Community board access and engagement</li>
@@ -85,11 +86,13 @@ export default function TermsOfServicePage() {
               <li><strong>Single Report:</strong> $4.99 for one detailed personality analysis</li>
               <li><strong>All Reports:</strong> $9.99 for access to all twelve character reports</li>
               <li><strong>Monthly Plan:</strong> $7.99/month for journaling and community features</li>
+              <li><strong>Single Compatibility Pair:</strong> $1.99 for one compatibility report between two characters</li>
+              <li><strong>All Compatibility Pairs:</strong> $24.99 for access to all 78 compatibility reports</li>
             </ul>
 
             <h3 className="storybook-subtitle text-xl mb-3 mt-6">Billing</h3>
             <ul className="list-disc pl-6 mb-4 space-y-2">
-              <li>Single and All Reports are one-time purchases</li>
+              <li>Single Reports, All Reports, and Compatibility Reports are one-time purchases</li>
               <li>Monthly subscriptions are billed on a recurring basis</li>
               <li>All fees are non-refundable except as required by law</li>
               <li>Prices may change with 30 days notice to existing subscribers</li>
@@ -101,7 +104,7 @@ export default function TermsOfServicePage() {
               <li>You may cancel your monthly subscription at any time</li>
               <li>Cancellation takes effect at the end of the current billing period</li>
               <li>No refunds for partial billing periods</li>
-              <li>One-time report purchases are non-refundable</li>
+              <li>One-time report purchases (personality and compatibility) are non-refundable</li>
               <li>You can upgrade or downgrade your monthly plan at any time</li>
             </ul>
 

@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS user_compatibility_access (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   user_email TEXT NOT NULL,
-  access_type TEXT NOT NULL CHECK (access_type IN ('single_pair', 'all_pairs', 'monthly_compatibility')),
+  access_type TEXT NOT NULL CHECK (access_type IN ('single_pair', 'all_pairs')),
   compatibility_pair_id TEXT, -- For single pair reports, which pair they can access (e.g., 'snowwhite-cinderella')
   stripe_payment_intent_id TEXT, -- To track the specific purchase
   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'expired', 'refunded')),

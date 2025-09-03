@@ -243,7 +243,7 @@ export default function CompatibilityPage() {
       </section>
 
       {/* Full Pairs Purchase Section - Top */}
-      {user && (!userAccess?.hasAccess || (userAccess.accessType !== 'all_pairs' && userAccess.accessType !== 'monthly_compatibility')) && (
+      {user && (!userAccess?.hasAccess || (userAccess.accessType !== 'all_pairs')) && (
         <section className="mb-12">
           <div className="storybook-card page-turn p-8 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200">
             <div className="text-center mb-6">
@@ -289,8 +289,7 @@ export default function CompatibilityPage() {
 
           // Determine if user has access to this specific combination
           const hasAccessToCombo = userAccess?.hasAccess && (
-            userAccess.accessType === 'all_pairs' || 
-            userAccess.accessType === 'monthly_compatibility' ||
+                    userAccess.accessType === 'all_pairs' ||
             (userAccess.accessType === 'single_pair' && userAccess.compatibilityPairId === combo.id) ||
             (userAccess.accessType === 'multiple_single_pairs' && userAccess.compatibilityPairIds?.includes(combo.id))
           );
@@ -394,7 +393,7 @@ export default function CompatibilityPage() {
       </section>
 
       {/* Full Pairs Purchase Section - Bottom */}
-      {user && (!userAccess?.hasAccess || (userAccess.accessType !== 'all_pairs' && userAccess.accessType !== 'monthly_compatibility')) && (
+      {user && (!userAccess?.hasAccess || (userAccess.accessType !== 'all_pairs')) && (
         <section className="mt-16">
           <div className="storybook-card page-turn p-8 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200">
             <div className="text-center mb-6">

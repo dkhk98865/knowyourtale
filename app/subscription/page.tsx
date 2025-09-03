@@ -139,7 +139,7 @@ export default function SubscriptionPage() {
             <div className="magical-sparkle text-3xl mb-3">💕</div>
             <h3 className="storybook-subtitle text-xl mb-3 text-purple-800">Compatibility Reports</h3>
             <p className="text-gray-700 mb-4">
-              Discover how different personality types interact and relate to each other. Purchase individual compatibility pairs ($1.99), all pairs ($24.99), or get monthly access ($12.99/mo).
+              Discover how different personality types interact and relate to each other. Purchase individual compatibility pairs ($1.99) or get all pairs ($24.99).
             </p>
             <Link href="/compatibility">
               <button className="magical-button bg-purple-600 hover:bg-purple-700 text-white px-6 py-2">

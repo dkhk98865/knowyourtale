@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
-      mode: plan === 'monthly_compatibility' ? 'subscription' : 'payment',
+      mode: 'payment', // All compatibility plans are one-time purchases
       success_url: successUrl,
       cancel_url: cancelUrl,
       metadata: {

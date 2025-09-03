@@ -40,7 +40,7 @@ export default function CompatibilityPurchase({
     return () => subscription.unsubscribe();
   }, [supabase]);
 
-  const handlePurchase = async (plan: 'single_pair' | 'all_pairs' | 'monthly_compatibility') => {
+  const handlePurchase = async (plan: 'single_pair' | 'all_pairs') => {
     if (!user) {
       alert('Please sign in to purchase compatibility reports');
       return;
@@ -96,7 +96,7 @@ export default function CompatibilityPurchase({
       </div>
 
       {/* Pricing Options */}
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
         {/* Single Pair */}
         <div className="storybook-card page-turn p-6 border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
           <div className="text-center mb-4">
@@ -159,37 +159,6 @@ export default function CompatibilityPurchase({
             className="w-full magical-button bg-purple-600 hover:bg-purple-700 text-white"
           >
             {loading ? 'Loading...' : 'Buy All Pairs'}
-          </button>
-        </div>
-
-        {/* Monthly Plan */}
-        <div className="storybook-card page-turn p-6 border-2 border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
-          <div className="text-center mb-4">
-            <div className="text-2xl mb-2">🌟</div>
-            <h3 className="font-semibold text-lg mb-2">Monthly Plan</h3>
-            <div className="text-3xl font-bold text-green-600 mb-2">$12.99</div>
-            <p className="text-sm text-gray-600">per month</p>
-          </div>
-          <ul className="space-y-2 mb-6">
-            <li className="flex items-center text-sm">
-              <span className="text-green-500 mr-2">✓</span>
-              All compatibility reports
-            </li>
-            <li className="flex items-center text-sm">
-              <span className="text-green-500 mr-2">✓</span>
-              New reports as they&apos;re added
-            </li>
-            <li className="flex items-center text-sm">
-              <span className="text-green-500 mr-2">✓</span>
-              Cancel anytime
-            </li>
-          </ul>
-          <button
-            onClick={() => handlePurchase('monthly_compatibility')}
-            disabled={loading}
-            className="w-full magical-button bg-green-600 hover:bg-green-700 text-white"
-          >
-            {loading ? 'Loading...' : 'Start Monthly Plan'}
           </button>
         </div>
       </div>

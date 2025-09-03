@@ -90,8 +90,7 @@ export default function CompatibilityReportPage({ params }: Props) {
 
   // Check if user has access to this compatibility report
   const hasAccess = userAccess?.hasAccess && (
-    userAccess.accessType === 'all_pairs' || 
-    userAccess.accessType === 'monthly_compatibility' ||
+            userAccess.accessType === 'all_pairs' ||
     (userAccess.accessType === 'single_pair' && userAccess.compatibilityPairId === id) ||
     (userAccess.accessType === 'multiple_single_pairs' && userAccess.compatibilityPairIds?.includes(id))
   );

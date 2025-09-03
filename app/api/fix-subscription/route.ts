@@ -38,12 +38,12 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ Subscription updated successfully:', updateData);
 
-    // Also ensure compatibility access exists
+    // Also ensure compatibility access exists (for all_pairs if needed)
     const { data: compatibilityData, error: compatibilityError } = await supabase
       .from('user_compatibility_access')
       .upsert({
         user_email: userEmail,
-        access_type: 'monthly_compatibility',
+        access_type: 'all_pairs',
         status: 'active',
         expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days from now
       }, {
