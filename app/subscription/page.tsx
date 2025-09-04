@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { analytics } from '@/lib/analytics';
+import { gtag_report_purchase_conversion } from '@/lib/gtag';
 
 export default function SubscriptionPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -48,10 +49,26 @@ export default function SubscriptionPage() {
       // Track checkout initiation
       analytics.trackCheckoutInitiated(plan.toLowerCase());
       
+      // Track Google Ads conversion based on plan
+      let planValue = 0;
+      if (plan.toLowerCase() === 'monthly') {
+        planValue = 7.99;
+      } else if (plan.toLowerCase() === 'single') {
+        planValue = 4.99;
+      } else if (plan.toLowerCase() === 'allreports') {
+        planValue = 9.99;
+      }
+      
+      gtag_report_purchase_conversion(planValue, 'USD', `T_${Date.now()}`, undefined);
+      
       // Set different success URLs based on plan
       let successUrl;
       if (plan.toLowerCase() === 'monthly') {
         successUrl = `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=monthly`;
+      } else if (plan.toLowerCase() === 'single') {
+        successUrl = `${window.location.origin}/reports?session_id={CHECKOUT_SESSION_ID}&plan=single`;
+      } else if (plan.toLowerCase() === 'allreports') {
+        successUrl = `${window.location.origin}/reports?session_id={CHECKOUT_SESSION_ID}&plan=allreports`;
       } else {
         successUrl = `${window.location.origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}&plan=${plan.toLowerCase()}`;
       }
@@ -158,6 +175,104 @@ export default function SubscriptionPage() {
 
         {/* Monthly Plans Grid */}
         <div className="max-w-4xl mx-auto">
+          {/* Individual Report Plan */}
+          <div className="storybook-card page-turn relative overflow-hidden border-2 border-blue-500 mb-8">
+            <div className="p-8">
+              <div className="text-center mb-6">
+                <div className="magical-sparkle">📄</div>
+                <h2 className="storybook-subtitle text-2xl mb-3">Single Report</h2>
+                <div className="magical-sparkle">✨</div>
+              </div>
+              
+              <div className="text-center mb-6">
+                <div className="text-4xl font-bold text-blue-600 mb-2">$4.99</div>
+                <div className="text-gray-600">one-time purchase</div>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center space-x-3">
+                  <div className="text-green-500 text-xl">✓</div>
+                  <span className="text-gray-700">One detailed personality analysis report</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="text-green-500 text-xl">✓</div>
+                  <span className="text-gray-700">Choose any character you want</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="text-green-500 text-xl">✓</div>
+                  <span className="text-gray-700">Lifetime access to your report</span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  analytics.trackButtonClick('purchase_single_report', 'subscription_page');
+                  handleSubscribe('Single');
+                }}
+                className="w-full magical-button magical-glow bg-blue-600 hover:bg-blue-700"
+                disabled={loading}
+              >
+                {loading ? 'Loading...' : 'Buy Single Report'}
+              </button>
+              
+              {/* Non-refundable notice */}
+              <div className="mt-4 text-center">
+                <p className="text-xs text-gray-500">
+                  ⚠️ All reports are non-refundable once purchased and accessed.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* All Reports Plan */}
+          <div className="storybook-card page-turn relative overflow-hidden border-2 border-purple-500 mb-8">
+            <div className="p-8">
+              <div className="text-center mb-6">
+                <div className="magical-sparkle">📚</div>
+                <h2 className="storybook-subtitle text-2xl mb-3">All Reports</h2>
+                <div className="magical-sparkle">🌟</div>
+              </div>
+              
+              <div className="text-center mb-6">
+                <div className="text-4xl font-bold text-purple-600 mb-2">$9.99</div>
+                <div className="text-gray-600">one-time purchase</div>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center space-x-3">
+                  <div className="text-green-500 text-xl">✓</div>
+                  <span className="text-gray-700">All 12 personality analysis reports</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="text-green-500 text-xl">✓</div>
+                  <span className="text-gray-700">Complete fairy tale personality collection</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="text-green-500 text-xl">✓</div>
+                  <span className="text-gray-700">Lifetime access to all reports</span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  analytics.trackButtonClick('purchase_all_reports', 'subscription_page');
+                  handleSubscribe('AllReports');
+                }}
+                className="w-full magical-button magical-glow bg-purple-600 hover:bg-purple-700"
+                disabled={loading}
+              >
+                {loading ? 'Loading...' : 'Buy All Reports'}
+              </button>
+              
+              {/* Non-refundable notice */}
+              <div className="mt-4 text-center">
+                <p className="text-xs text-gray-500">
+                  ⚠️ All reports are non-refundable once purchased and accessed.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Monthly Plan */}
           <div className="storybook-card page-turn relative overflow-hidden border-2 border-accent-gold">
             {/* Popular badge */}

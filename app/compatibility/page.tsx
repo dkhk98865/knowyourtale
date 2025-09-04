@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase-client';
 import { User } from '@supabase/supabase-js';
+import { gtag_report_purchase_conversion } from '@/lib/gtag';
 
 export default function CompatibilityPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -30,6 +31,9 @@ export default function CompatibilityPage() {
     }
 
     try {
+      // Track conversion before creating checkout session
+      gtag_report_purchase_conversion(1.99, 'USD', `T_${Date.now()}`, undefined);
+
       const response = await fetch('/api/create-compatibility-checkout-session', {
         method: 'POST',
         headers: {
@@ -67,6 +71,9 @@ export default function CompatibilityPage() {
     }
 
     try {
+      // Track conversion before creating checkout session
+      gtag_report_purchase_conversion(24.99, 'USD', `T_${Date.now()}`, undefined);
+
       const response = await fetch('/api/create-compatibility-checkout-session', {
         method: 'POST',
         headers: {
