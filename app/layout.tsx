@@ -5,6 +5,7 @@ import Sidebar from "@/components/sidebar";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { Analytics } from "@vercel/analytics/react";
+import Script from "next/script";
 
 const crimsonText = Crimson_Text({
   variable: "--font-crimson-text",
@@ -31,6 +32,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Google Ads (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17529797157"
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17529797157');
+          `}
+        </Script>
+      </head>
       <body
         className={`${crimsonText.variable} ${playfairDisplay.variable} antialiased`}
       >

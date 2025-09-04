@@ -157,28 +157,32 @@ CREATE POLICY "Users can view own subscription" ON user_subscriptions
 CREATE POLICY "Service role can manage all subscriptions" ON user_subscriptions
   FOR ALL USING (auth.role() = 'service_role');
 
--- Note: RLS is disabled for user_report_access, so policies are not needed
--- When RLS is re-enabled, uncomment the following policies:
--- CREATE POLICY "Users can view own report access" ON user_report_access
---   FOR SELECT USING (auth.jwt() ->> 'email' = user_email);
--- CREATE POLICY "Users can update own report access" ON user_report_access
---   FOR UPDATE USING (auth.jwt() ->> 'email' = user_email);
--- CREATE POLICY "Service role can manage all report access" ON user_report_access
---   FOR ALL USING (auth.role() = 'service_role');
--- CREATE POLICY "Users can insert own report access" ON user_report_access
---   FOR INSERT WITH CHECK (auth.jwt() ->> 'email' = user_email);
+-- Create policies for user_report_access table
+DROP POLICY IF EXISTS "Users can view own report access" ON user_report_access;
+DROP POLICY IF EXISTS "Service role can manage all report access" ON user_report_access;
 
--- TEMPORARY: Disable RLS for user_report_access to allow webhook inserts
--- Remove this after webhook is working and re-enable with proper policies
-ALTER TABLE user_report_access DISABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view own report access" ON user_report_access
+  FOR SELECT USING (auth.jwt() ->> 'email' = user_email);
 
--- TEMPORARY: Disable RLS for user_compatibility_access to allow webhook inserts
--- Remove this after webhook is working and re-enable with proper policies
-ALTER TABLE user_compatibility_access DISABLE ROW LEVEL SECURITY;
+CREATE POLICY "Service role can manage all report access" ON user_report_access
+  FOR ALL USING (auth.role() = 'service_role');
 
--- TEMPORARY: Disable RLS for user_prompt_progress to allow initialization
--- Remove this after initialization is working and re-enable with proper policies
-ALTER TABLE user_prompt_progress DISABLE ROW LEVEL SECURITY;
+-- Create policies for user_compatibility_access table
+DROP POLICY IF EXISTS "Users can view own compatibility access" ON user_compatibility_access;
+DROP POLICY IF EXISTS "Service role can manage all compatibility access" ON user_compatibility_access;
+
+CREATE POLICY "Users can view own compatibility access" ON user_compatibility_access
+  FOR SELECT USING (auth.jwt() ->> 'email' = user_email);
+
+CREATE POLICY "Service role can manage all compatibility access" ON user_compatibility_access
+  FOR ALL USING (auth.role() = 'service_role');
+
+-- Enable RLS on all tables for security
+ALTER TABLE user_subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_report_access ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_compatibility_access ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_prompt_progress ENABLE ROW LEVEL SECURITY;
+ALTER TABLE webhook_logs ENABLE ROW LEVEL SECURITY;
 
 -- Alternative: Create a very permissive policy that allows all operations
 -- CREATE POLICY "Allow all operations temporarily" ON user_report_access
@@ -477,7 +481,7 @@ GRANT SELECT ON community_likes TO authenticated;
 GRANT INSERT, UPDATE, DELETE ON community_likes TO authenticated;
 GRANT ALL ON community_likes TO service_role;
 
--- Create a view for community posts with user info
+-- Create a view for community posts with user info (defaults to SECURITY INVOKER)
 CREATE OR REPLACE VIEW community_posts_view AS
 SELECT 
   cp.*,
@@ -487,3 +491,7 @@ FROM community_posts cp
 LEFT JOIN community_replies cr ON cp.id = cr.post_id
 GROUP BY cp.id, cp.user_id, cp.user_email, cp.user_name, cp.title, cp.content, cp.post_type, cp.character_id, cp.likes_count, cp.replies_count, cp.is_pinned, cp.is_locked, cp.created_at, cp.updated_at
 ORDER BY cp.is_pinned DESC, cp.created_at DESC;
+
+-- Grant permissions on the view
+GRANT SELECT ON community_posts_view TO authenticated;
+GRANT ALL ON community_posts_view TO service_role;
